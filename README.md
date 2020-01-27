@@ -1,4 +1,4 @@
-# Your Plugin Name
+# Nativescript Mapbox SDK
 
 Add your plugin badges here. See [nativescript-urlhandler](https://github.com/hypery2k/nativescript-urlhandler) for example.
 
