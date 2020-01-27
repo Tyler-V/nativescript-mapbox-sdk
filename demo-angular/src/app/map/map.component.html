@@ -1,0 +1,51 @@
+<GridLayout>
+  <StackLayout>
+    <ContentView height="100%" width="100%">
+      <Mapbox
+        [accessToken]="accessToken"
+        [mapStyle]="mapStyle"
+        [zoomLevel]="zoom"
+        [latitude]="latitude"
+        [longitude]="longitude"
+        hideCompass="true"
+        disableZoom="false"
+        disableRotation="false"
+        disableScroll="false"
+        disableTilt="false"
+        (mapReady)="onMapReady($event)"
+        (styleLoaded)="onStyleLoaded($event)"
+      >
+      </Mapbox>
+    </ContentView>
+  </StackLayout>
+  <FAB
+    (tap)="showLocation()"
+    icon="~/images/location_search.png"
+    rippleColor="#f1f1f1"
+    class="fab-button show-location"
+  ></FAB>
+  <FAB
+    (tap)="trackUser()"
+    icon="~/images/my_location.png"
+    rippleColor="#f1f1f1"
+    class="fab-button track-location"
+  ></FAB>
+  <FAB
+    (tap)="drivingMode()"
+    [icon]="isTracking ? '~/images/stop.png' : '~/images/navigation.png'"
+    rippleColor="#f1f1f1"
+    class="fab-button driving-mode"
+  ></FAB>
+  <FAB
+    (tap)="showOfflineModal()"
+    icon="~/images/offline.png"
+    rippleColor="#f1f1f1"
+    class="fab-button offline"
+  ></FAB>
+  <FAB
+    (tap)="showStylesModal()"
+    icon="~/images/layers.png"
+    rippleColor="#f1f1f1"
+    class="fab-button styles"
+  ></FAB>
+</GridLayout>

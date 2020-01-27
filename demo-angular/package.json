@@ -1,0 +1,43 @@
+{
+  "nativescript": {
+    "id": "org.nativescript.demoangular",
+    "tns-ios": {
+      "version": "6.3.0"
+    },
+    "tns-android": {
+      "version": "6.3.1"
+    }
+  },
+  "description": "NativeScript Application",
+  "license": "SEE LICENSE IN <your-license-filename>",
+  "repository": "<fill-your-repository-here>",
+  "dependencies": {
+    "@angular/animations": "~8.2.0",
+    "@angular/common": "~8.2.0",
+    "@angular/compiler": "~8.2.0",
+    "@angular/core": "~8.2.0",
+    "@angular/forms": "~8.2.0",
+    "@angular/platform-browser": "~8.2.0",
+    "@angular/platform-browser-dynamic": "~8.2.0",
+    "@angular/router": "~8.2.0",
+    "@nstudio/nativescript-floatingactionbutton": "^1.1.0",
+    "nativescript-angular": "~8.2.0",
+    "nativescript-geolocation": "^5.1.0",
+    "nativescript-mapbox-sdk": "file:../src",
+    "@nativescript/theme": "^2.2.1",
+    "reflect-metadata": "~0.1.12",
+    "rxjs": "^6.4.0",
+    "tns-core-modules": "~6.3.0",
+    "tslint": "^5.20.1",
+    "zone.js": "~0.9.1"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "~8.2.0",
+    "@ngtools/webpack": "~8.2.0",
+    "nativescript-dev-webpack": "~1.4.0",
+    "node-sass": "^4.13.0",
+    "typescript": "~3.5.3"
+  },
+  "gitHead": "42f2a6a9c94eaf9c68d2a41e0daaa1a2544bc28f",
+  "readme": "NativeScript Application"
+}
