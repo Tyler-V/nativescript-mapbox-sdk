@@ -23,17 +23,21 @@ export class Style extends MapboxStyle {
       this.mapboxView.mapboxMap.setStyle(
         new com.mapbox.mapboxsdk.maps.Style.Builder().fromUri(uri),
         new com.mapbox.mapboxsdk.maps.Style.OnStyleLoaded({
-          onStyleLoaded: mapboxStyle => {
+          onStyleLoaded: (mapboxStyle) => {
             this.mapboxView.mapboxStyle = mapboxStyle;
             this.mapboxView.notify({
               eventName: MapboxViewBase.styleLoadedEvent,
-              object: this.mapboxView
+              object: this.mapboxView,
             });
             resolve();
-          }
+          },
         })
       );
     });
+  }
+
+  addImage(name: string, filePath: string) {
+    this.mapboxView.mapboxStyle.addImage(name, this.getImage(filePath).android);
   }
 
   addSource(source: any) {

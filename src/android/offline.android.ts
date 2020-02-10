@@ -60,35 +60,33 @@ export class Offline extends MapboxOffline {
           onError: (error: string) => {
             reject(error);
           },
-          onCreate: offlineRegion => {
+          onCreate: (offlineRegion) => {
             offlineRegion.setDownloadState(com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_ACTIVE);
             offlineRegion.setObserver(
               new com.mapbox.mapboxsdk.offline.OfflineRegion.OfflineRegionObserver({
-                onStatusChanged: status => {
+                onStatusChanged: (status) => {
                   let percentage =
-                    status.getRequiredResourceCount() >= 0
-                      ? (100.0 * status.getCompletedResourceCount()) / status.getRequiredResourceCount()
-                      : 0.0;
+                    status.getRequiredResourceCount() >= 0 ? (100.0 * status.getCompletedResourceCount()) / status.getRequiredResourceCount() : 0.0;
                   onProgress({
                     completedSize: status.getCompletedResourceSize(),
                     completed: status.getCompletedResourceCount(),
                     expected: status.getRequiredResourceCount(),
                     percentage: Math.round(percentage * 100) / 100,
-                    complete: status.isComplete()
+                    complete: status.isComplete(),
                   });
                   if (status.isComplete()) {
                     resolve('Complete');
                   }
                 },
-                onError: error => {
+                onError: (error) => {
                   reject(`${error.getMessage()}, reason: ${error.getReason()}`);
                 },
-                mapboxTileCountLimitExceeded: limit => {
+                mapboxTileCountLimitExceeded: (limit) => {
                   reject(`Mapbox tile count limited exceed: ${limit}`);
-                }
+                },
               })
             );
-          }
+          },
         })
       );
     });
@@ -108,7 +106,7 @@ export class Offline extends MapboxOffline {
           onError: (error: string) => {
             reject(error);
           },
-          onList: offlineRegions => {
+          onList: (offlineRegions) => {
             const regions = [];
             if (offlineRegions !== null) {
               for (let i = 0; i < offlineRegions.length; i++) {
@@ -126,13 +124,13 @@ export class Offline extends MapboxOffline {
                     north: bounds.getLatNorth(),
                     east: bounds.getLonEast(),
                     south: bounds.getLatSouth(),
-                    west: bounds.getLonWest()
-                  }
+                    west: bounds.getLonWest(),
+                  },
                 });
               }
             }
             resolve(regions);
-          }
+          },
         })
       );
     });
@@ -147,7 +145,7 @@ export class Offline extends MapboxOffline {
           },
           onSuccess: () => {
             resolve();
-          }
+          },
         })
       );
     });
@@ -160,7 +158,7 @@ export class Offline extends MapboxOffline {
           onError: (error: string) => {
             reject(error);
           },
-          onList: offlineRegions => {
+          onList: (offlineRegions) => {
             for (let offlineRegion of offlineRegions) {
               let name = this._getRegionName(offlineRegion);
               if (name === options.name) {
@@ -171,13 +169,13 @@ export class Offline extends MapboxOffline {
                     },
                     onDelete: () => {
                       resolve();
-                    }
+                    },
                   })
                 );
                 break;
               }
             }
-          }
+          },
         })
       );
     });
@@ -186,6 +184,4 @@ export class Offline extends MapboxOffline {
   setOfflineTileCountLimit(limit: number): void {
     this._getOfflineManager().setOfflineMapboxTileCountLimit(limit);
   }
-
-  
 }

@@ -1,22 +1,19 @@
-import { Component, OnInit, ViewContainerRef } from "@angular/core";
-import {
-    ModalDialogService,
-    ModalDialogOptions
-} from "nativescript-angular/modal-dialog";
-import { LatLng, RenderMode, CameraMode } from "nativescript-mapbox-sdk";
-import * as geolocation from "nativescript-geolocation";
-import { MapService } from "./map.service";
-import { StylesComponent } from "./styles/styles.component";
-import { OfflineComponent } from "./offline/offline.component";
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
+import { LatLng, RenderMode, CameraMode } from 'nativescript-mapbox-sdk';
+import * as geolocation from 'nativescript-geolocation';
+import { MapService } from './map.service';
+import { StylesComponent } from './styles/styles.component';
+import { OfflineComponent } from './offline/offline.component';
 
-import { Color } from "tns-core-modules/color";
+import { Color } from 'tns-core-modules/color';
 declare const android, com, java, org: any;
 
 @Component({
-    selector: "map",
+    selector: 'map',
     moduleId: module.id,
-    templateUrl: "./map.component.html",
-    styleUrls: ["./map.component.scss"]
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
     accessToken: string;
@@ -33,14 +30,9 @@ export class MapComponent implements OnInit {
 
     isTracking: boolean = false;
 
-    constructor(
-        private mapService: MapService,
-        private modalService: ModalDialogService,
-        private vcRef: ViewContainerRef
-    ) {
-        this.accessToken =
-            "sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ";
-        this.mapStyle = "mapbox://styles/mapbox/streets-v11";
+    constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {
+        this.accessToken = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
+        this.mapStyle = 'mapbox://styles/mapbox/streets-v11';
     }
 
     ngOnInit(): void {}
@@ -51,150 +43,67 @@ export class MapComponent implements OnInit {
         this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
             this.mapService.mapbox.annotation.addCircle();
         });
-        this.mapService.mapbox.map.addOnMapLongClickListener(
-            (latLng: LatLng) => {
-                const features = this.mapService.mapbox.map.queryRenderedFeatures(
-                    latLng
-                );
-                console.log(features);
-            }
-        );
+        this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
+            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng);
+            console.log(features);
+        });
     }
 
     onStyleLoaded(args) {
-        console.log(args.eventName);
-        //this.addTerrainLayer();
-        this.addExample2();
+        this.addWells();
     }
 
-    addExample2() {
-        this.mapService.mapbox.style
-            .getStyle()
-            .addSource(
-                new com.mapbox.mapboxsdk.style.sources.VectorSource(
-                    "source-id",
-                    "mapbox://tvorpahl.b39qo3tq"
-                )
-            );
+    addWells() {
+        this.mapService.mapbox.style.addSource(new com.mapbox.mapboxsdk.style.sources.VectorSource('source-id', 'mapbox://tvorpahl.b39qo3tq'));
 
-        const wellsLayer = new com.mapbox.mapboxsdk.style.layers.CircleLayer(
-            "layer-id",
-            "source-id"
-        );
-        wellsLayer.setSourceLayer("wells");
+        const wellsLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('layer-id', 'source-id');
+        wellsLayer.setSourceLayer('wells');
 
-        const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+        this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
+        this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
+        this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
+        this.mapService.mapbox.style.addImage('EOR', 'images/types/eor.png');
+        this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
+        this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
+
         const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+        const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+        const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
+        const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
+        const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
         const match = com.mapbox.mapboxsdk.style.expressions.Expression.match;
-        const circleColor =
-            com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
+        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
 
-        const stops = [
-            stop(
-                "OIL",
-                rgb(
-                    new java.lang.Integer(251),
-                    new java.lang.Integer(176),
-                    new java.lang.Integer(59)
-                )
-            ),
-            stop(
-                "GAS",
-                rgb(
-                    new java.lang.Integer(34),
-                    new java.lang.Integer(59),
-                    new java.lang.Integer(83)
-                )
-            ),
-            stop(
-                "OILGAS",
-                rgb(
-                    new java.lang.Integer(229),
-                    new java.lang.Integer(94),
-                    new java.lang.Integer(94)
-                )
-            ),
-            stop(
-                "EOR",
-                rgb(
-                    new java.lang.Integer(59),
-                    new java.lang.Integer(178),
-                    new java.lang.Integer(208)
-                )
-            ),
-            stop(
-                "SWD",
-                rgb(
-                    new java.lang.Integer(204),
-                    new java.lang.Integer(204),
-                    new java.lang.Integer(204)
-                )
-            ),
-            stop(
-                "OTHER",
-                rgb(
-                    new java.lang.Integer(0),
-                    new java.lang.Integer(255),
-                    new java.lang.Integer(255)
-                )
-            )
-        ];
-
-        const circleColorExpression = com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor(
-            match(
-                get("TYPE"),
-                rgb(
-                    new java.lang.Integer(0),
-                    new java.lang.Integer(0),
-                    new java.lang.Integer(0)
-                ),
-                stops
-            )
-        );
-
-        wellsLayer.setProperties([circleColorExpression]);
-        this.mapService.mapbox.style.getStyle().addLayer(wellsLayer);
-    }
-
-    addTerrainLayer() {
-        this.mapService.mapbox.style
-            .getStyle()
-            .addSource(
-                new com.mapbox.mapboxsdk.style.sources.VectorSource(
-                    "terrain-data",
-                    "mapbox://mapbox.mapbox-terrain-v2"
-                )
-            );
-
-        const terrainData = new com.mapbox.mapboxsdk.style.layers.LineLayer(
-            "terrain-data",
-            "terrain-data"
-        );
-        terrainData.setSourceLayer("contour");
-        terrainData.setProperties([
-            com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin(
-                com.mapbox.mapboxsdk.style.layers.Property.LINE_JOIN_ROUND
-            ),
-            com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap(
-                com.mapbox.mapboxsdk.style.layers.Property.LINE_CAP_ROUND
-            ),
-            com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor(
-                android.graphics.Color.parseColor("#ff69b4")
-            ),
-            com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth(
-                new java.lang.Float(1.0)
-            )
+        wellsLayer.setProperties([
+            iconImage(get('TYPE')),
+            iconAllowOverlap(new java.lang.Boolean(true)),
+            iconIgnorePlacement(new java.lang.Boolean(true)),
+            textAllowOverlap(new java.lang.Boolean(true)),
         ]);
 
-        this.mapService.mapbox.style.getStyle().addLayer(terrainData);
+        const VISIBLE = true;
+        wellsLayer.setFilter(
+            any([
+                all([eq(get('TYPE'), 'OIL'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'GAS'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'OILGAS'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'EOR'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'SWD'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'OTHER'), eq(get('VISIBLE'), VISIBLE)]),
+            ])
+        );
+
+        this.mapService.mapbox.style.addLayer(wellsLayer);
     }
 
     showLocation() {
         geolocation.enableLocationRequest().then(() => {
             this.mapService.mapbox.location.startTracking({
                 cameraMode: CameraMode.NONE,
-                renderMode: RenderMode.NORMAL
+                renderMode: RenderMode.NORMAL,
             });
         });
     }
@@ -208,7 +117,7 @@ export class MapComponent implements OnInit {
                 animationDuration: 1000,
                 onCameraTrackingDismissed: () => {
                     this.mapService.mapbox.location.stopTracking();
-                }
+                },
             });
         });
     }
@@ -227,7 +136,7 @@ export class MapComponent implements OnInit {
                     renderMode: RenderMode.GPS,
                     zoom: 19,
                     tilt: 45,
-                    animationDuration: 2000
+                    animationDuration: 2000,
                 });
             });
         }
@@ -236,7 +145,7 @@ export class MapComponent implements OnInit {
     showOfflineModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: false
+            fullscreen: false,
         };
 
         return this.modalService.showModal(OfflineComponent, options);
@@ -245,7 +154,7 @@ export class MapComponent implements OnInit {
     showStylesModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: false
+            fullscreen: false,
         };
 
         return this.modalService.showModal(StylesComponent, options);
