@@ -50,14 +50,93 @@ export class MapComponent implements OnInit {
     }
 
     onStyleLoaded(args) {
+        const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource('wells', 'mapbox://tvorpahl.b39qo3tq');
+        this.mapService.mapbox.style.addSource(vectorSource);
         this.addWells();
+        this.addHeatmap();
+    }
+
+    addHeatmap() {
+        const heatmapLayer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer('heatmap-layer-id', 'wells');
+        heatmapLayer.setSourceLayer('wells');
+        const maxZoom = 12;
+        heatmapLayer.setMaxZoom(maxZoom);
+
+        const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
+        const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
+        const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
+        const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+        const heatmapWeight = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapWeight;
+        const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+        const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
+        const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
+        const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
+        const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
+        const literal = com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+        const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+
+        const _heatmapColor1 = heatmapColor(
+            interpolate(linear(), heatmapDensity(), [
+                stop(new java.lang.Float(0.01), rgba(new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(0.01))),
+                stop(new java.lang.Float(0.25), rgb(new java.lang.Integer(253), new java.lang.Integer(199), new java.lang.Integer(12))),
+                stop(new java.lang.Float(0.5), rgb(new java.lang.Integer(243), new java.lang.Integer(144), new java.lang.Integer(63))),
+                stop(new java.lang.Float(0.75), rgb(new java.lang.Integer(237), new java.lang.Integer(104), new java.lang.Integer(60))),
+                stop(new java.lang.Float(0.9), rgb(new java.lang.Integer(233), new java.lang.Integer(62), new java.lang.Integer(58))),
+            ])
+        );
+
+        const _heatmapColor2 = heatmapColor(
+            interpolate(linear(), heatmapDensity(), [
+                stop(new java.lang.Float(0.01), rgba(new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(0.01))),
+                stop(new java.lang.Float(0.25), rgb(new java.lang.Integer(4), new java.lang.Integer(179), new java.lang.Integer(183))),
+                stop(new java.lang.Float(0.5), rgb(new java.lang.Integer(204), new java.lang.Integer(211), new java.lang.Integer(61))),
+                stop(new java.lang.Float(0.75), rgb(new java.lang.Integer(252), new java.lang.Integer(167), new java.lang.Integer(55))),
+                stop(new java.lang.Float(0.9), rgb(new java.lang.Integer(255), new java.lang.Integer(78), new java.lang.Integer(70))),
+            ])
+        );
+
+        const _heatmapColor3 = heatmapColor(
+            interpolate(linear(), heatmapDensity(), [
+                stop(new java.lang.Integer(0.0), rgb(new java.lang.Integer(0), new java.lang.Integer(0), new java.lang.Integer(255))), // blue
+                stop(new java.lang.Integer(0.25), rgb(new java.lang.Integer(0), new java.lang.Integer(225), new java.lang.Integer(255))), // cyan
+                stop(new java.lang.Integer(0.5), rgb(new java.lang.Integer(0), new java.lang.Integer(255), new java.lang.Integer(0))), // green
+                stop(new java.lang.Integer(0.75), rgb(new java.lang.Integer(255), new java.lang.Integer(225), new java.lang.Integer(0))), // yellow
+                stop(new java.lang.Integer(1.0), rgb(new java.lang.Integer(255), new java.lang.Integer(0), new java.lang.Integer(0))), // red
+            ])
+        );
+
+        const _heatmapIntensity = heatmapIntensity(
+            interpolate(linear(), zoom(), [
+                stop(new java.lang.Integer(0), new java.lang.Float(1.0)),
+                stop(new java.lang.Integer(maxZoom), new java.lang.Float(0.5))
+            ])
+        );
+
+        const _heatmapRadius = heatmapRadius(
+            interpolate(linear(), zoom(), [
+                stop(new java.lang.Integer(0), new java.lang.Integer(5)),
+                stop(new java.lang.Integer(maxZoom), new java.lang.Integer(10)),
+            ])
+        );
+
+        const _heatmapOpacity = heatmapOpacity(
+            interpolate(linear(), zoom(), [
+                stop(new java.lang.Integer(0), new java.lang.Float(1.0)),
+                stop(new java.lang.Integer(maxZoom), new java.lang.Float(1.0)),
+            ])
+        );
+
+        heatmapLayer.setProperties([_heatmapColor2, _heatmapRadius, _heatmapIntensity, _heatmapOpacity]);
+
+        this.mapService.mapbox.style.addLayer(heatmapLayer);
     }
 
     addWells() {
-        this.mapService.mapbox.style.addSource(new com.mapbox.mapboxsdk.style.sources.VectorSource('source-id', 'mapbox://tvorpahl.b39qo3tq'));
-
-        const wellsLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('layer-id', 'source-id');
+        const wellsLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('symbol-layer-id', 'wells');
         wellsLayer.setSourceLayer('wells');
+        wellsLayer.setMinZoom(12);
 
         this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
         this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
