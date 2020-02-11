@@ -6,8 +6,27 @@ import { MapService } from './map.service';
 import { StylesComponent } from './styles/styles.component';
 import { OfflineComponent } from './offline/offline.component';
 
-import { Color } from 'tns-core-modules/color';
 declare const android, com, java, org: any;
+const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
+const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
+const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
+const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
+const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
+const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
+const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
+const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
+const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
+const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
+const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+const iconSize = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 
 @Component({
     selector: 'map',
@@ -50,46 +69,28 @@ export class MapComponent implements OnInit {
     }
 
     onStyleLoaded(args) {
-        const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource('wells', 'mapbox://tvorpahl.b39qo3tq');
-        this.mapService.mapbox.style.addSource(vectorSource);
-        this.addWells();
-        this.addHeatmap();
+        this.addVectorSource();
+        this.addSymbolLayer();
+        this.addHeatmapLayer();
     }
 
-    addHeatmap() {
+    addVectorSource() {
+        const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource('wells', 'mapbox://tvorpahl.b39qo3tq');
+        this.mapService.mapbox.style.addSource(vectorSource);
+    }
+
+    addHeatmapLayer() {
         const heatmapLayer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer('heatmap-layer-id', 'wells');
         heatmapLayer.setSourceLayer('wells');
         const maxZoom = 12;
         heatmapLayer.setMaxZoom(maxZoom);
 
-        const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-        const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-        const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-        const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-        const heatmapWeight = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapWeight;
-        const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-        const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
-        const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-        const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-        const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-        const literal = com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-        const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-
-        const _heatmapColor1 = heatmapColor(
+        const _heatmapColor = heatmapColor(
             interpolate(linear(), heatmapDensity(), [
-                stop(new java.lang.Float(0.01), rgba(new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(0.01))),
-                stop(new java.lang.Float(0.25), rgb(new java.lang.Integer(253), new java.lang.Integer(199), new java.lang.Integer(12))),
-                stop(new java.lang.Float(0.5), rgb(new java.lang.Integer(243), new java.lang.Integer(144), new java.lang.Integer(63))),
-                stop(new java.lang.Float(0.75), rgb(new java.lang.Integer(237), new java.lang.Integer(104), new java.lang.Integer(60))),
-                stop(new java.lang.Float(0.9), rgb(new java.lang.Integer(233), new java.lang.Integer(62), new java.lang.Integer(58))),
-            ])
-        );
-
-        const _heatmapColor2 = heatmapColor(
-            interpolate(linear(), heatmapDensity(), [
-                stop(new java.lang.Float(0.01), rgba(new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(0.01))),
+                stop(
+                    new java.lang.Float(0.01),
+                    rgba(new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(0.01))
+                ),
                 stop(new java.lang.Float(0.25), rgb(new java.lang.Integer(4), new java.lang.Integer(179), new java.lang.Integer(183))),
                 stop(new java.lang.Float(0.5), rgb(new java.lang.Integer(204), new java.lang.Integer(211), new java.lang.Integer(61))),
                 stop(new java.lang.Float(0.75), rgb(new java.lang.Integer(252), new java.lang.Integer(167), new java.lang.Integer(55))),
@@ -97,20 +98,10 @@ export class MapComponent implements OnInit {
             ])
         );
 
-        const _heatmapColor3 = heatmapColor(
-            interpolate(linear(), heatmapDensity(), [
-                stop(new java.lang.Integer(0.0), rgb(new java.lang.Integer(0), new java.lang.Integer(0), new java.lang.Integer(255))), // blue
-                stop(new java.lang.Integer(0.25), rgb(new java.lang.Integer(0), new java.lang.Integer(225), new java.lang.Integer(255))), // cyan
-                stop(new java.lang.Integer(0.5), rgb(new java.lang.Integer(0), new java.lang.Integer(255), new java.lang.Integer(0))), // green
-                stop(new java.lang.Integer(0.75), rgb(new java.lang.Integer(255), new java.lang.Integer(225), new java.lang.Integer(0))), // yellow
-                stop(new java.lang.Integer(1.0), rgb(new java.lang.Integer(255), new java.lang.Integer(0), new java.lang.Integer(0))), // red
-            ])
-        );
-
         const _heatmapIntensity = heatmapIntensity(
             interpolate(linear(), zoom(), [
                 stop(new java.lang.Integer(0), new java.lang.Float(1.0)),
-                stop(new java.lang.Integer(maxZoom), new java.lang.Float(0.5))
+                stop(new java.lang.Integer(maxZoom), new java.lang.Float(0.5)),
             ])
         );
 
@@ -128,43 +119,10 @@ export class MapComponent implements OnInit {
             ])
         );
 
-        heatmapLayer.setProperties([_heatmapColor2, _heatmapRadius, _heatmapIntensity, _heatmapOpacity]);
-
-        this.mapService.mapbox.style.addLayer(heatmapLayer);
-    }
-
-    addWells() {
-        const wellsLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('symbol-layer-id', 'wells');
-        wellsLayer.setSourceLayer('wells');
-        wellsLayer.setMinZoom(12);
-
-        this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
-        this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
-        this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
-        this.mapService.mapbox.style.addImage('EOR', 'images/types/eor.png');
-        this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
-        this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
-
-        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-        const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-        const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
-        const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
-        const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
-        const match = com.mapbox.mapboxsdk.style.expressions.Expression.match;
-        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-
-        wellsLayer.setProperties([
-            iconImage(get('TYPE')),
-            iconAllowOverlap(new java.lang.Boolean(true)),
-            iconIgnorePlacement(new java.lang.Boolean(true)),
-            textAllowOverlap(new java.lang.Boolean(true)),
-        ]);
+        heatmapLayer.setProperties([_heatmapColor, _heatmapRadius, _heatmapIntensity, _heatmapOpacity]);
 
         const VISIBLE = true;
-        wellsLayer.setFilter(
+        heatmapLayer.setFilter(
             any([
                 all([eq(get('TYPE'), 'OIL'), eq(get('VISIBLE'), VISIBLE)]),
                 all([eq(get('TYPE'), 'GAS'), eq(get('VISIBLE'), VISIBLE)]),
@@ -175,7 +133,42 @@ export class MapComponent implements OnInit {
             ])
         );
 
-        this.mapService.mapbox.style.addLayer(wellsLayer);
+        this.mapService.mapbox.style.addLayer(heatmapLayer);
+    }
+
+    addSymbolLayer() {
+        const symbolLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('symbol-layer-id', 'wells');
+        symbolLayer.setSourceLayer('wells');
+        symbolLayer.setMinZoom(12);
+
+        this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
+        this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
+        this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
+        this.mapService.mapbox.style.addImage('EOR', 'images/types/eor.png');
+        this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
+        this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
+
+        symbolLayer.setProperties([
+            iconImage(get('TYPE')),
+            iconSize(new java.lang.Float(2.0)),
+            iconAllowOverlap(new java.lang.Boolean(true)),
+            iconIgnorePlacement(new java.lang.Boolean(true)),
+            textAllowOverlap(new java.lang.Boolean(true)),
+        ]);
+
+        const VISIBLE = true;
+        symbolLayer.setFilter(
+            any([
+                all([eq(get('TYPE'), 'OIL'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'GAS'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'OILGAS'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'EOR'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'SWD'), eq(get('VISIBLE'), VISIBLE)]),
+                all([eq(get('TYPE'), 'OTHER'), eq(get('VISIBLE'), VISIBLE)]),
+            ])
+        );
+
+        this.mapService.mapbox.style.addLayer(symbolLayer);
     }
 
     showLocation() {
