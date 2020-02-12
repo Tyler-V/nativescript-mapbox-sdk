@@ -1,23 +1,19 @@
 <GridLayout>
-  <StackLayout>
-    <ContentView height="100%" width="100%">
-      <Mapbox
-        [accessToken]="accessToken"
-        [mapStyle]="mapStyle"
-        [zoomLevel]="zoom"
-        [latitude]="latitude"
-        [longitude]="longitude"
-        hideCompass="true"
-        disableZoom="false"
-        disableRotation="false"
-        disableScroll="false"
-        disableTilt="false"
-        (mapReady)="onMapReady($event)"
-        (styleLoaded)="onStyleLoaded($event)"
-      >
-      </Mapbox>
-    </ContentView>
-  </StackLayout>
+  <Mapbox
+    [accessToken]="accessToken"
+    [mapStyle]="mapStyle"
+    [zoomLevel]="zoom"
+    [latitude]="latitude"
+    [longitude]="longitude"
+    hideCompass="true"
+    disableZoom="false"
+    disableRotation="false"
+    disableScroll="false"
+    disableTilt="false"
+    (mapReady)="onMapReady($event)"
+    (styleLoaded)="onStyleLoaded($event)"
+  >
+  </Mapbox>
   <FAB
     (tap)="showLocation()"
     icon="~/images/location_search.png"

@@ -62,15 +62,28 @@ export class MapboxView extends MapboxViewBase {
           });
         });
 
+        // this.nativeMapView.rotateEnabled = true;
+        this.nativeMapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+
         // _setMapboxMapOptions(this.nativeMapView, settings);
 
         this.nativeView.addSubview(this.nativeMapView);
-
-        // set tint color to black
-        this.nativeMapView.tintColor = UIColor.blackColor;
       };
 
       setTimeout(drawMap, 0);
+    }
+  }
+
+  public onLayout(left: number, top: number, right: number, bottom: number): void {
+    super.onLayout(left, top, right, bottom);
+    if (this.nativeMapView) {
+      this.nativeMapView.layer.frame = this.ios.layer.bounds;
+    }
+  }
+
+  protected onDisableScrollChanged(oldValue: boolean, newValue: boolean) {
+    if (this.mapbox) {
+      //this.getMapboxApi().setScrollingEnabled(!newValue);
     }
   }
 }
