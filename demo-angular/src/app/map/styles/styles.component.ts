@@ -30,7 +30,7 @@ export class StylesComponent implements OnInit {
         this.params.closeCallback();
     }
 
-    close() {
+    goBack() {
         this.params.closeCallback();
     }
 }
