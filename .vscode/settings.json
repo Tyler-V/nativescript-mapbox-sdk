@@ -2,7 +2,5 @@
   "files.exclude": {
     "**/*.js": { "when": "$(basename).ts" },
     "**/*.map": { "when": "$(basename).map" }
-  },
-  "prettier.printWidth": 160,
-  "prettier.singleQuote": true
+  }
 }

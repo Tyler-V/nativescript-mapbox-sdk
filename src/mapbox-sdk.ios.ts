@@ -58,7 +58,7 @@ export class MapboxView extends MapboxViewBase {
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
             map: this,
-            ios: this.nativeMapView
+            ios: this.nativeMapView,
           });
         });
 
