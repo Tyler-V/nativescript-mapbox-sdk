@@ -5,8 +5,9 @@ import * as geolocation from 'nativescript-geolocation';
 import { MapService } from './map.service';
 import { StylesComponent } from './styles/styles.component';
 import { OfflineComponent } from './offline/offline.component';
+import * as app from 'tns-core-modules/application';
 
-declare const android, com, java, org: any;
+declare const android, com, java: any;
 const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
 const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
 const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -60,11 +61,14 @@ export class MapComponent implements OnInit {
         console.log(args.eventName);
         this.mapService.mapbox = args.object.mapbox;
         this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
-            this.mapService.mapbox.annotation.addCircle();
-        });
-        this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
-            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng);
-            console.log(features);
+            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
+            const feature = features[0];
+            if (feature) {
+                const context = app.android.context;
+                const BubbleLayout = com.mapbox.mapboxsdk.annotations.BubbleLayout;
+                const inflater = android.view.LayoutInflater.from(context, null);
+                const bubbleLayout = inflater.inflate(context.R.layout.activity_query_feature_window_symbol_layer, null);
+            }
         });
     }
 
