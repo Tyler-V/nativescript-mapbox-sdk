@@ -15,7 +15,9 @@ export class Map extends MapboxMap {
 
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {}
 
-  getMap() {}
+  getMap() {
+    return this.mapboxView.mapboxMap;
+  }
 
   getZoom() {}
 
