@@ -24,45 +24,11 @@ export class Location extends MapboxLocation {
     super(mapboxView);
   }
 
-  private _getLocationComponent() {
-    debugger;
-    if (!this.locationComponent) {
-      const theMap: MGLMapView = this.mapboxView["nativeMapView"];
-      const loc: MGLUserLocation = theMap.userLocation;
-      this.locationComponent = loc;
-    }
-    return this.locationComponent;
-  }
+  private _getLocationComponent() {}
 
-  private _getLocationComponentOptions() {
-    return new Promise((resolve, reject) => {
-      try {
-        const theMap: MGLMapView = this.mapboxView["nativeMapView"] ||  this._mapbox;
-        const loc: MGLUserLocation = theMap.userLocation;
-        let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>theMap.delegate ;
-        if (loc === null) {
-          reject("Location not available");
-        } else {
-          resolve({
-            location: {
-              lat: loc.coordinate.latitude,
-              lng: loc.coordinate.longitude
-            },
-            speed: loc.location ? loc.location.speed : 0
-          });
-          // let camera = new MGLMapCamera(location);
-          // theMap.setCameraAnimated(camera, true);
-        }
-        return theMap.userLocation;
-    } catch (ex) {
-      console.log("Error in mapbox.getUserLocation: " + ex);
-      reject(ex);
-    }
-  });
-}
+  private _getLocationComponentOptions() {}
 
   startTracking(options: LocationOptions): Promise<void> {
-    debugger;
     return new Promise((resolve, reject) => {
       try {
         if (!this.mapboxView["nativeMapView"]) {
