@@ -22,6 +22,7 @@ export interface LocationOptions {
   zoom?: number;
   tilt?: number;
   animationDuration?: number;
+  animated?: boolean;
   onCameraTrackingChanged?: (currentMode: number) => void;
   onCameraTrackingDismissed?: () => void;
 }
