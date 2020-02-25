@@ -3,7 +3,6 @@ import { MapboxView } from "../mapbox-sdk.ios";
 import { LatLng } from "../mapbox-sdk.common";
 
 export class Map extends MapboxMap {
-  _mapbox: any = {};
 
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
@@ -12,7 +11,7 @@ export class Map extends MapboxMap {
   animateCamera(options: CameraPosition, duration: number = 2000): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let theMap: MGLMapView = this.mapboxView["nativeMapView"] || this._mapbox;
+        let theMap: MGLMapView = this.mapboxView["nativeMapView"];
         let target = [theMap.latitude, theMap.longitude];
         if (target === undefined) {
           reject("Please set the 'target' parameter");

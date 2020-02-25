@@ -3,7 +3,6 @@ import { MapboxStyle } from "../common/style.common";
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export class Style extends MapboxStyle {
-  _mapbox: any = {};
 
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
@@ -22,7 +21,7 @@ export class Style extends MapboxStyle {
     let that = this;
     return new Promise((resolve, reject) => {
       try {
-      const theMap: MGLMapView = that.mapboxView["nativeMapView"] || that._mapbox ;
+      const theMap: MGLMapView = that.mapboxView["nativeMapView"];
 
       let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>theMap.delegate ;
 

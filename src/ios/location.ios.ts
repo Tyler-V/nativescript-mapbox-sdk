@@ -63,7 +63,7 @@ export class Location extends MapboxLocation {
           return;
         }
         that.mapboxView["nativeMapView"].showsUserLocation = true;
-        that.mapboxView["nativeMapView"].setUserTrackingModeAnimated(_getTrackingMode(options.cameraMode), options.animated === true);
+        that.mapboxView["nativeMapView"].setUserTrackingModeAnimated(_getTrackingMode(options.cameraMode));
         that.mapboxView["nativeMapView"].userTrackingMode =  _stringToCameraMode( options.cameraMode );
 
         that.mapboxView["nativeMapView"].setCameraWithDurationAnimationTimingFunction(
