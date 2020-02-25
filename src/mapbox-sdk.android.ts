@@ -85,3 +85,22 @@ export class MapboxView extends MapboxViewBase {
   }
 }
 
+const _getMapboxMapOptions = (settings, context?) => {
+  const mapboxMapOptions = com.mapbox.mapboxsdk.maps.MapboxMapOptions.createFromAttributes(context)
+    .compassEnabled(!settings.hideCompass)
+    .rotateGesturesEnabled(!settings.disableRotation)
+    .scrollGesturesEnabled(!settings.disableScroll)
+    .tiltGesturesEnabled(!settings.disableTilt)
+    .zoomGesturesEnabled(!settings.disableZoom)
+    .attributionEnabled(!settings.hideAttribution)
+    .logoEnabled(!settings.hideLogo);
+
+  if (settings.center && settings.center.lat && settings.center.lng) {
+    const cameraPositionBuilder = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
+      .target(new com.mapbox.mapboxsdk.geometry.LatLng(settings.center.lat, settings.center.lng))
+      .zoom(settings.zoomLevel);
+    mapboxMapOptions.camera(cameraPositionBuilder.build());
+  }
+
+  return mapboxMapOptions;
+};
