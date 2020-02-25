@@ -11,14 +11,13 @@ export class Map extends MapboxMap {
   animateCamera(options: CameraPosition, duration: number = 2000): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let theMap: MGLMapView = this.mapboxView["nativeMapView"];
-        let target = [theMap.latitude, theMap.longitude];
+        let target = [this.mapboxView.nativeMapView.latitude, this.mapboxView.nativeMapView.longitude];
         if (target === undefined) {
           reject("Please set the 'target' parameter");
           return;
         }
 
-        let cam = theMap.camera;
+        let cam = this.mapboxView.nativeMapView.camera;
 
         cam.centerCoordinate = CLLocationCoordinate2DMake(target[0], target[1]);
 
@@ -30,7 +29,7 @@ export class Map extends MapboxMap {
           cam.pitch = options.tilt;
         }
 
-        theMap.setCameraWithDurationAnimationTimingFunction(
+        this.mapboxView.nativeMapView.setCameraWithDurationAnimationTimingFunction(
             cam,
             duration / 1000,
             CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut));

@@ -11,7 +11,6 @@ export { MapStyle } from './common/style.common';
 
 
 export class MapboxView extends MapboxViewBase {
-  nativeMapView: MGLMapView;
   delegate: MGLMapViewDelegate;
 
   constructor() {

@@ -21,16 +21,15 @@ export class Style extends MapboxStyle {
     let that = this;
     return new Promise((resolve, reject) => {
       try {
-      const theMap: MGLMapView = that.mapboxView["nativeMapView"];
 
-      let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>theMap.delegate ;
+      let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapboxView.nativeMapView.delegate ;
 
       delegate.setStyleLoadedCallback( () => {
         console.log( "Mapbox:setMapStyle(): style loaded callback returned." );
 
         resolve();
       });
-      theMap.styleURL = NSURL.URLWithString(uri);
+      this.mapboxView.nativeMapView.styleURL = NSURL.URLWithString(uri);
       // that.mapboxView.mapboxStyle = NSURL.URLWithString(uri).absoluteString;
       this.mapboxView.notify({
         eventName: MapboxViewBase.styleLoadedEvent,

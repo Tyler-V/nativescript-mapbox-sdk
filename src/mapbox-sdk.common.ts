@@ -170,6 +170,8 @@ export abstract class MapboxViewBase extends MapboxApi {
   public mapboxView;
   public mapboxMap;
   public mapboxStyle;
+  public nativeMapView: MGLMapView;
+
 
   constructor() {
     super();
