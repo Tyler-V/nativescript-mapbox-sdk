@@ -7,13 +7,13 @@ export enum CameraMode {
   TRACKING = 'TRACKING',
   TRACKING_COMPASS = 'TRACKING_COMPASS',
   TRACKING_GPS = 'TRACKING_GPS',
-  TRACKING_GPS_NORTH = 'TRACKING_GPS_NORTH'
+  TRACKING_GPS_NORTH = 'TRACKING_GPS_NORTH',
 }
 
 export enum RenderMode {
   COMPASS = 'COMPASS',
   GPS = 'GPS',
-  NORMAL = 'NORMAL'
+  NORMAL = 'NORMAL',
 }
 
 export interface LocationOptions {
