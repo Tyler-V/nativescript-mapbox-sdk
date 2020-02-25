@@ -1,9 +1,8 @@
-import { MapboxMap, CameraPosition } from "./../common/map.common";
-import { MapboxView } from "../mapbox-sdk.ios";
-import { LatLng } from "../mapbox-sdk.common";
+import { MapboxMap, CameraPosition } from './../common/map.common';
+import { MapboxView } from '../mapbox-sdk.ios';
+import { LatLng } from '../mapbox-sdk.common';
 
 export class Map extends MapboxMap {
-
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
   }
@@ -11,13 +10,13 @@ export class Map extends MapboxMap {
   animateCamera(options: CameraPosition, duration: number = 2000): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let target = [this.mapboxView.nativeMapView.latitude, this.mapboxView.nativeMapView.longitude];
+        let target = [this.mapboxView.mapboxView.latitude, this.mapboxView.mapboxView.longitude];
         if (target === undefined) {
           reject("Please set the 'target' parameter");
           return;
         }
 
-        let cam = this.mapboxView.nativeMapView.camera;
+        let cam = this.mapboxView.mapboxView.camera;
 
         cam.centerCoordinate = CLLocationCoordinate2DMake(target[0], target[1]);
 
@@ -29,16 +28,17 @@ export class Map extends MapboxMap {
           cam.pitch = options.tilt;
         }
 
-        this.mapboxView.nativeMapView.setCameraWithDurationAnimationTimingFunction(
-            cam,
-            duration / 1000,
-            CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut));
+        this.mapboxView.mapboxView.setCameraWithDurationAnimationTimingFunction(
+          cam,
+          duration / 1000,
+          CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
+        );
 
         setTimeout(() => {
           resolve();
         }, duration);
       } catch (ex) {
-        console.log("Error in mapbox.animateCamera: " + ex);
+        console.log('Error in mapbox.animateCamera: ' + ex);
         reject(ex);
       }
     });
