@@ -171,6 +171,7 @@ export abstract class MapboxViewBase extends MapboxApi {
   public mapboxMap;
   public mapboxStyle;
 
+
   constructor() {
     super();
     this.mapbox = new Mapbox();

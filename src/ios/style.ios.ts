@@ -1,10 +1,8 @@
-import { MapboxView, MGLMapViewDelegateImpl } from "../mapbox-sdk.ios";
-import { MapboxStyle } from "../common/style.common";
+import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
+import { MapboxStyle } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export class Style extends MapboxStyle {
-  _mapbox: any = {};
-
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
   }
@@ -19,27 +17,22 @@ export class Style extends MapboxStyle {
   }
 
   setStyleUri(uri: string): Promise<void> {
-    let that = this;
     return new Promise((resolve, reject) => {
       try {
-      const theMap: MGLMapView = that.mapboxView["nativeMapView"] || that._mapbox ;
+        let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapboxView.mapboxView.delegate;
 
-      let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>theMap.delegate ;
+        delegate.setStyleLoadedCallback(() => {
+          console.log('Mapbox:setMapStyle(): style loaded callback returned.');
 
-      delegate.setStyleLoadedCallback( () => {
-        console.log( "Mapbox:setMapStyle(): style loaded callback returned." );
-
-        resolve();
-      });
-      theMap.styleURL = NSURL.URLWithString(uri);
-      // that.mapboxView.mapboxStyle = NSURL.URLWithString(uri).absoluteString;
-      this.mapboxView.notify({
-        eventName: MapboxViewBase.styleLoadedEvent,
-        object: this.mapboxView
-    });
-
+          resolve();
+        });
+        this.mapboxView.mapboxView.styleURL = NSURL.URLWithString(uri);
+        this.mapboxView.notify({
+          eventName: MapboxViewBase.styleLoadedEvent,
+          object: this.mapboxView,
+        });
       } catch (ex) {
-        console.log("Error in mapbox.setMapStyle: " + ex);
+        console.log('Error in mapbox.setMapStyle: ' + ex);
         reject(ex);
       }
     });
