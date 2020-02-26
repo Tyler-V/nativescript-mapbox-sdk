@@ -34,16 +34,13 @@ export class MapboxView extends MapboxViewBase {
   disposeNativeView(): void {}
 
   initMap(): void {
-    if (!this.mapboxView && this.config.accessToken) {
-      // let settings = Mapbox.merge(this.config, Mapbox.defaults);
+    if (!this.mapView && this.config.accessToken) {
       let settings = this.config;
-
-      console.log('MapboxView::initMap(): to with config:', this.config);
 
       let drawMap = () => {
         MGLAccountManager.accessToken = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
 
-        this.mapboxView = MGLMapView.alloc().initWithFrameStyleURL(
+        this.mapView = MGLMapView.alloc().initWithFrameStyleURL(
           CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height),
           NSURL.URLWithString('mapbox://styles/mapbox/streets-v11')
         );
@@ -51,7 +48,7 @@ export class MapboxView extends MapboxViewBase {
         // this delegate class is defined later in this file and is where, in Obj-C land,
         // callbacks are delivered and handled.
 
-        this.mapboxView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback(() => {
+        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback(() => {
           console.log('MapboxView:initMap(): MLMapViewDeleteImpl onMapReady callback');
           if (settings.mapStyle) {
             this.mapbox.style.setStyleUri(settings.mapStyle);
@@ -59,27 +56,25 @@ export class MapboxView extends MapboxViewBase {
           this.notify({
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
-            map: this,
-            ios: this.mapboxView,
           });
         });
 
         // this.mapboxView.rotateEnabled = true;
-        this.mapboxView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+        this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
         // _setMapboxMapOptions(this.mapboxView, settings);
 
-        this.nativeView.addSubview(this.mapboxView);
+        this.nativeView.addSubview(this.mapView);
       };
 
-      setTimeout(drawMap, 0);
+      setTimeout(drawMap, settings.delay ? settings.delay : 0);
     }
   }
 
   public onLayout(left: number, top: number, right: number, bottom: number): void {
     super.onLayout(left, top, right, bottom);
-    if (this.mapboxView) {
-      this.mapboxView.layer.frame = this.ios.layer.bounds;
+    if (this.mapView) {
+      this.mapView.layer.frame = this.ios.layer.bounds;
     }
   }
 
@@ -110,7 +105,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
 
   public initWithCallback(mapLoadedCallback: (mapView: MGLMapView) => void): MGLMapViewDelegateImpl {
     console.log('MGLMapViewDelegateImpl::initWithCallback()');
-
     this.mapLoadedCallback = mapLoadedCallback;
     return this;
   }

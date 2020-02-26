@@ -11,11 +11,7 @@ export class Annotation extends MapboxAnnotation {
   }
 
   private _getCircleManager() {
-    return new com.mapbox.mapboxsdk.plugins.annotation.CircleManager(
-      this.mapboxView.mapboxView,
-      this.mapboxView.mapboxMap,
-      this.mapboxView.mapboxStyle
-    );
+    return new com.mapbox.mapboxsdk.plugins.annotation.CircleManager(this.view.mapView, this.view.mapboxMap, this.view.mapStyle);
   }
 
   public addCircle() {

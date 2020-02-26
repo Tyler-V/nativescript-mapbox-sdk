@@ -167,9 +167,9 @@ export abstract class MapboxViewBase extends MapboxApi {
   protected config: any = {};
 
   public mapbox: Mapbox;
-  public mapboxView;
-  public mapboxMap;
-  public mapboxStyle;
+  public mapView;
+  public mapStyle;
+  public mapboxMap; // android
 
   constructor() {
     super();

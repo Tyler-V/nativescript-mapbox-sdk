@@ -10,24 +10,24 @@ export class Style extends MapboxStyle {
   }
 
   getStyle() {
-    return this.mapboxView.mapboxStyle;
+    return this.view.mapStyle;
   }
 
   getUri() {
-    const uri = this.mapboxView.mapboxStyle.getUri();
+    const uri = this.view.mapStyle.getUri();
     return uri;
   }
 
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.mapboxView.mapboxMap.setStyle(
+      this.view.mapboxMap.setStyle(
         new com.mapbox.mapboxsdk.maps.Style.Builder().fromUri(uri),
         new com.mapbox.mapboxsdk.maps.Style.OnStyleLoaded({
           onStyleLoaded: (mapboxStyle) => {
-            this.mapboxView.mapboxStyle = mapboxStyle;
-            this.mapboxView.notify({
+            this.view.mapStyle = mapboxStyle;
+            this.view.notify({
               eventName: MapboxViewBase.styleLoadedEvent,
-              object: this.mapboxView,
+              object: this.view,
             });
             resolve();
           },
@@ -36,15 +36,11 @@ export class Style extends MapboxStyle {
     });
   }
 
-  addImage(name: string, filePath: string) {
-    this.mapboxView.mapboxStyle.addImage(name, this.getImage(filePath).android);
-  }
-
   addSource(source: any) {
-    this.mapboxView.mapboxStyle.addSource(source);
+    this.view.mapStyle.addSource(source);
   }
 
   addLayer(layer: any) {
-    this.mapboxView.mapboxStyle.addLayer(layer);
+    this.view.mapStyle.addLayer(layer);
   }
 }

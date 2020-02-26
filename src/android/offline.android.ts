@@ -21,11 +21,11 @@ export class Offline extends MapboxOffline {
   downloadOfflineRegion(options: any, onProgress?: (data: any) => void): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!options.mapStyle) {
-        options.mapStyle = this.mapboxView.mapbox.style.getUri();
+        options.mapStyle = this.view.mapbox.style.getUri();
       }
 
       if (!options.bounds) {
-        options.bounds = this.mapboxView.mapbox.map.getBounds();
+        options.bounds = this.view.mapbox.map.getBounds();
       }
 
       if (!options.minZoom) {
@@ -33,7 +33,7 @@ export class Offline extends MapboxOffline {
       }
 
       if (!options.maxZoom) {
-        options.maxZoom = Math.min(Math.ceil(this.mapboxView.mapbox.map.getZoom()), 20);
+        options.maxZoom = Math.min(Math.ceil(this.view.mapbox.map.getZoom()), 20);
       }
 
       const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()

@@ -17,10 +17,10 @@ export interface StyleOptions {
 }
 
 export abstract class MapboxStyle {
-  protected mapboxView: MapboxViewBase;
+  protected view: MapboxViewBase;
 
-  constructor(mapboxView: MapboxViewBase) {
-    this.mapboxView = mapboxView;
+  constructor(view: MapboxViewBase) {
+    this.view = view;
   }
 
   abstract getStyle();

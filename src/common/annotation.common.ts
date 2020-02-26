@@ -1,10 +1,10 @@
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export abstract class MapboxAnnotation {
-  protected mapboxView: MapboxViewBase;
+  protected view: MapboxViewBase;
 
-  constructor(mapboxView: MapboxViewBase) {
-    this.mapboxView = mapboxView;
+  constructor(view: MapboxViewBase) {
+    this.view = view;
   }
 
   abstract addCircle();

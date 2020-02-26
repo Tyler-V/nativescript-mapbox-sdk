@@ -36,24 +36,19 @@ const iconSize = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
     styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
-    accessToken: string;
-    mapStyle: string;
-    latitude = 39.8283;
-    longitude = -98.5795;
-    zoom = 2.5;
-    minZoom = 0;
-    maxZoom = 22;
-    bearing = 0;
-    tilt = 0;
-
-    showMap: boolean;
+    accessToken: string = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
+    mapStyle: string = 'mapbox://styles/mapbox/streets-v11';
+    latitude: number = 39.8283;
+    longitude: number = -98.5795;
+    zoom: number = 2.5;
+    minZoom: number = 0;
+    maxZoom: number = 22;
+    bearing: number = 0;
+    tilt: number = 0;
 
     isTracking: boolean = false;
 
-    constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {
-        this.accessToken = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
-        this.mapStyle = 'mapbox://styles/mapbox/streets-v11';
-    }
+    constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {}
 
     ngOnInit(): void {}
 

@@ -10,13 +10,13 @@ export class Map extends MapboxMap {
   animateCamera(options: CameraPosition, duration: number = 2000): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let target = [this.mapboxView.mapboxView.latitude, this.mapboxView.mapboxView.longitude];
+        let target = [this.view.mapView.latitude, this.view.mapView.longitude];
         if (target === undefined) {
           reject("Please set the 'target' parameter");
           return;
         }
 
-        let cam = this.mapboxView.mapboxView.camera;
+        let cam = this.view.mapView.camera;
 
         cam.centerCoordinate = CLLocationCoordinate2DMake(target[0], target[1]);
 
@@ -28,7 +28,7 @@ export class Map extends MapboxMap {
           cam.pitch = options.tilt;
         }
 
-        this.mapboxView.mapboxView.setCameraWithDurationAnimationTimingFunction(
+        this.view.mapView.setCameraWithDurationAnimationTimingFunction(
           cam,
           duration / 1000,
           CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
@@ -49,7 +49,7 @@ export class Map extends MapboxMap {
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {}
 
   getMap() {
-    return this.mapboxView.mapboxMap;
+    return this.view.mapboxMap;
   }
 
   getZoom() {}
