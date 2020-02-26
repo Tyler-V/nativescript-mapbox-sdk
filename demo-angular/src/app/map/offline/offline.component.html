@@ -1,60 +1,37 @@
-<StackLayout>
+<StackLayout width="100%">
+  <AbsoluteLayout width="100%" height="50">
+    <StackLayout orientation="horizontal" width="100%" height="100%">
+      <Label text="Offline Maps" fontSize="24" left="50%" top="0" width="100%" textAlignment="center" verticalAlignment="center"></Label>
+    </StackLayout>
+    <StackLayout orientation="horizontal" height="100%" width="50" (tap)="goBack()">
+      <Image src="~/images/arrow_back.png" class="m-l-5" height="30" verticalAlignment="center"></Image>
+    </StackLayout>
+  </AbsoluteLayout>
+  <StackLayout class="hr"></StackLayout>
   <StackLayout class="p-20">
     <Label text="New Offline Region"></Label>
     <StackLayout>
-      <TextField
-        [(ngModel)]="regionName"
-        hint="Name"
-        autocorrect="false"
-      ></TextField>
-      <Button
-        text="Download Region"
-        class="-primary"
-        (tap)="onDownloadTap()"
-      ></Button>
-      <Progress
-        *ngIf="isDownloading"
-        (loaded)="onProgressBarLoaded($event)"
-        maxValue="100"
-      ></Progress>
+      <TextField [(ngModel)]="regionName" hint="Name" autocorrect="false"></TextField>
+      <Button text="Download Region" class="-primary" (tap)="onDownloadTap()"></Button>
+      <Progress *ngIf="isDownloading" (loaded)="onProgressBarLoaded($event)" maxValue="100"></Progress>
     </StackLayout>
   </StackLayout>
   <StackLayout class="hr"></StackLayout>
   <StackLayout class="p-20">
     <Label text="Offline Database"></Label>
     <StackLayout>
-      <Button
-        text="Set Offline Limit"
-        class="-primary"
-        (tap)="setOfflineLimit()"
-      ></Button>
-      <Button
-        text="Reset Database"
-        class="-primary"
-        (tap)="onResetTap()"
-      ></Button>
+      <Button text="Set Offline Limit" class="-primary" (tap)="setOfflineLimit()"></Button>
+      <Button text="Reset Database" class="-primary" (tap)="onResetTap()"></Button>
     </StackLayout>
   </StackLayout>
   <StackLayout class="hr"></StackLayout>
   <StackLayout class="p-20">
     <Label text="Offline Regions"></Label>
-    <Button
-      text="List Offline Regions"
-      class="-primary"
-      (tap)="getOfflineRegions()"
-    ></Button>
+    <Button text="List Offline Regions" class="-primary" (tap)="getOfflineRegions()"></Button>
     <StackLayout>
       <ListView [items]="offlineRegions" height="100">
-        <ng-template
-          let-region="item"
-          let-i="index"
-          let-odd="odd"
-          let-even="even"
-        >
-          <FlexboxLayout
-            orientation="horizontal"
-            justifyContent="space-between"
-          >
+        <ng-template let-region="item" let-i="index" let-odd="odd" let-even="even">
+          <FlexboxLayout orientation="horizontal" justifyContent="space-between">
             <Label [text]="region.name" class="label"></Label>
           </FlexboxLayout>
         </ng-template>

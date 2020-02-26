@@ -12,7 +12,7 @@ export class MapboxStatic {
       left: 0,
       right: 0,
       top: 0,
-      bottom: 0
+      bottom: 0,
     },
     zoomLevel: 0, // 0 (a big part of the world) to 20 (street level)
     showUserLocation: false, // true requires adding `NSLocationWhenInUseUsageDescription` or `NSLocationAlwaysUsageDescription` in the .plist
@@ -23,7 +23,7 @@ export class MapboxStatic {
     disableScroll: false,
     disableZoom: false,
     disableTilt: false,
-    delay: 0
+    delay: 0,
   };
 
   public static merge(obj1: {}, obj2: {}): any {
@@ -96,56 +96,56 @@ longitudeProperty.register(MapboxApi);
 export const showUserLocationProperty = new Property<MapboxApi, boolean>({
   name: 'showUserLocation',
   defaultValue: MapboxStatic.defaults.showUserLocation,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 showUserLocationProperty.register(MapboxApi);
 
 export const hideLogoProperty = new Property<MapboxApi, boolean>({
   name: 'hideLogo',
   defaultValue: MapboxStatic.defaults.hideLogo,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 hideLogoProperty.register(MapboxApi);
 
 export const hideAttributionProperty = new Property<MapboxApi, boolean>({
   name: 'hideAttribution',
   defaultValue: MapboxStatic.defaults.hideAttribution,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 hideAttributionProperty.register(MapboxApi);
 
 export const hideCompassProperty = new Property<MapboxApi, boolean>({
   name: 'hideCompass',
   defaultValue: MapboxStatic.defaults.hideCompass,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 hideCompassProperty.register(MapboxApi);
 
 export const disableZoomProperty = new Property<MapboxApi, boolean>({
   name: 'disableZoom',
   defaultValue: MapboxStatic.defaults.disableZoom,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 disableZoomProperty.register(MapboxApi);
 
 export const disableRotationProperty = new Property<MapboxApi, boolean>({
   name: 'disableRotation',
   defaultValue: MapboxStatic.defaults.disableRotation,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 disableRotationProperty.register(MapboxApi);
 
 export const disableScrollProperty = new Property<MapboxApi, boolean>({
   name: 'disableScroll',
   defaultValue: MapboxStatic.defaults.disableScroll,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 disableScrollProperty.register(MapboxApi);
 
 export const disableTiltProperty = new Property<MapboxApi, boolean>({
   name: 'disableTilt',
   defaultValue: MapboxStatic.defaults.disableTilt,
-  valueConverter: booleanConverter
+  valueConverter: booleanConverter,
 });
 disableTiltProperty.register(MapboxApi);
 
