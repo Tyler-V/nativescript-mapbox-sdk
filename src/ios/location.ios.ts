@@ -37,26 +37,26 @@ export class Location extends MapboxLocation {
     super(mapboxView);
   }
 
-  private _getLocationComponent() { }
+  private _getLocationComponent() {}
 
-  private _getLocationComponentOptions() { }
+  private _getLocationComponentOptions() {}
 
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
-      let camera = this.mapboxView.mapboxView.camera;
+      let camera = this.view.mapView.camera;
       camera.pitch = options.tilt;
       const durationMs = options.animationDuration ? options.animationDuration : 5000;
 
       try {
-        if (!this.mapboxView.mapboxView) {
+        if (!this.view.mapView) {
           reject('No map has been loaded');
           return;
         }
-        this.mapboxView.mapboxView.showsUserLocation = true;
-        this.mapboxView.mapboxView.setUserTrackingModeAnimated(_getTrackingMode(options.cameraMode), true);
-        this.mapboxView.mapboxView.userTrackingMode = _stringToCameraMode(options.cameraMode);
+        this.view.mapView.showsUserLocation = true;
+        this.view.mapView.setUserTrackingModeAnimated(_getTrackingMode(options.cameraMode), true);
+        this.view.mapView.userTrackingMode = _stringToCameraMode(options.cameraMode);
 
-        this.mapboxView.mapboxView.setCameraWithDurationAnimationTimingFunction(
+        this.view.mapView.setCameraWithDurationAnimationTimingFunction(
           camera,
           durationMs / 1000,
           CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
@@ -71,8 +71,8 @@ export class Location extends MapboxLocation {
   }
 
   stopTracking() {
-    this.mapboxView.mapboxView.camera.pitch = 0;
-    this.mapboxView.mapboxView.camera.heading = 180;
-    this.mapboxView.mapboxView.userTrackingMode = 0;
+    this.view.mapView.camera.pitch = 0;
+    this.view.mapView.camera.heading = 180;
+    this.view.mapView.userTrackingMode = 0;
   }
 }

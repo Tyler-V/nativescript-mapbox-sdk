@@ -27,10 +27,10 @@ export interface LocationOptions {
 }
 
 export abstract class MapboxLocation {
-  protected mapboxView: MapboxViewBase;
+  protected view: MapboxViewBase;
 
-  constructor(mapboxView: MapboxViewBase) {
-    this.mapboxView = mapboxView;
+  constructor(view: MapboxViewBase) {
+    this.view = view;
   }
 
   abstract startTracking(options: LocationOptions): Promise<void>;
