@@ -38,6 +38,10 @@ export class Style extends MapboxStyle {
     });
   }
 
+  addImage(name: string, filePath: string) {
+    return Promise.reject('Error, method not implemented.');
+  }
+
   addSource(source: any) {
     this.view.mapStyle.addSource(source);
   }
