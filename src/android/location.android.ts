@@ -19,10 +19,7 @@ export class Location extends MapboxLocation {
   }
 
   private _getLocationComponentOptions() {
-    return com.mapbox.mapboxsdk.location.LocationComponentActivationOptions.builder(
-      this.view._context,
-      this.view.mapStyle
-    )
+    return com.mapbox.mapboxsdk.location.LocationComponentActivationOptions.builder(this.view._context, this.view.mapStyle)
       .useDefaultLocationEngine(true)
       .locationEngineRequest(
         new com.mapbox.android.core.location.LocationEngineRequest.Builder(750)
@@ -39,26 +36,25 @@ export class Location extends MapboxLocation {
       const locationComponent = this._getLocationComponent();
       locationComponent.activateLocationComponent(this._getLocationComponentOptions());
       locationComponent.setLocationComponentEnabled(true);
-      locationComponent.setCameraMode(com.mapbox.mapboxsdk.location.modes.CameraMode[options.cameraMode]);
       locationComponent.setRenderMode(com.mapbox.mapboxsdk.location.modes.RenderMode[options.renderMode]);
-      locationComponent.zoomWhileTracking(
-        options.zoom,
-        options.animationDuration ? options.animationDuration : 0,
-        new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-          onCancel: () => {},
-          onFinish: () => {
-            locationComponent.tiltWhileTracking(options.tilt, 1000);
-          }
+      locationComponent.setCameraMode(
+        com.mapbox.mapboxsdk.location.modes.CameraMode[options.cameraMode],
+        new com.mapbox.mapboxsdk.location.OnLocationCameraTransitionListener({
+          onLocationCameraTransitionCanceled: (currentMode: number) => {},
+          onLocationCameraTransitionFinished: (currentMode: number) => {
+            locationComponent.zoomWhileTracking(
+              options.zoom,
+              options.animationDuration ? options.animationDuration : 0,
+              new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
+                onCancel: () => {},
+                onFinish: () => {
+                  locationComponent.tiltWhileTracking(options.tilt, 1000);
+                },
+              })
+            );
+          },
         })
       );
-
-      // if (options.zoom) {
-      //   locationComponent.zoomWhileTracking(options.zoom, options.animationDuration ? options.animationDuration : 0);
-      // }
-
-      // if (options.tilt) {
-      //   locationComponent.tiltWhileTracking(options.tilt, options.animationDuration ? options.animationDuration : 0);
-      // }
 
       if (this.cameraTrackingChangedListener) {
         locationComponent.removeOnCameraTrackingChangedListener(this.cameraTrackingChangedListener);
@@ -75,7 +71,7 @@ export class Location extends MapboxLocation {
             if (options.onCameraTrackingDismissed) {
               options.onCameraTrackingDismissed();
             }
-          }
+          },
         });
         locationComponent.addOnCameraTrackingChangedListener(this.cameraTrackingChangedListener);
       }
