@@ -8,28 +8,28 @@ export class Style extends MapboxStyle {
   }
 
   getStyle() {
-    return this.mapboxView.mapboxStyle;
+    return this.view.mapStyle;
   }
 
   getUri() {
-    const uri = this.mapboxView.mapboxStyle.getUri();
+    const uri = this.view.mapStyle.getUri();
     return uri;
   }
 
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapboxView.mapboxView.delegate;
+        let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.view.mapView.delegate;
 
         delegate.setStyleLoadedCallback(() => {
           console.log('Mapbox:setMapStyle(): style loaded callback returned.');
 
           resolve();
         });
-        this.mapboxView.mapboxView.styleURL = NSURL.URLWithString(uri);
-        this.mapboxView.notify({
+        this.view.mapView.styleURL = NSURL.URLWithString(uri);
+        this.view.notify({
           eventName: MapboxViewBase.styleLoadedEvent,
-          object: this.mapboxView,
+          object: this.view,
         });
       } catch (ex) {
         console.log('Error in mapbox.setMapStyle: ' + ex);
@@ -39,10 +39,10 @@ export class Style extends MapboxStyle {
   }
 
   addSource(source: any) {
-    this.mapboxView.mapboxStyle.addSource(source);
+    this.view.mapStyle.addSource(source);
   }
 
   addLayer(layer: any) {
-    this.mapboxView.mapboxStyle.addLayer(layer);
+    this.view.mapStyle.addLayer(layer);
   }
 }

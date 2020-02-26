@@ -9,10 +9,10 @@ export interface CameraPosition {
 }
 
 export abstract class MapboxMap {
-    protected mapboxView: MapboxViewBase;
+    protected view: MapboxViewBase;
 
-    constructor(mapboxView: MapboxViewBase) {
-        this.mapboxView = mapboxView;
+    constructor(view: MapboxViewBase) {
+        this.view = view;
     }
 
     abstract addOnMapClickListener(listener: (latLng: LatLng) => void);

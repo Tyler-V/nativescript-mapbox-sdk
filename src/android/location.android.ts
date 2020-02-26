@@ -13,15 +13,15 @@ export class Location extends MapboxLocation {
 
   private _getLocationComponent() {
     if (!this.locationComponent) {
-      this.locationComponent = this.mapboxView.mapboxMap.getLocationComponent();
+      this.locationComponent = this.view.mapboxMap.getLocationComponent();
     }
     return this.locationComponent;
   }
 
   private _getLocationComponentOptions() {
     return com.mapbox.mapboxsdk.location.LocationComponentActivationOptions.builder(
-      this.mapboxView._context,
-      this.mapboxView.mapboxStyle
+      this.view._context,
+      this.view.mapStyle
     )
       .useDefaultLocationEngine(true)
       .locationEngineRequest(

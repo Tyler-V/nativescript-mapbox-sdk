@@ -36,7 +36,7 @@ export class MapboxView extends MapboxViewBase {
   disposeNativeView(): void {}
 
   initMap(): void {
-    if (!this.mapboxView && this.config.accessToken) {
+    if (!this.mapView && this.config.accessToken) {
       let settings = this.config;
       const context = utils.ad.getApplicationContext();
       const instance = com.mapbox.mapboxsdk.Mapbox.getInstance(context, this.config.accessToken);
@@ -58,9 +58,9 @@ export class MapboxView extends MapboxViewBase {
           mapboxMapOptions.camera(cameraPositionBuilder.build());
         }
 
-        this.mapboxView = new com.mapbox.mapboxsdk.maps.MapView(this._context, mapboxMapOptions);
+        this.mapView = new com.mapbox.mapboxsdk.maps.MapView(this._context, mapboxMapOptions);
 
-        this.mapboxView.getMapAsync(
+        this.mapView.getMapAsync(
           new com.mapbox.mapboxsdk.maps.OnMapReadyCallback({
             onMapReady: mapboxMap => {
               this.mapboxMap = mapboxMap;
@@ -77,7 +77,7 @@ export class MapboxView extends MapboxViewBase {
           })
         );
 
-        this.nativeView.addView(this.mapboxView);
+        this.nativeView.addView(this.mapView);
       };
 
       setTimeout(drawMap, settings.delay ? settings.delay : 0);
