@@ -23,6 +23,7 @@ export interface StyleOptions {
 
 export abstract class MapboxStyle {
   protected view: MapboxViewBase;
+  public heatmap: MapboxHeatmap;
 
   constructor(view: MapboxViewBase) {
     this.view = view;
@@ -44,4 +45,8 @@ export abstract class MapboxStyle {
     const imageSource: ImageSource = ImageSource.fromFileSync(folderPath);
     return imageSource;
   }
+}
+
+export abstract class MapboxHeatmap {
+  abstract heatmapWeight(value);
 }

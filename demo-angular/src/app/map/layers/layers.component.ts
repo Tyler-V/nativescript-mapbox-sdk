@@ -3,6 +3,7 @@ import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
 import { LayerType } from 'nativescript-mapbox-sdk';
+import { Color } from 'tns-core-modules/color';
 
 declare const android, com, java: any;
 const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
@@ -65,6 +66,12 @@ export class LayersComponent implements OnInit {
     addHeatmapLayer() {
         const maxZoom = 12;
         this.mapService.heatmapLayer = this.mapService.mapbox.style.createLayer(LayerType.HEATMAP, 'heatmap-layer-id', 'wells', null, maxZoom);
+
+        const array = [
+            ['0', '1'],
+            ['5', '0'],
+        ];
+        this.mapService.mapbox.style.heatmap.heatmapWeight(array);
 
         const _heatmapColor = heatmapColor(
             interpolate(linear(), heatmapDensity(), [
