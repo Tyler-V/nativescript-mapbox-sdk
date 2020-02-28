@@ -73,11 +73,4 @@ export class Style extends MapboxStyle {
     if (maxZoom) layer.setMaxZoom(maxZoom);
     return layer;
   }
-
-  createHeatmapLayer(layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
-    const heatmapLayer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
-    heatmapLayer.setSourceLayer(sourceId);
-    if (minZoom) heatmapLayer.setMinZoom(minZoom);
-    if (maxZoom) heatmapLayer.setMaxZoom(maxZoom);
-  }
 }
