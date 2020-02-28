@@ -1,4 +1,4 @@
-import { Page } from 'tns-core-modules/ui/page';
+import { Page, isIOS } from 'tns-core-modules/ui/page';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
@@ -58,12 +58,20 @@ export class LayersComponent implements OnInit {
     }
 
     removeHeatmapLayer() {
+        if (isIOS) {
+            return; // TODO
+        }
+
         this.mapService.mapbox.style.removeLayer(this.mapService.heatmapLayer);
         this.mapService.heatmapLayer = null;
         this.params.closeCallback();
     }
 
     addHeatmapLayer() {
+        if (isIOS) {
+            return; // TODO
+        }
+
         const maxZoom = 12;
         this.mapService.heatmapLayer = this.mapService.mapbox.style.createLayer(LayerType.HEATMAP, 'heatmap-layer-id', 'wells', null, maxZoom);
 
@@ -114,12 +122,20 @@ export class LayersComponent implements OnInit {
     }
 
     removeSymbolLayer() {
+        if (isIOS) {
+            return; // TODO
+        }
+
         this.mapService.mapbox.style.removeLayer(this.mapService.symbolLayer);
         this.mapService.symbolLayer = null;
         this.params.closeCallback();
     }
 
     addSymbolLayer() {
+        if (isIOS) {
+            return; // TODO
+        }
+
         this.mapService.symbolLayer = this.mapService.mapbox.style.createLayer(LayerType.SYMBOL, 'symbol-layer-id', 'wells', null, null);
 
         this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
@@ -142,6 +158,10 @@ export class LayersComponent implements OnInit {
     }
 
     filter() {
+        if (isIOS) {
+            return; // TODO
+        }
+
         const randomBoolean = () => Math.random() >= 0.5;
         this.OIL = randomBoolean();
         this.OILGAS = randomBoolean();
