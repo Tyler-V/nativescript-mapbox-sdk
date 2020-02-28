@@ -14,13 +14,11 @@ export interface DownloadProgress {
   expected: number;
   percentage: number;
   complete: boolean;
-  // Android only, the size in bytes of the download so far.
-  completedSize?: number;
+  completedSize?: number; // Android only, the size in bytes of the download so far.
 }
 export interface DownloadOfflineRegionOptions extends RegionOptions {
   onProgress?: (data: DownloadProgress) => void;
-  // Optional for Android only. Setting this, in case no map has been show yet (and thus, no accessToken has been passed in yet).
-  accessToken?: string;
+  accessToken?: string; // Optional for Android only. Setting this, in case no map has been show yet (and thus, no accessToken has been passed in yet).
 }
 
 export interface DeleteOfflineRegionOptions {
