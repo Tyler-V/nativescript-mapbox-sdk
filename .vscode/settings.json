@@ -1,6 +1,10 @@
 {
   "files.exclude": {
     "**/*.js": { "when": "$(basename).ts" },
-    "**/*.map": { "when": "$(basename).map" }
+    "**/*.map": { "when": "$(basename).map" },
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/node_modules": true
   }
 }
