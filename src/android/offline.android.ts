@@ -36,6 +36,10 @@ export class Offline extends MapboxOffline {
         options.maxZoom = Math.min(Math.ceil(this.view.mapbox.map.getZoom()), 20);
       }
 
+      if (!options.name) {
+        Promise.reject('An offline region name is required.');
+      }
+
       const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(options.bounds.north, options.bounds.east))
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(options.bounds.south, options.bounds.west))
