@@ -49,7 +49,7 @@ export class Offline extends MapboxOffline {
             let complete = offlinePackProgress.countOfResourcesCompleted === offlinePackProgress.countOfResourcesExpected;
 
             options.onProgress({
-              name: userInfo.name,
+              name: userInfo.objectForKey('name'),
               completed: offlinePackProgress.countOfResourcesCompleted,
               expected: offlinePackProgress.countOfResourcesExpected,
               percentage: Math.round((offlinePackProgress.countOfResourcesCompleted / offlinePackProgress.countOfResourcesExpected) * 10000) / 100,
@@ -67,7 +67,7 @@ export class Offline extends MapboxOffline {
           let userInfo = NSKeyedUnarchiver.unarchiveObjectWithData(offlinePack.context);
           let error = notification.userInfo[MGLOfflinePackUserInfoKeyError];
           reject({
-            name: userInfo.name,
+            name: userInfo.objectForKey('name'),
             error: 'Download error. ' + error,
           });
         });
@@ -116,7 +116,7 @@ export class Offline extends MapboxOffline {
           let region: MGLTilePyramidOfflineRegion = <MGLTilePyramidOfflineRegion>pack.region;
           let userInfo = NSKeyedUnarchiver.unarchiveObjectWithData(pack.context);
           regions.push({
-            name: userInfo.name,
+            name: userInfo.objectForKey('name'),
             style: '' + region.styleURL,
             minZoom: region.minimumZoomLevel,
             maxZoom: region.maximumZoomLevel,
@@ -153,7 +153,7 @@ export class Offline extends MapboxOffline {
         for (let i = 0; i < packs.count; i++) {
           let pack = packs.objectAtIndex(i);
           let userInfo = NSKeyedUnarchiver.unarchiveObjectWithData(pack.context);
-          let name = userInfo.name;
+          let name = userInfo.objectForKey('name');
           if (name === options.name) {
             found = true;
             MGLOfflineStorage.sharedOfflineStorage.removePackWithCompletionHandler(pack, (error: NSError) => {
