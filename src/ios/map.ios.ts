@@ -1,4 +1,4 @@
-import { MapboxMap, CameraPosition } from './../common/map.common';
+import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 
@@ -52,7 +52,10 @@ export class Map extends MapboxMap {
     return this.view.mapboxMap;
   }
 
-  getZoom() {}
+  getZoom() {
+    const zoom = this.view.mapView.zoomLevel;
+    return zoom;
+  }
 
   getTilt() {}
 
@@ -60,7 +63,15 @@ export class Map extends MapboxMap {
 
   getCenter() {}
 
-  getBounds() {}
+  getBounds(): LatLngBounds {
+    let visibleCoordinateBounds = this.view.mapView.visibleCoordinateBounds;
+    return {
+      north: visibleCoordinateBounds.ne.latitude,
+      east: visibleCoordinateBounds.ne.longitude,
+      south: visibleCoordinateBounds.sw.latitude,
+      west: visibleCoordinateBounds.sw.longitude,
+    };
+  }
 
   queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {}
 

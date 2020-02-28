@@ -85,12 +85,12 @@ export class Map extends MapboxMap {
   }
 
   getBounds() {
-    const bounds = this.view.mapboxMap.getProjection().getVisibleRegion().latLngBounds;
+    const latLngBounds = this.view.mapboxMap.getProjection().getVisibleRegion().latLngBounds;
     return {
-      north: bounds.getLatNorth(),
-      east: bounds.getLonEast(),
-      south: bounds.getLatSouth(),
-      west: bounds.getLonWest(),
+      north: latLngBounds.getLatNorth(),
+      east: latLngBounds.getLonEast(),
+      south: latLngBounds.getLatSouth(),
+      west: latLngBounds.getLonWest(),
     };
   }
 
