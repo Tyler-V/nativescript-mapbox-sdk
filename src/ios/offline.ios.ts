@@ -1,5 +1,5 @@
 import { MapboxView } from '../mapbox-sdk.ios';
-import { MapboxOffline } from '../common/offline.common';
+import { MapboxOffline, DownloadOfflineRegionOptions, DeleteOfflineRegionOptions } from '../common/offline.common';
 
 const _addObserver = (eventName, callback) => {
   return NSNotificationCenter.defaultCenter.addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue, callback);
@@ -11,7 +11,7 @@ export class Offline extends MapboxOffline {
 
   _getOfflineManager() {}
 
-  downloadOfflineRegion(options: any, onProgress?: (data: any) => void): Promise<any> {
+  downloadOfflineRegion(options: DownloadOfflineRegionOptions): Promise<any> {
     let that = this;
     return new Promise((resolve, reject) => {
       try {
@@ -20,15 +20,15 @@ export class Offline extends MapboxOffline {
         }
 
         if (!options.minZoom) {
-          options.minZoom = 7;
+          options.minZoom = 0;
         }
 
         if (!options.maxZoom) {
-          options.maxZoom = 10;
+          options.maxZoom = Math.min(Math.ceil(that.view.mapbox.map.getZoom()), 20);
         }
 
         if (!options.name) {
-          options.name = 'offline map';
+          Promise.reject('An offline region name is required.');
         }
 
         let styleURL = NSURL.URLWithString(that.view.mapbox.style.getStyle());
@@ -99,8 +99,6 @@ export class Offline extends MapboxOffline {
     });
   }
 
-  _getRegionName(offlineRegion) {}
-
   listOfflineRegions(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
@@ -140,7 +138,7 @@ export class Offline extends MapboxOffline {
     return null;
   }
 
-  deleteOfflineRegion(options: any): Promise<any> {
+  deleteOfflineRegion(options: DeleteOfflineRegionOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         if (!options || !options.name) {

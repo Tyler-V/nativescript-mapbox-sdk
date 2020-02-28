@@ -1,6 +1,6 @@
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxView } from '../mapbox-sdk.android';
-import { MapboxOffline } from '../common/offline.common';
+import { MapboxOffline, DownloadOfflineRegionOptions, DeleteOfflineRegionOptions } from '../common/offline.common';
 
 declare const android, com, java, org: any;
 
@@ -18,7 +18,7 @@ export class Offline extends MapboxOffline {
     return this.offlineManager;
   }
 
-  downloadOfflineRegion(options: any, onProgress?: (data: any) => void): Promise<any> {
+  downloadOfflineRegion(options: DownloadOfflineRegionOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!options.mapStyle) {
         options.mapStyle = this.view.mapbox.style.getUri();
@@ -67,13 +67,16 @@ export class Offline extends MapboxOffline {
                 onStatusChanged: (status) => {
                   let percentage =
                     status.getRequiredResourceCount() >= 0 ? (100.0 * status.getCompletedResourceCount()) / status.getRequiredResourceCount() : 0.0;
-                  onProgress({
-                    completedSize: status.getCompletedResourceSize(),
-                    completed: status.getCompletedResourceCount(),
-                    expected: status.getRequiredResourceCount(),
-                    percentage: Math.round(percentage * 100) / 100,
-                    complete: status.isComplete(),
-                  });
+                  if (options.onProgress) {
+                    options.onProgress({
+                      name: options.name,
+                      completedSize: status.getCompletedResourceSize(),
+                      completed: status.getCompletedResourceCount(),
+                      expected: status.getRequiredResourceCount(),
+                      percentage: Math.round(percentage * 100) / 100,
+                      complete: status.isComplete(),
+                    });
+                  }
                   if (status.isComplete()) {
                     resolve('Complete');
                   }
@@ -151,7 +154,7 @@ export class Offline extends MapboxOffline {
     });
   }
 
-  deleteOfflineRegion(options: any): Promise<any> {
+  deleteOfflineRegion(options: DeleteOfflineRegionOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       this._getOfflineManager().listOfflineRegions(
         new com.mapbox.mapboxsdk.offline.OfflineManager.ListOfflineRegionsCallback({
