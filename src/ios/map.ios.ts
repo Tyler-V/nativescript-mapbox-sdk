@@ -52,7 +52,10 @@ export class Map extends MapboxMap {
     return this.view.mapboxMap;
   }
 
-  getZoom() {}
+  getZoom() {
+    const zoom = this.view.mapView.zoomLevel;
+    return zoom;
+  }
 
   getTilt() {}
 
