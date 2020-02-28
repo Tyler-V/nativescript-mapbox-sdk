@@ -1,4 +1,3 @@
-import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { MapboxOffline } from '../common/offline.common';
 
@@ -13,7 +12,6 @@ export class Offline extends MapboxOffline {
   _getOfflineManager() {}
 
   downloadOfflineRegion(options: any, onProgress?: (data: any) => void): Promise<any> {
-    debugger;
     let that = this;
     return new Promise((resolve, reject) => {
       try {
@@ -27,6 +25,10 @@ export class Offline extends MapboxOffline {
 
         if (!options.maxZoom) {
           options.maxZoom = 10;
+        }
+
+        if (!options.name) {
+          options.name = 'offline map';
         }
 
         let styleURL = NSURL.URLWithString(that.view.mapbox.style.getStyle());
@@ -77,7 +79,7 @@ export class Offline extends MapboxOffline {
           console.log(`Offline region '${userInfo.name}' reached the tile limit of ${maximumCount}`);
         });
         // Store some data for identification purposes alongside the downloaded resources.
-        let userInfo = { name: 'foobar' };
+        let userInfo = { name: options.name };
         let context = NSKeyedArchiver.archivedDataWithRootObject(userInfo);
 
         // Create and register an offline pack with the shared offline storage object.
