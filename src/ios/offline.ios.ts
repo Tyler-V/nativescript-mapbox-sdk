@@ -199,5 +199,7 @@ export class Offline extends MapboxOffline {
     });
   }
 
-  setOfflineTileCountLimit(limit: number): void {}
+  setOfflineTileCountLimit(limit: number): void {
+    MGLOfflineStorage.sharedOfflineStorage.setMaximumAllowedMapboxTiles(limit);
+  }
 }
