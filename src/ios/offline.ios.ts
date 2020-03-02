@@ -135,7 +135,30 @@ export class Offline extends MapboxOffline {
   }
 
   resetDatabase(): Promise<any> {
-    return null;
+    return new Promise((resolve, reject) => {
+      let packs = MGLOfflineStorage.sharedOfflineStorage.packs;
+
+      MGLOfflineStorage.sharedOfflineStorage.resetDatabaseWithCompletionHandler((error) => {
+        if (error) {
+          console.log("Failed to reset Mapbox database!  Error:" + error);
+        } else {
+            console.log("Mapbox database was reset.");
+        }
+      });
+
+      for (let i = 0; i < packs.count; i++) {
+        let pack: MGLOfflinePack = packs.objectAtIndex(i);
+          MGLOfflineStorage.sharedOfflineStorage.removePackWithCompletionHandler(pack, (error: NSError) => {
+            if (error) {
+              // The pack couldn’t be deleted for some reason.
+              reject(error.localizedFailureReason);
+            } else {
+              resolve();
+              // don't return, see note below
+            }
+          });
+        }
+    });
   }
 
   deleteOfflineRegion(options: DeleteOfflineRegionOptions): Promise<any> {
