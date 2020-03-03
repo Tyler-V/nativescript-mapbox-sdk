@@ -11,26 +11,33 @@ export enum MapStyle {
   SATELLITE_STREETS = 'mapbox://styles/mapbox/satellite-streets-v11',
 }
 
+export enum LayerType {
+  HEATMAP = 'HEATMAP',
+  SYMBOL = 'SYMBOL',
+}
+
 export interface StyleOptions {
   style?: string;
   uri?: string;
 }
 
 export abstract class MapboxStyle {
-  protected mapboxView: MapboxViewBase;
+  protected view: MapboxViewBase;
+  public heatmap: MapboxHeatmap;
 
-  constructor(mapboxView: MapboxViewBase) {
-    this.mapboxView = mapboxView;
+  constructor(view: MapboxViewBase) {
+    this.view = view;
   }
 
   abstract getStyle();
   abstract getUri(): string;
-
   abstract setStyleUri(uri: string): Promise<any>;
-
-  abstract addImage(name: string, filePath: string);
-  abstract addSource(source: any);
-  abstract addLayer(layer: any);
+  abstract addImage(name: string, filePath: string): void;
+  abstract addSource(source: any): void;
+  abstract addLayer(layer: any): void;
+  abstract removeLayer(layer: any): void;
+  abstract addVectorSource(sourceId: string, uri: string): void;
+  abstract createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number): any;
 
   public getImage(filePath: string): ImageSource {
     const folder: Folder = <Folder>knownFolders.currentApp();
@@ -38,4 +45,8 @@ export abstract class MapboxStyle {
     const imageSource: ImageSource = ImageSource.fromFileSync(folderPath);
     return imageSource;
   }
+}
+
+export abstract class MapboxHeatmap {
+  abstract heatmapWeight(value);
 }

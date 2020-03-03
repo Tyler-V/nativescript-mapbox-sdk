@@ -7,13 +7,13 @@ export enum CameraMode {
   TRACKING = 'TRACKING',
   TRACKING_COMPASS = 'TRACKING_COMPASS',
   TRACKING_GPS = 'TRACKING_GPS',
-  TRACKING_GPS_NORTH = 'TRACKING_GPS_NORTH'
+  TRACKING_GPS_NORTH = 'TRACKING_GPS_NORTH',
 }
 
 export enum RenderMode {
   COMPASS = 'COMPASS',
   GPS = 'GPS',
-  NORMAL = 'NORMAL'
+  NORMAL = 'NORMAL',
 }
 
 export interface LocationOptions {
@@ -27,10 +27,10 @@ export interface LocationOptions {
 }
 
 export abstract class MapboxLocation {
-  protected mapboxView: MapboxViewBase;
+  protected view: MapboxViewBase;
 
-  constructor(mapboxView: MapboxViewBase) {
-    this.mapboxView = mapboxView;
+  constructor(view: MapboxViewBase) {
+    this.view = view;
   }
 
   abstract startTracking(options: LocationOptions): Promise<void>;

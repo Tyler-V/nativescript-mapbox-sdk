@@ -18,87 +18,87 @@ export class Map extends MapboxMap {
         .tilt(options.tilt ? options.tilt : 0)
         .build();
 
-      this.mapboxView.mapboxMap.animateCamera(
+      this.view.mapboxMap.animateCamera(
         com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(position),
         duration,
         new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
           onCancel: () => reject('Cancelled'),
-          onFinish: () => resolve()
+          onFinish: () => resolve(),
         })
       );
     });
   }
 
   addOnMapClickListener(listener: (latLng: LatLng) => void) {
-    this.mapboxView.mapboxMap.addOnMapClickListener(
+    this.view.mapboxMap.addOnMapClickListener(
       new com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener({
-        onMapClick: latLng => {
+        onMapClick: (latLng) => {
           listener({
             lat: latLng.getLatitude(),
-            lng: latLng.getLongitude()
+            lng: latLng.getLongitude(),
           });
           return false;
-        }
+        },
       })
     );
   }
 
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {
-    this.mapboxView.mapboxMap.addOnMapLongClickListener(
+    this.view.mapboxMap.addOnMapLongClickListener(
       new com.mapbox.mapboxsdk.maps.MapboxMap.OnMapLongClickListener({
-        onMapLongClick: latLng => {
+        onMapLongClick: (latLng) => {
           listener({
             lat: latLng.getLatitude(),
-            lng: latLng.getLongitude()
+            lng: latLng.getLongitude(),
           });
           return false;
-        }
+        },
       })
     );
   }
 
   getMap() {
-    return this.mapboxView.mapboxMap;
+    return this.view.mapboxMap;
   }
 
   getZoom() {
-    const zoom = this.mapboxView.mapboxMap.getCameraPosition().zoom;
+    const zoom = this.view.mapboxMap.getCameraPosition().zoom;
     return zoom;
   }
 
   getTilt() {
-    const tilt = this.mapboxView.mapboxMap.getCameraPosition().tilt;
+    const tilt = this.view.mapboxMap.getCameraPosition().tilt;
     return tilt;
   }
 
   getBearing() {
-    const bearing = this.mapboxView.mapboxMap.getCameraPosition().bearing;
+    const bearing = this.view.mapboxMap.getCameraPosition().bearing;
     return bearing;
   }
 
   getCenter() {
-    const coordinate = this.mapboxView.mapboxMap.getCameraPosition().target;
+    const coordinate = this.view.mapboxMap.getCameraPosition().target;
     return {
       lat: coordinate.getLatitude(),
-      lng: coordinate.getLongitude()
+      lng: coordinate.getLongitude(),
     };
   }
 
   getBounds() {
-    const bounds = this.mapboxView.mapboxMap.getProjection().getVisibleRegion().latLngBounds;
+    const latLngBounds = this.view.mapboxMap.getProjection().getVisibleRegion().latLngBounds;
     return {
-      north: bounds.getLatNorth(),
-      east: bounds.getLonEast(),
-      south: bounds.getLatSouth(),
-      west: bounds.getLonWest()
+      north: latLngBounds.getLatNorth(),
+      east: latLngBounds.getLonEast(),
+      south: latLngBounds.getLatSouth(),
+      west: latLngBounds.getLonWest(),
     };
   }
 
   queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {
     const latLng = new com.mapbox.mapboxsdk.geometry.LatLng(point.lat, point.lng);
-    const pixel = this.mapboxView.mapboxMap.getProjection().toScreenLocation(latLng);
+    const pixel = this.view.mapboxMap.getProjection().toScreenLocation(latLng);
 
-    const features = this.mapboxView.mapboxMap.queryRenderedFeatures(pixel, layerIds);
+    const features = this.view.mapboxMap.queryRenderedFeatures(pixel, layerIds);
     const results: Array<Feature> = [];
 
     for (let i = 0; i < features.size(); i++) {
@@ -106,7 +106,7 @@ export class Map extends MapboxMap {
       results.push({
         id: feature.id(),
         type: feature.type(),
-        properties: JSON.parse(feature.properties().toString())
+        properties: JSON.parse(feature.properties().toString()),
       });
     }
 
@@ -114,14 +114,14 @@ export class Map extends MapboxMap {
   }
 
   setAllGesturesEnabled(enabled: boolean) {
-    this.mapboxView.mapboxMap.getUiSettings().setAllGesturesEnabled(enabled);
+    this.view.mapboxMap.getUiSettings().setAllGesturesEnabled(enabled);
   }
 
   setCompassEnabled(enabled: boolean) {
-    this.mapboxView.mapboxMap.getUiSettings().setCompassEnabled(enabled);
+    this.view.mapboxMap.getUiSettings().setCompassEnabled(enabled);
   }
 
   setLogoEnabled(enabled: boolean) {
-    this.mapboxView.mapboxMap.getUiSettings().setLogoEnabled(enabled);
+    this.view.mapboxMap.getUiSettings().setLogoEnabled(enabled);
   }
 }

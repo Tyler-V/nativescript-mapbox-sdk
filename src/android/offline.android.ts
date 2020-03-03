@@ -1,6 +1,6 @@
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxView } from '../mapbox-sdk.android';
-import { MapboxOffline } from '../common/offline.common';
+import { MapboxOffline, DownloadOfflineRegionOptions, DeleteOfflineRegionOptions } from '../common/offline.common';
 
 declare const android, com, java, org: any;
 
@@ -18,14 +18,14 @@ export class Offline extends MapboxOffline {
     return this.offlineManager;
   }
 
-  downloadOfflineRegion(options: any, onProgress?: (data: any) => void): Promise<any> {
+  downloadOfflineRegion(options: DownloadOfflineRegionOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!options.mapStyle) {
-        options.mapStyle = this.mapboxView.mapbox.style.getUri();
+        options.mapStyle = this.view.mapbox.style.getUri();
       }
 
       if (!options.bounds) {
-        options.bounds = this.mapboxView.mapbox.map.getBounds();
+        options.bounds = this.view.mapbox.map.getBounds();
       }
 
       if (!options.minZoom) {
@@ -33,7 +33,11 @@ export class Offline extends MapboxOffline {
       }
 
       if (!options.maxZoom) {
-        options.maxZoom = Math.min(Math.ceil(this.mapboxView.mapbox.map.getZoom()), 20);
+        options.maxZoom = Math.min(Math.ceil(this.view.mapbox.map.getZoom()), 20);
+      }
+
+      if (!options.name) {
+        Promise.reject('An offline region name is required.');
       }
 
       const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
@@ -67,13 +71,16 @@ export class Offline extends MapboxOffline {
                 onStatusChanged: (status) => {
                   let percentage =
                     status.getRequiredResourceCount() >= 0 ? (100.0 * status.getCompletedResourceCount()) / status.getRequiredResourceCount() : 0.0;
-                  onProgress({
-                    completedSize: status.getCompletedResourceSize(),
-                    completed: status.getCompletedResourceCount(),
-                    expected: status.getRequiredResourceCount(),
-                    percentage: Math.round(percentage * 100) / 100,
-                    complete: status.isComplete(),
-                  });
+                  if (options.onProgress) {
+                    options.onProgress({
+                      name: options.name,
+                      completedSize: status.getCompletedResourceSize(),
+                      completed: status.getCompletedResourceCount(),
+                      expected: status.getRequiredResourceCount(),
+                      percentage: Math.round(percentage * 100) / 100,
+                      complete: status.isComplete(),
+                    });
+                  }
                   if (status.isComplete()) {
                     resolve('Complete');
                   }
@@ -151,7 +158,7 @@ export class Offline extends MapboxOffline {
     });
   }
 
-  deleteOfflineRegion(options: any): Promise<any> {
+  deleteOfflineRegion(options: DeleteOfflineRegionOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       this._getOfflineManager().listOfflineRegions(
         new com.mapbox.mapboxsdk.offline.OfflineManager.ListOfflineRegionsCallback({

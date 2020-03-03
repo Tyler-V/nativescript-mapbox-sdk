@@ -1,6 +1,14 @@
-<GridLayout width="300">
+<StackLayout width="100%">
+  <AbsoluteLayout width="100%" height="50">
+    <StackLayout orientation="horizontal" width="100%" height="100%">
+      <Label text="Mapbox Styles" fontSize="24" left="50%" top="0" width="100%" textAlignment="center" verticalAlignment="center"></Label>
+    </StackLayout>
+    <StackLayout orientation="horizontal" height="100%" width="50" (tap)="goBack()">
+      <Image src="~/images/arrow_back.png" class="m-l-5" height="30" verticalAlignment="center"></Image>
+    </StackLayout>
+  </AbsoluteLayout>
+  <StackLayout class="hr"></StackLayout>
   <StackLayout class="p-20">
-    <Label text="Map Styles" class="m-b-10"></Label>
     <StackLayout>
       <Button text="Mapbox Streets" class="-primary" (tap)="setStyle(MapStyle.MAPBOX_STREETS)"></Button>
       <Button text="Dark" class="-primary" (tap)="setStyle(MapStyle.DARK)"></Button>
@@ -10,4 +18,4 @@
       <Button text="Satellite Streets" class="-primary" (tap)="setStyle(MapStyle.SATELLITE_STREETS)"></Button>
     </StackLayout>
   </StackLayout>
-</GridLayout>
+</StackLayout>

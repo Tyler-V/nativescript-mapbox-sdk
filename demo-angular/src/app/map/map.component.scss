@@ -11,27 +11,22 @@ $fab-margin: 10;
   horizontal-align: left;
 }
 
-.show-location {
+.location {
   $button-index: 0;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }
 
-.track-location {
+.styles {
   $button-index: 1;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }
 
-.driving-mode {
+.layers {
   $button-index: 2;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }
 
 .offline {
   $button-index: 3;
-  margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
-}
-
-.styles {
-  $button-index: 4;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }

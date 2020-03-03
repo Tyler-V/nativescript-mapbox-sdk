@@ -1,15 +1,13 @@
 import { MapboxViewBase } from './mapbox-sdk.common';
-
 import { Map } from './android/map.android';
 import { Offline } from './android/offline.android';
 import { Style } from './android/style.android';
 import { Location } from './android/location.android';
 import { Annotation } from './android/annotation.android';
+import * as utils from 'tns-core-modules/utils/utils';
 
 export { CameraMode, RenderMode, LocationOptions } from './common/location.common';
-export { MapStyle } from './common/style.common';
-
-import * as utils from 'tns-core-modules/utils/utils';
+export { MapStyle, LayerType } from './common/style.common';
 
 declare const android, com, java, org: any;
 
@@ -36,7 +34,7 @@ export class MapboxView extends MapboxViewBase {
   disposeNativeView(): void {}
 
   initMap(): void {
-    if (!this.mapboxView && this.config.accessToken) {
+    if (!this.mapView && this.config.accessToken) {
       let settings = this.config;
       const context = utils.ad.getApplicationContext();
       const instance = com.mapbox.mapboxsdk.Mapbox.getInstance(context, this.config.accessToken); // com.mapbox.mapboxsdk.Mapbox
@@ -44,11 +42,11 @@ export class MapboxView extends MapboxViewBase {
       let drawMap = () => {
         const mapboxMapOptions = this.getMapboxMapOptions();
 
-        this.mapboxView = new com.mapbox.mapboxsdk.maps.MapView(this._context, mapboxMapOptions);
+        this.mapView = new com.mapbox.mapboxsdk.maps.MapView(this._context, mapboxMapOptions);
 
-        this.mapboxView.getMapAsync(
+        this.mapView.getMapAsync(
           new com.mapbox.mapboxsdk.maps.OnMapReadyCallback({
-            onMapReady: mapboxMap => {
+            onMapReady: (mapboxMap) => {
               this.mapboxMap = mapboxMap;
 
               if (settings.mapStyle) {
@@ -57,13 +55,13 @@ export class MapboxView extends MapboxViewBase {
 
               this.notify({
                 eventName: MapboxViewBase.mapReadyEvent,
-                object: this
+                object: this,
               });
-            }
+            },
           })
         );
 
-        this.nativeView.addView(this.mapboxView);
+        this.nativeView.addView(this.mapView);
       };
 
       setTimeout(drawMap, settings.delay ? settings.delay : 0);

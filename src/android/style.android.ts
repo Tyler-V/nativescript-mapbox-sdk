@@ -1,3 +1,4 @@
+import { LayerType, MapboxHeatmap } from './../common/style.common';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxStyle } from '../common/style.common';
@@ -7,27 +8,28 @@ declare const android, com, java, org: any;
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
+    this.heatmap = new Heatmap();
   }
 
   getStyle() {
-    return this.mapboxView.mapboxStyle;
+    return this.view.mapStyle;
   }
 
   getUri() {
-    const uri = this.mapboxView.mapboxStyle.getUri();
+    const uri = this.view.mapStyle.getUri();
     return uri;
   }
 
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.mapboxView.mapboxMap.setStyle(
+      this.view.mapboxMap.setStyle(
         new com.mapbox.mapboxsdk.maps.Style.Builder().fromUri(uri),
         new com.mapbox.mapboxsdk.maps.Style.OnStyleLoaded({
           onStyleLoaded: (mapboxStyle) => {
-            this.mapboxView.mapboxStyle = mapboxStyle;
-            this.mapboxView.notify({
+            this.view.mapStyle = mapboxStyle;
+            this.view.notify({
               eventName: MapboxViewBase.styleLoadedEvent,
-              object: this.mapboxView,
+              object: this.view,
             });
             resolve();
           },
@@ -37,14 +39,45 @@ export class Style extends MapboxStyle {
   }
 
   addImage(name: string, filePath: string) {
-    this.mapboxView.mapboxStyle.addImage(name, this.getImage(filePath).android);
+    this.view.mapStyle.addImage(name, this.getImage(filePath).android);
   }
 
   addSource(source: any) {
-    this.mapboxView.mapboxStyle.addSource(source);
+    this.view.mapStyle.addSource(source);
   }
 
   addLayer(layer: any) {
-    this.mapboxView.mapboxStyle.addLayer(layer);
+    this.view.mapStyle.addLayer(layer);
+  }
+
+  removeLayer(layer: any) {
+    this.view.mapStyle.removeLayer(layer);
+  }
+
+  addVectorSource(sourceId: string, uri: string) {
+    const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource(sourceId, uri);
+    this.addSource(vectorSource);
+  }
+
+  createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
+    let layer;
+    switch (layerType) {
+      case LayerType.HEATMAP:
+        layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
+        break;
+      case LayerType.SYMBOL:
+        layer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer(layerId, sourceId);
+        break;
+    }
+    layer.setSourceLayer(sourceId);
+    if (minZoom) layer.setMinZoom(minZoom);
+    if (maxZoom) layer.setMaxZoom(maxZoom);
+    return layer;
+  }
+}
+
+export class Heatmap extends MapboxHeatmap {
+  heatmapWeight(value) {
+    console.log(value);
   }
 }
