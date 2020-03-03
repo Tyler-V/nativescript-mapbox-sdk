@@ -1,19 +1,16 @@
-import { Component, OnInit, ViewContainerRef } from "@angular/core";
-import {
-    ModalDialogService,
-    ModalDialogOptions
-} from "nativescript-angular/modal-dialog";
-import { RenderMode, CameraMode } from "nativescript-mapbox-sdk";
-import * as geolocation from "nativescript-geolocation";
-import { MapService } from "./map.service";
-import { StylesComponent } from "./styles/styles.component";
-import { OfflineComponent } from "./offline/offline.component";
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
+import { RenderMode, CameraMode } from 'nativescript-mapbox-sdk';
+import * as geolocation from 'nativescript-geolocation';
+import { MapService } from './map.service';
+import { StylesComponent } from './styles/styles.component';
+import { OfflineComponent } from './offline/offline.component';
 
 @Component({
-    selector: "map",
+    selector: 'map',
     moduleId: module.id,
-    templateUrl: "./map.component.html",
-    styleUrls: ["./map.component.scss"]
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
     accessToken: string;
@@ -30,14 +27,9 @@ export class MapComponent implements OnInit {
 
     isTracking: boolean = false;
 
-    constructor(
-        private mapService: MapService,
-        private modalService: ModalDialogService,
-        private vcRef: ViewContainerRef
-    ) {
-        this.accessToken =
-            "sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ";
-        this.mapStyle = "mapbox://styles/mapbox/streets-v11";
+    constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {
+        this.accessToken = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
+        this.mapStyle = 'mapbox://styles/mapbox/streets-v11';
     }
 
     ngOnInit(): void {}
@@ -55,7 +47,7 @@ export class MapComponent implements OnInit {
         geolocation.enableLocationRequest().then(() => {
             this.mapService.mapbox.location.startTracking({
                 cameraMode: CameraMode.NONE,
-                renderMode: RenderMode.NORMAL
+                renderMode: RenderMode.NORMAL,
             });
         });
     }
@@ -66,10 +58,11 @@ export class MapComponent implements OnInit {
                 cameraMode: CameraMode.TRACKING_COMPASS,
                 renderMode: RenderMode.COMPASS,
                 zoom: 16,
+                tilt: 0,
                 animationDuration: 1000,
                 onCameraTrackingDismissed: () => {
                     this.mapService.mapbox.location.stopTracking();
-                }
+                },
             });
         });
     }
@@ -88,7 +81,7 @@ export class MapComponent implements OnInit {
                     renderMode: RenderMode.GPS,
                     zoom: 19,
                     tilt: 45,
-                    animationDuration: 2000
+                    animationDuration: 2000,
                 });
             });
         }
@@ -97,7 +90,7 @@ export class MapComponent implements OnInit {
     showOfflineModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: true
+            fullscreen: true,
         };
 
         return this.modalService.showModal(OfflineComponent, options);
@@ -106,7 +99,7 @@ export class MapComponent implements OnInit {
     showStylesModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: true
+            fullscreen: true,
         };
 
         return this.modalService.showModal(StylesComponent, options);

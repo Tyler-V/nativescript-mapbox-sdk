@@ -44,7 +44,6 @@ export class Location extends MapboxLocation {
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       let camera = this.view.mapView.camera;
-      camera.pitch = options.tilt;
       const durationMs = options.animationDuration ? options.animationDuration : 5000;
 
       try {
@@ -53,14 +52,15 @@ export class Location extends MapboxLocation {
           return;
         }
         this.view.mapView.showsUserLocation = true;
-        this.view.mapView.setUserTrackingModeAnimated(_getTrackingMode(options.cameraMode), true);
         this.view.mapView.userTrackingMode = _stringToCameraMode(options.cameraMode);
+        camera.pitch = options.tilt;
 
         this.view.mapView.setCameraWithDurationAnimationTimingFunction(
           camera,
           durationMs / 1000,
           CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
         );
+        this.view.mapView.setZoomLevelAnimated(options.zoom, true);
 
         resolve();
       } catch (ex) {
@@ -71,8 +71,6 @@ export class Location extends MapboxLocation {
   }
 
   stopTracking() {
-    this.view.mapView.camera.pitch = 0;
-    this.view.mapView.camera.heading = 180;
-    this.view.mapView.userTrackingMode = 0;
+    this.view.mapView.userTrackingMode = MGLUserTrackingMode.None;
   }
 }
