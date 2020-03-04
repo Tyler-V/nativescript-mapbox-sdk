@@ -10,14 +10,13 @@ export class Map extends MapboxMap {
   animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let target = [this.view.mapView.latitude, this.view.mapView.longitude];
-        if (target === undefined) {
+        if (!options.latLng) {
           reject("Please set the 'target' parameter");
           return;
         }
         let cam = this.view.mapView.camera;
 
-        cam.centerCoordinate = CLLocationCoordinate2DMake(target[0], target[1]);
+        cam.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
 
         if (options.bearing) {
           cam.heading = options.bearing;

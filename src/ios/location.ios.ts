@@ -16,15 +16,12 @@ const _getTrackingMode = (input: LocationOptions['cameraMode']): MGLUserTracking
 const _stringToCameraMode = (mode: LocationOptions['cameraMode']): any => {
   switch (mode) {
     case 'NONE':
-      console.log('NONE');
       return 0;
 
     case 'TRACKING_COMPASS':
-      console.log('TRACKING_COMPASS');
       return 1;
 
     case 'TRACKING_GPS':
-      console.log('TRACKING_GPS');
       return 3;
   }
 };
@@ -53,6 +50,7 @@ export class Location extends MapboxLocation {
 
         this.view.mapView.showsUserLocation = true;
         this.view.mapView.userTrackingMode = _stringToCameraMode(options.cameraMode);
+
         camera.pitch = options.tilt;
 
         this.view.mapView.setCameraWithDurationAnimationTimingFunction(
@@ -60,7 +58,8 @@ export class Location extends MapboxLocation {
           durationMs / 1000,
           CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
         );
-        // Need to set the camera back to the mapView object. https://stackoverflow.com/a/39006843/10680786
+
+        // Need to set the camera back to the mapView object.
         this.view.mapView.camera = camera;
         this.view.mapView.setZoomLevelAnimated(options.zoom, false);
 
