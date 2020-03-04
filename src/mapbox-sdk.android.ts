@@ -9,7 +9,7 @@ import { Annotation } from './android/annotation.android';
 export { CameraMode, RenderMode, LocationOptions } from './common/location.common';
 export { MapStyle } from './common/style.common';
 
-import * as utils from "tns-core-modules/utils/utils";
+import * as utils from 'tns-core-modules/utils/utils';
 
 declare const android, com, java, org: any;
 
@@ -39,24 +39,10 @@ export class MapboxView extends MapboxViewBase {
     if (!this.mapView && this.config.accessToken) {
       let settings = this.config;
       const context = utils.ad.getApplicationContext();
-      const instance = com.mapbox.mapboxsdk.Mapbox.getInstance(context, this.config.accessToken);
+      const instance = com.mapbox.mapboxsdk.Mapbox.getInstance(context, this.config.accessToken); // com.mapbox.mapboxsdk.Mapbox
 
       let drawMap = () => {
-        const mapboxMapOptions = com.mapbox.mapboxsdk.maps.MapboxMapOptions.createFromAttributes(this._context)
-          .compassEnabled(!settings.hideCompass)
-          .rotateGesturesEnabled(!settings.disableRotation)
-          .scrollGesturesEnabled(!settings.disableScroll)
-          .tiltGesturesEnabled(!settings.disableTilt)
-          .zoomGesturesEnabled(!settings.disableZoom)
-          .attributionEnabled(!settings.hideAttribution)
-          .logoEnabled(!settings.hideLogo);
-
-        if (settings.center && settings.center.lat && settings.center.lng) {
-          const cameraPositionBuilder = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
-            .target(new com.mapbox.mapboxsdk.geometry.LatLng(settings.center.lat, settings.center.lng))
-            .zoom(settings.zoomLevel);
-          mapboxMapOptions.camera(cameraPositionBuilder.build());
-        }
+        const mapboxMapOptions = this.getMapboxMapOptions();
 
         this.mapView = new com.mapbox.mapboxsdk.maps.MapView(this._context, mapboxMapOptions);
 
@@ -83,24 +69,24 @@ export class MapboxView extends MapboxViewBase {
       setTimeout(drawMap, settings.delay ? settings.delay : 0);
     }
   }
-}
 
-const _getMapboxMapOptions = (settings, context?) => {
-  const mapboxMapOptions = com.mapbox.mapboxsdk.maps.MapboxMapOptions.createFromAttributes(context)
-    .compassEnabled(!settings.hideCompass)
-    .rotateGesturesEnabled(!settings.disableRotation)
-    .scrollGesturesEnabled(!settings.disableScroll)
-    .tiltGesturesEnabled(!settings.disableTilt)
-    .zoomGesturesEnabled(!settings.disableZoom)
-    .attributionEnabled(!settings.hideAttribution)
-    .logoEnabled(!settings.hideLogo);
+  private getMapboxMapOptions() {
+    const mapboxMapOptions = com.mapbox.mapboxsdk.maps.MapboxMapOptions.createFromAttributes(this._context)
+      .compassEnabled(!this.config.hideCompass)
+      .rotateGesturesEnabled(!this.config.disableRotation)
+      .scrollGesturesEnabled(!this.config.disableScroll)
+      .tiltGesturesEnabled(!this.config.disableTilt)
+      .zoomGesturesEnabled(!this.config.disableZoom)
+      .attributionEnabled(!this.config.hideAttribution)
+      .logoEnabled(!this.config.hideLogo);
 
-  if (settings.center && settings.center.lat && settings.center.lng) {
-    const cameraPositionBuilder = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
-      .target(new com.mapbox.mapboxsdk.geometry.LatLng(settings.center.lat, settings.center.lng))
-      .zoom(settings.zoomLevel);
-    mapboxMapOptions.camera(cameraPositionBuilder.build());
+    if (this.config.center && this.config.center.lat && this.config.center.lng) {
+      const cameraPositionBuilder = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
+        .target(new com.mapbox.mapboxsdk.geometry.LatLng(this.config.center.lat, this.config.center.lng))
+        .zoom(this.config.zoomLevel);
+      mapboxMapOptions.camera(cameraPositionBuilder.build());
+    }
+
+    return mapboxMapOptions;
   }
-
-  return mapboxMapOptions;
-};
+}
