@@ -43,14 +43,14 @@ export class Location extends MapboxLocation {
 
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
-      let camera = this.view.mapView.camera;
-      const durationMs = options.animationDuration ? options.animationDuration : 5000;
-
       try {
         if (!this.view.mapView) {
           reject('No map has been loaded');
           return;
         }
+        let camera = this.view.mapView.camera;
+        const durationMs = options.animationDuration ? options.animationDuration : 5000;
+
         this.view.mapView.showsUserLocation = true;
         this.view.mapView.userTrackingMode = _stringToCameraMode(options.cameraMode);
         camera.pitch = options.tilt;
@@ -60,7 +60,9 @@ export class Location extends MapboxLocation {
           durationMs / 1000,
           CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
         );
-        this.view.mapView.setZoomLevelAnimated(options.zoom, true);
+        // Need to set the camera back to the mapView object. https://stackoverflow.com/a/39006843/10680786
+        this.view.mapView.camera = camera;
+        this.view.mapView.setZoomLevelAnimated(options.zoom, false);
 
         resolve();
       } catch (ex) {
