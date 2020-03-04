@@ -1,27 +1,27 @@
 import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
 import { MapboxLocation, LocationOptions } from '../common/location.common';
 
-const _getTrackingMode = (input: LocationOptions['cameraMode']): MGLUserTrackingMode => {
-  if (input === 'TRACKING') {
-    return MGLUserTrackingMode.Follow;
-  } else if (input === 'TRACKING_COMPASS') {
-    return MGLUserTrackingMode.FollowWithHeading;
-  } else if (input === 'TRACKING_GPS') {
-    return MGLUserTrackingMode.FollowWithCourse;
-  } else {
-    return MGLUserTrackingMode.None;
-  }
-};
-
 const _stringToCameraMode = (mode: LocationOptions['cameraMode']): any => {
   switch (mode) {
     case 'NONE':
       return 0;
 
-    case 'TRACKING_COMPASS':
+    case 'NONE_COMPASS':
+      return 0;
+
+    case 'NONE_GPS':
+      return 0;
+
+    case 'TRACKING':
       return 1;
 
+    case 'TRACKING_COMPASS':
+      return 2;
+
     case 'TRACKING_GPS':
+      return 3;
+
+    case 'TRACKING_GPS_NORTH':
       return 3;
   }
 };
