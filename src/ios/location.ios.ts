@@ -41,10 +41,6 @@ export class Location extends MapboxLocation {
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        if (!this.view.mapView) {
-          reject('No map has been loaded');
-          return;
-        }
         let camera = this.view.mapView.camera;
         const durationMs = options.animationDuration ? options.animationDuration : 5000;
 
