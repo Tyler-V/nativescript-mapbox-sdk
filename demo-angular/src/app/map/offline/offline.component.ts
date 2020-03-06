@@ -72,6 +72,7 @@ export class OfflineComponent implements OnInit {
     onResetTap() {
         this.mapService.mapbox.offline.resetDatabase().then(() => {
             console.log("Database Reset!");
+            this.offlineRegions = [];
         });
     }
 
