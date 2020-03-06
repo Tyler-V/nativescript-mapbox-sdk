@@ -11,26 +11,25 @@ export class Map extends MapboxMap {
     return new Promise((resolve, reject) => {
       try {
         if (!options.latLng) {
-          reject("Please set the 'target' parameter");
+          reject('A position is required');
           return;
         }
-        let cam = this.view.mapView.camera;
+        const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
+        const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, options.latLng.lat, viewportSize);
 
-        cam.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
-
-        if (options.bearing) {
-          cam.heading = options.bearing;
-        }
-
-        if (options.tilt) {
-          cam.pitch = options.tilt;
-        }
+        let camera = MGLMapCamera.alloc();
+        camera.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
+        camera.heading = options.bearing;
+        camera.pitch = options.tilt;
+        camera.altitude = altitude;
 
         this.view.mapView.setCameraWithDurationAnimationTimingFunction(
-          cam,
+          camera,
           duration / 3000,
           CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
         );
+
+        this.view.mapView.setZoomLevelAnimated(options.zoom, false);
 
         setTimeout(() => {
           resolve();
