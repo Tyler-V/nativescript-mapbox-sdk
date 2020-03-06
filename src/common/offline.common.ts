@@ -18,7 +18,7 @@ export interface DownloadProgress {
 }
 export interface DownloadOfflineRegionOptions extends RegionOptions {
   onProgress?: (data: DownloadProgress) => void;
-  accessToken?: string; // Android only, in case the map has not been shown yet.
+  accessToken?: string; // Optional for Android only. Setting this, in case no map has been show yet (and thus, no accessToken has been passed in yet).
 }
 
 export interface DeleteOfflineRegionOptions {

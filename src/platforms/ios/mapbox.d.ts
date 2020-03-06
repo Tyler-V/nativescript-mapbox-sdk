@@ -1669,6 +1669,8 @@ declare class MGLOfflineStorage extends NSObject {
     removePackWithCompletionHandler(pack: MGLOfflinePack, completion: (p1: NSError) => void): void;
 
     setMaximumAllowedMapboxTiles(maximumCount: number): void;
+
+    resetDatabaseWithCompletionHandler(completion: (p1: NSError) => void): void;
 }
 
 interface MGLOfflineStorageDelegate extends NSObjectProtocol {
