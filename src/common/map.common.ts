@@ -36,6 +36,6 @@ export abstract class MapboxMap {
   abstract setCompassEnabled(enabled: boolean);
   abstract setLogoEnabled(enabled: boolean);
 
-  abstract animateCamera(options: CameraPosition): Promise<void>;
+  abstract animateCamera(options: CameraPosition, duration: number): Promise<void>;
   abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]);
 }

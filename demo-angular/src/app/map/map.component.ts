@@ -53,6 +53,7 @@ export class MapComponent implements OnInit {
                 cameraMode: CameraMode.TRACKING_COMPASS,
                 renderMode: RenderMode.COMPASS,
                 zoom: 16,
+                tilt: 0,
                 animationDuration: 1000,
                 onCameraTrackingDismissed: () => {
                     this.mapService.mapbox.location.stopTracking();

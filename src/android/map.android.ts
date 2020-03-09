@@ -9,7 +9,7 @@ export class Map extends MapboxMap {
     super(mapboxView);
   }
 
-  animateCamera(options: CameraPosition, duration: number = 2000): Promise<void> {
+  animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
     return new Promise((resolve, reject) => {
       const position = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
         .target(new com.mapbox.mapboxsdk.geometry.LatLng(options.latLng.lat, options.latLng.lng))

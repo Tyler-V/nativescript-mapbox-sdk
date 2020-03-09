@@ -48,7 +48,7 @@ export class MapboxView extends MapboxViewBase {
 
         this.mapView.getMapAsync(
           new com.mapbox.mapboxsdk.maps.OnMapReadyCallback({
-            onMapReady: mapboxMap => {
+            onMapReady: (mapboxMap) => {
               this.mapboxMap = mapboxMap;
 
               if (settings.mapStyle) {
@@ -57,9 +57,9 @@ export class MapboxView extends MapboxViewBase {
 
               this.notify({
                 eventName: MapboxViewBase.mapReadyEvent,
-                object: this
+                object: this,
               });
-            }
+            },
           })
         );
 

@@ -7,36 +7,35 @@ export class Map extends MapboxMap {
     super(mapboxView);
   }
 
-  animateCamera(options: CameraPosition, duration: number = 2000): Promise<void> {
+  animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        let target = [this.view.mapView.latitude, this.view.mapView.longitude];
-        if (target === undefined) {
-          reject("Please set the 'target' parameter");
+        if (!options.latLng) {
+          reject('A position is required');
           return;
         }
 
-        let cam = this.view.mapView.camera;
+        options.bearing = options.bearing ? options.bearing : this.getBearing();
+        options.tilt = options.tilt ? options.tilt : this.getTilt();
+        options.zoom = options.zoom ? options.zoom : this.getZoom();
 
-        cam.centerCoordinate = CLLocationCoordinate2DMake(target[0], target[1]);
+        const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
+        const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, options.latLng.lat, viewportSize);
 
-        if (options.bearing) {
-          cam.heading = options.bearing;
-        }
+        let camera = MGLMapCamera.alloc();
+        camera.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
+        camera.heading = options.bearing;
+        camera.pitch = options.tilt;
+        camera.altitude = altitude;
 
-        if (options.tilt) {
-          cam.pitch = options.tilt;
-        }
-
-        this.view.mapView.setCameraWithDurationAnimationTimingFunction(
-          cam,
+        this.view.mapView.setCameraWithDurationAnimationTimingFunctionCompletionHandler(
+          camera,
           duration / 1000,
-          CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
+          CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut),
+          () => {
+            resolve();
+          }
         );
-
-        setTimeout(() => {
-          resolve();
-        }, duration);
       } catch (ex) {
         console.log('Error in mapbox.animateCamera: ' + ex);
         reject(ex);
@@ -57,9 +56,15 @@ export class Map extends MapboxMap {
     return zoom;
   }
 
-  getTilt() {}
+  getTilt() {
+    const tilt = this.view.mapView.camera.pitch;
+    return tilt;
+  }
 
-  getBearing() {}
+  getBearing() {
+    const bearing = this.view.mapView.camera.heading;
+    return bearing;
+  }
 
   getCenter() {}
 
