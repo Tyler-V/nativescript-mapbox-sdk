@@ -14,6 +14,11 @@ export class Map extends MapboxMap {
           reject('A position is required');
           return;
         }
+
+        options.bearing = options.bearing ? options.bearing : this.getBearing();
+        options.tilt = options.tilt ? options.tilt : this.getTilt();
+        options.zoom = options.zoom ? options.zoom : this.getZoom();
+
         const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
         const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, options.latLng.lat, viewportSize);
 
@@ -23,17 +28,14 @@ export class Map extends MapboxMap {
         camera.pitch = options.tilt;
         camera.altitude = altitude;
 
-        this.view.mapView.setCameraWithDurationAnimationTimingFunction(
+        this.view.mapView.setCameraWithDurationAnimationTimingFunctionCompletionHandler(
           camera,
-          duration / 3000,
-          CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut)
+          duration / 1000,
+          CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut),
+          () => {
+            resolve();
+          }
         );
-
-        this.view.mapView.setZoomLevelAnimated(options.zoom, false);
-
-        setTimeout(() => {
-          resolve();
-        }, duration);
       } catch (ex) {
         console.log('Error in mapbox.animateCamera: ' + ex);
         reject(ex);
@@ -59,7 +61,10 @@ export class Map extends MapboxMap {
     return tilt;
   }
 
-  getBearing() {}
+  getBearing() {
+    const bearing = this.view.mapView.camera.heading;
+    return bearing;
+  }
 
   getCenter() {}
 

@@ -39,11 +39,14 @@ export class MapComponent implements OnInit {
     }
 
     showLocation() {
-        geolocation.enableLocationRequest().then(() => {
-            this.mapService.mapbox.location.startTracking({
-                cameraMode: CameraMode.NONE,
-                renderMode: RenderMode.NORMAL,
-            });
+        this.mapService.mapbox.map.animateCamera({
+            latLng: {
+                lat: 31.531726,
+                lng: -84.119568
+            },
+            zoom: 15,
+        }, 10000).then(() => {
+            console.log("Animation complete!");
         });
     }
 
@@ -52,8 +55,8 @@ export class MapComponent implements OnInit {
             this.mapService.mapbox.location.startTracking({
                 cameraMode: CameraMode.TRACKING_COMPASS,
                 renderMode: RenderMode.COMPASS,
-                zoom: 16,
-                tilt: 0,
+                zoom: 6,
+                tilt: 30,
                 animationDuration: 1000,
                 onCameraTrackingDismissed: () => {
                     this.mapService.mapbox.location.stopTracking();
