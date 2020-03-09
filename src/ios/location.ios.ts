@@ -43,7 +43,7 @@ export class Location extends MapboxLocation {
     return new Promise((resolve, reject) => {
       try {
         let cameraPosition: CameraPosition = {
-          latLng: { lat: this.view.mapView.lat, lng: this.view.mapView.lng },
+          latLng: { lat: this.view.mapView.latitude, lng: this.view.mapView.longitude },
           zoom: options.zoom,
           tilt: options.tilt,
         };
