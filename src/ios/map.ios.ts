@@ -88,7 +88,9 @@ export class Map extends MapboxMap {
 
   setAllGesturesEnabled(enabled: boolean) {}
 
-  setCompassEnabled(enabled: boolean) {}
+  setCompassEnabled(enabled: boolean) {
+    this.view.mapView.compassView.hidden = enabled;
+  }
 
   setLogoEnabled(enabled: boolean) {}
 }
