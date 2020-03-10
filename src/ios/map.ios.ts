@@ -1,6 +1,7 @@
 import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
+import * as utils from "tns-core-modules/utils/utils";
 
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
@@ -92,5 +93,8 @@ export class Map extends MapboxMap {
     this.view.mapView.compassView.hidden = enabled;
   }
 
-  setLogoEnabled(enabled: boolean) {}
+  setLogoEnabled(enabled: boolean) {
+    this.view.mapView.attributionButton.hidden = enabled; // This is for the info icon on bottom right
+    this.view.mapView.logoView.hidden = enabled; // This is for the mapbox logo on bottom left
+  }
 }
