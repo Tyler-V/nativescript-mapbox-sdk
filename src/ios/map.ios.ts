@@ -66,7 +66,13 @@ export class Map extends MapboxMap {
     return bearing;
   }
 
-  getCenter() {}
+  getCenter() {
+    const coordinate = this.view.mapView.centerCoordinate;
+    return {
+      lat: coordinate.latitude,
+      lng: coordinate.longitude
+    };
+  }
 
   getBounds(): LatLngBounds {
     let visibleCoordinateBounds = this.view.mapView.visibleCoordinateBounds;
