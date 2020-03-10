@@ -1,10 +1,7 @@
 {
   "files.exclude": {
     "**/*.js": { "when": "$(basename).ts" },
-    "**/*.map": { "when": "$(basename).map" },
-    "**/node_modules": true
+    "**/*.map": { "when": "$(basename).map" }
   },
-  "search.exclude": {
-    "**/node_modules": true
-  }
+  "typescript.tsdk": "./demo-angular/node_modules/typescript/lib"
 }
