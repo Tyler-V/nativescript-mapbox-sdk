@@ -1,7 +1,6 @@
 import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
-import * as utils from "tns-core-modules/utils/utils";
 
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
@@ -71,7 +70,7 @@ export class Map extends MapboxMap {
     const coordinate = this.view.mapView.centerCoordinate;
     return {
       lat: coordinate.latitude,
-      lng: coordinate.longitude
+      lng: coordinate.longitude,
     };
   }
 
@@ -87,7 +86,12 @@ export class Map extends MapboxMap {
 
   queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {}
 
-  setAllGesturesEnabled(enabled: boolean) {}
+  setAllGesturesEnabled(enabled: boolean) {
+    this.view.mapView.zoomEnabled = enabled;
+    this.view.mapView.scrollEnabled = enabled;
+    this.view.mapView.pitchEnabled = enabled;
+    this.view.mapView.rotateEnabled = enabled;
+  }
 
   setCompassEnabled(enabled: boolean) {
     this.view.mapView.compassView.hidden = enabled;
