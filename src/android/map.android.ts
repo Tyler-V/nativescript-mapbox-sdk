@@ -1,6 +1,6 @@
-import { MapboxMap, CameraPosition } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.android';
-import { LatLng, Feature } from '../mapbox-sdk.common';
+import { LatLng } from '../mapbox-sdk.common';
+import { MapboxMap, CameraPosition, LatLngBounds, Feature } from './../common/map.common';
 
 declare const android, com, java, org: any;
 
@@ -57,26 +57,22 @@ export class Map extends MapboxMap {
     );
   }
 
-  getMap() {
-    return this.view.mapboxMap;
-  }
-
-  getZoom() {
+  getZoom(): number {
     const zoom = this.view.mapboxMap.getCameraPosition().zoom;
     return zoom;
   }
 
-  getTilt() {
+  getTilt(): number {
     const tilt = this.view.mapboxMap.getCameraPosition().tilt;
     return tilt;
   }
 
-  getBearing() {
+  getBearing(): number {
     const bearing = this.view.mapboxMap.getCameraPosition().bearing;
     return bearing;
   }
 
-  getCenter() {
+  getCenter(): LatLng {
     const coordinate = this.view.mapboxMap.getCameraPosition().target;
     return {
       lat: coordinate.getLatitude(),
@@ -84,7 +80,7 @@ export class Map extends MapboxMap {
     };
   }
 
-  getBounds() {
+  getBounds(): LatLngBounds {
     const latLngBounds = this.view.mapboxMap.getProjection().getVisibleRegion().latLngBounds;
     return {
       north: latLngBounds.getLatNorth(),
@@ -94,7 +90,7 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
     const latLng = new com.mapbox.mapboxsdk.geometry.LatLng(point.lat, point.lng);
     const pixel = this.view.mapboxMap.getProjection().toScreenLocation(latLng);
 
@@ -113,15 +109,15 @@ export class Map extends MapboxMap {
     return results;
   }
 
-  setAllGesturesEnabled(enabled: boolean) {
+  setAllGesturesEnabled(enabled: boolean): void {
     this.view.mapboxMap.getUiSettings().setAllGesturesEnabled(enabled);
   }
 
-  setCompassEnabled(enabled: boolean) {
+  setCompassEnabled(enabled: boolean): void {
     this.view.mapboxMap.getUiSettings().setCompassEnabled(enabled);
   }
 
-  setLogoEnabled(enabled: boolean) {
+  setLogoEnabled(enabled: boolean): void {
     this.view.mapboxMap.getUiSettings().setLogoEnabled(enabled);
   }
 }

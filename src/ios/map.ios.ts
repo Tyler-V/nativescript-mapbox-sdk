@@ -1,6 +1,6 @@
-import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
+import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
 
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
@@ -47,10 +47,6 @@ export class Map extends MapboxMap {
 
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {}
 
-  getMap() {
-    return this.view.mapboxMap;
-  }
-
   getZoom() {
     const zoom = this.view.mapView.zoomLevel;
     return zoom;
@@ -84,7 +80,9 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {}
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
+    return null;
+  }
 
   setAllGesturesEnabled(enabled: boolean) {
     this.view.mapView.zoomEnabled = enabled;
