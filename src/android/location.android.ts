@@ -54,6 +54,12 @@ export class Location extends MapboxLocation {
 
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {
+          mode: TrackingMode.NORMAL,
+          animated: false,
+        };
+      }
       const locationComponent = this._getLocationComponent();
       locationComponent.activateLocationComponent(this._getLocationComponentOptions());
       locationComponent.setLocationComponentEnabled(true);

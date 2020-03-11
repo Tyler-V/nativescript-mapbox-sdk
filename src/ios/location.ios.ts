@@ -19,7 +19,12 @@ export class Location extends MapboxLocation {
 
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.view.mapView.userTrackingMode = this._getUserTrackingMode(options.mode);
+      if (!options) {
+        options = {
+          mode: TrackingMode.NORMAL,
+          animated: false,
+        };
+      }
       this.view.mapView.setUserTrackingModeAnimatedCompletionHandler(this._getUserTrackingMode(options.mode), options.animated, () => {
         resolve();
       });
