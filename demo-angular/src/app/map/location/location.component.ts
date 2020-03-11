@@ -3,7 +3,7 @@ import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
 import * as geolocation from 'nativescript-geolocation';
-import { CameraMode, RenderMode } from 'nativescript-mapbox-sdk';
+import { TrackingMode } from 'nativescript-mapbox-sdk';
 
 @Component({
     selector: 'location',
@@ -35,42 +35,38 @@ export class LocationComponent implements OnInit {
         this.params.closeCallback();
         this.mapService.isTracking = true;
         geolocation.enableLocationRequest().then(() => {
-            this.mapService.mapbox.location.startTracking({
-                cameraMode: CameraMode.NONE,
-                renderMode: RenderMode.NORMAL,
-            });
+            this.mapService.mapbox.location.startTracking();
         });
     }
 
-    trackLocation() {
+    trackLocationWithCompass() {
         this.params.closeCallback();
         geolocation.enableLocationRequest().then(() => {
             this.mapService.isTracking = true;
-            this.mapService.mapbox.location.startTracking({
-                cameraMode: CameraMode.TRACKING_COMPASS,
-                renderMode: RenderMode.COMPASS,
-                zoom: 16,
-                animationDuration: 1000,
-                onCameraTrackingDismissed: () => {
-                    this.mapService.mapbox.location.stopTracking();
-                    this.mapService.isTracking = false;
-                },
-            });
+            this.mapService.mapbox.location
+                .startTracking({
+                    mode: TrackingMode.COMPASS,
+                    animated: true,
+                })
+                .then(() => {
+                    console.log('Finished Animation');
+                });
         });
     }
 
-    drivingMode() {
+    trackLocationWithGPS() {
         this.params.closeCallback();
         geolocation.enableLocationRequest().then(() => {
             this.mapService.isTracking = true;
             this.mapService.mapbox.map.setAllGesturesEnabled(false);
-            this.mapService.mapbox.location.startTracking({
-                cameraMode: CameraMode.TRACKING_GPS,
-                renderMode: RenderMode.GPS,
-                zoom: 19,
-                tilt: 45,
-                animationDuration: 2000,
-            });
+            this.mapService.mapbox.location
+                .startTracking({
+                    mode: TrackingMode.GPS,
+                    animated: true,
+                })
+                .then(() => {
+                    console.log('Finished Animation');
+                });
         });
     }
 }

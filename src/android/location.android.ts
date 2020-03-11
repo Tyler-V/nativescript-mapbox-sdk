@@ -1,11 +1,10 @@
 import { MapboxView } from '../mapbox-sdk.android';
-import { MapboxLocation, LocationOptions } from '../common/location.common';
+import { MapboxLocation, LocationOptions, TrackingMode } from '../common/location.common';
 
 declare const android, com, java, org: any;
 
 export class Location extends MapboxLocation {
   private locationComponent;
-  private cameraTrackingChangedListener;
 
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
@@ -31,61 +30,61 @@ export class Location extends MapboxLocation {
       .build();
   }
 
+  _getRenderMode(mode: TrackingMode) {
+    switch (mode) {
+      case TrackingMode.COMPASS:
+        return com.mapbox.mapboxsdk.location.modes.RenderMode.COMPASS;
+      case TrackingMode.GPS:
+        return com.mapbox.mapboxsdk.location.modes.RenderMode.GPS;
+      default:
+        return com.mapbox.mapboxsdk.location.modes.RenderMode.NORMAL;
+    }
+  }
+
+  _getCameraMode(mode: TrackingMode) {
+    switch (mode) {
+      case TrackingMode.COMPASS:
+        return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_COMPASS;
+      case TrackingMode.GPS:
+        return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_GPS;
+      default:
+        return com.mapbox.mapboxsdk.location.modes.RenderMode.TRACKING;
+    }
+  }
+
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       const locationComponent = this._getLocationComponent();
       locationComponent.activateLocationComponent(this._getLocationComponentOptions());
       locationComponent.setLocationComponentEnabled(true);
-      locationComponent.setRenderMode(com.mapbox.mapboxsdk.location.modes.RenderMode[options.renderMode]);
+      locationComponent.setRenderMode(this._getRenderMode(options.mode));
       locationComponent.setCameraMode(
-        com.mapbox.mapboxsdk.location.modes.CameraMode[options.cameraMode],
+        this._getCameraMode(options.mode),
         new com.mapbox.mapboxsdk.location.OnLocationCameraTransitionListener({
           onLocationCameraTransitionCanceled: (currentMode: number) => {},
           onLocationCameraTransitionFinished: (currentMode: number) => {
-            locationComponent.zoomWhileTracking(
-              options.zoom,
-              options.animationDuration ? options.animationDuration : 0,
-              new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-                onCancel: () => {},
-                onFinish: () => {
-                  locationComponent.tiltWhileTracking(options.tilt, 1000);
-                },
-              })
-            );
+            if (options.animated) {
+              locationComponent.zoomWhileTracking(
+                16,
+                2000,
+                new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
+                  onCancel: () => {},
+                  onFinish: () => {
+                    resolve();
+                  },
+                })
+              );
+            } else {
+              resolve();
+            }
           },
         })
       );
-
-      if (this.cameraTrackingChangedListener) {
-        locationComponent.removeOnCameraTrackingChangedListener(this.cameraTrackingChangedListener);
-      }
-
-      if (options.onCameraTrackingChanged || options.onCameraTrackingDismissed) {
-        this.cameraTrackingChangedListener = new com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener({
-          onCameraTrackingChanged: (currentMode: number) => {
-            if (options.onCameraTrackingChanged) {
-              options.onCameraTrackingChanged(currentMode);
-            }
-          },
-          onCameraTrackingDismissed: () => {
-            if (options.onCameraTrackingDismissed) {
-              options.onCameraTrackingDismissed();
-            }
-          },
-        });
-        locationComponent.addOnCameraTrackingChangedListener(this.cameraTrackingChangedListener);
-      }
-
-      resolve();
     });
   }
 
   stopTracking() {
     const locationComponent = this._getLocationComponent();
-    if (this.cameraTrackingChangedListener) {
-      locationComponent.removeOnCameraTrackingChangedListener(this.cameraTrackingChangedListener);
-      this.cameraTrackingChangedListener = null;
-    }
     locationComponent.setCameraMode(com.mapbox.mapboxsdk.location.modes.CameraMode.NONE);
     locationComponent.setRenderMode(com.mapbox.mapboxsdk.location.modes.RenderMode.NORMAL);
     locationComponent.setLocationComponentEnabled(false);

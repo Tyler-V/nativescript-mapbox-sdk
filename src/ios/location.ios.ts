@@ -1,46 +1,28 @@
 import { MapboxView } from '../mapbox-sdk.ios';
-import { MapboxLocation, LocationOptions } from '../common/location.common';
-
-const _stringToCameraMode = (mode: LocationOptions['cameraMode']): any => {
-  switch (mode) {
-    case 'NONE':
-      return 0;
-    case 'TRACKING':
-      return 1;
-    case 'NONE_COMPASS':
-      return 2;
-    case 'TRACKING_COMPASS':
-      return 2;
-    case 'NONE_GPS':
-      return 3;
-    case 'TRACKING_GPS':
-      return 3;
-    case 'TRACKING_GPS_NORTH':
-      return 3;
-  }
-};
+import { MapboxLocation, LocationOptions, TrackingMode } from '../common/location.common';
 
 export class Location extends MapboxLocation {
-  private locationComponent;
-  private cameraTrackingChangedListener;
-
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
   }
 
-  private _getLocationComponent() {}
-
-  private _getLocationComponentOptions() {}
+  _getUserTrackingMode(mode: TrackingMode) {
+    switch (mode) {
+      case TrackingMode.COMPASS:
+        return MGLUserTrackingMode.FollowWithHeading;
+      case TrackingMode.GPS:
+        return MGLUserTrackingMode.FollowWithCourse;
+      default:
+        return MGLUserTrackingMode.Follow;
+    }
+  }
 
   startTracking(options: LocationOptions): Promise<void> {
     return new Promise((resolve, reject) => {
-      try {
-        this.view.mapView.userTrackingMode = _stringToCameraMode(options.cameraMode);
+      this.view.mapView.userTrackingMode = this._getUserTrackingMode(options.mode);
+      this.view.mapView.setUserTrackingModeAnimatedCompletionHandler(this._getUserTrackingMode(options.mode), options.animated, () => {
         resolve();
-      } catch (ex) {
-        console.log('Error in mapbox.trackUser: ' + ex);
-        reject(ex);
-      }
+      });
     });
   }
 

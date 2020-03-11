@@ -1,29 +1,14 @@
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
-export enum CameraMode {
-  NONE = 'NONE',
-  NONE_COMPASS = 'NONE_COMPASS',
-  NONE_GPS = 'NONE_GPS',
-  TRACKING = 'TRACKING',
-  TRACKING_COMPASS = 'TRACKING_COMPASS',
-  TRACKING_GPS = 'TRACKING_GPS',
-  TRACKING_GPS_NORTH = 'TRACKING_GPS_NORTH',
-}
-
-export enum RenderMode {
-  COMPASS = 'COMPASS',
-  GPS = 'GPS',
-  NORMAL = 'NORMAL',
+export enum TrackingMode {
+  NORMAL,
+  COMPASS,
+  GPS,
 }
 
 export interface LocationOptions {
-  cameraMode: CameraMode;
-  renderMode: RenderMode;
-  zoom?: number;
-  tilt?: number;
-  animationDuration?: number;
-  onCameraTrackingChanged?: (currentMode: number) => void;
-  onCameraTrackingDismissed?: () => void;
+  mode?: TrackingMode;
+  animated?: boolean;
 }
 
 export abstract class MapboxLocation {
@@ -33,6 +18,6 @@ export abstract class MapboxLocation {
     this.view = view;
   }
 
-  abstract startTracking(options: LocationOptions): Promise<void>;
+  abstract startTracking(options?: LocationOptions): Promise<void>;
   abstract stopTracking();
 }

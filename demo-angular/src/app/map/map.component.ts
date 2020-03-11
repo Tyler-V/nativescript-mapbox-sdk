@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
-import { LatLng, RenderMode, CameraMode, LayerType } from 'nativescript-mapbox-sdk';
-import * as geolocation from 'nativescript-geolocation';
-import * as app from 'tns-core-modules/application';
+import { LatLng } from 'nativescript-mapbox-sdk';
 import { MapService } from './map.service';
 import { StylesComponent } from './styles/styles.component';
 import { OfflineComponent } from './offline/offline.component';

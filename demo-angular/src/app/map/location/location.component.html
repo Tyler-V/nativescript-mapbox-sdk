@@ -20,8 +20,8 @@
     <StackLayout class="hr"></StackLayout>
     <StackLayout class="p-x-20 p-t-10">
       <Button text="Track Location" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="showLocation()"></Button>
-      <Button text="Track Location With Compass" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="trackLocation()"></Button>
-      <Button text="Track Location With GPS" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="drivingMode()"></Button>
+      <Button text="Track Location With Compass" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="trackLocationWithCompass()"></Button>
+      <Button text="Track Location With GPS" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="trackLocationWithGPS()"></Button>
     </StackLayout>
   </StackLayout>
 </StackLayout>

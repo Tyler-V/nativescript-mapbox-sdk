@@ -6,7 +6,7 @@ import { Location } from './android/location.android';
 import { Annotation } from './android/annotation.android';
 import * as utils from 'tns-core-modules/utils/utils';
 
-export { CameraMode, RenderMode, LocationOptions } from './common/location.common';
+export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
 
 declare const android, com, java, org: any;

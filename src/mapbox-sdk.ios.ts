@@ -1,12 +1,11 @@
 import { MapboxViewBase } from './mapbox-sdk.common';
-
 import { Map } from './ios/map.ios';
 import { Offline } from './ios/offline.ios';
 import { Style } from './ios/style.ios';
 import { Location } from './ios/location.ios';
 import { Annotation } from './ios/annotation.ios';
 
-export { CameraMode, RenderMode, LocationOptions } from './common/location.common';
+export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
 
 export class MapboxView extends MapboxViewBase {
