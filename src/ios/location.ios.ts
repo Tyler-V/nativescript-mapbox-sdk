@@ -1,6 +1,5 @@
-import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
+import { MapboxView } from '../mapbox-sdk.ios';
 import { MapboxLocation, LocationOptions } from '../common/location.common';
-import { CameraPosition } from './../common/map.common';
 
 const _stringToCameraMode = (mode: LocationOptions['cameraMode']): any => {
   switch (mode) {

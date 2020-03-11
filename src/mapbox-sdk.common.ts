@@ -6,6 +6,11 @@ import { MapboxMap } from './common/map.common';
 import { MapboxOffline } from './common/offline.common';
 import { MapboxAnnotation } from './common/annotation.common';
 
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+
 export class MapboxStatic {
   public static defaults = {
     margins: {
@@ -47,17 +52,6 @@ export class MapboxStatic {
     }
     return result;
   }
-}
-
-export interface Feature {
-  id: any;
-  type?: string;
-  properties: Object;
-}
-
-export interface LatLng {
-  lat: number;
-  lng: number;
 }
 
 export interface ShowOptions {
