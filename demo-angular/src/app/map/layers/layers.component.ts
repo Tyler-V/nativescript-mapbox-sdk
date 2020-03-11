@@ -3,32 +3,8 @@ import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
 import { LayerType } from 'nativescript-mapbox-sdk';
-import { Color } from 'tns-core-modules/color';
 
 declare const android, com, java: any;
-const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-const literal = com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-const bool = com.mapbox.mapboxsdk.style.expressions.Expression.bool;
-const toBool = com.mapbox.mapboxsdk.style.expressions.Expression.toBool;
-const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
-const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
-const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
-const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
-const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-const iconSize = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 
 @Component({
     selector: 'layers',
@@ -80,6 +56,18 @@ export class LayersComponent implements OnInit {
             ['5', '0'],
         ];
         this.mapService.mapbox.style.heatmap.heatmapWeight(array);
+
+        const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
+        const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
+        const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
+        const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+        const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+        const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
+        const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
+        const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
+        const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
+        const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
 
         const _heatmapColor = heatmapColor(
             interpolate(linear(), heatmapDensity(), [
@@ -145,6 +133,13 @@ export class LayersComponent implements OnInit {
         this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
         this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
 
+        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+        const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
+        const iconSize = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
+
         this.mapService.symbolLayer.setProperties([
             iconImage(get('TYPE')),
             iconSize(new java.lang.Float(2.0)),
@@ -170,6 +165,11 @@ export class LayersComponent implements OnInit {
         this.SWD = randomBoolean();
         this.OTHER = randomBoolean();
         this.SHOW_ALL_WELLS = randomBoolean();
+
+        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+        const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+        const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
+        const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
 
         const createExpression = (type: string, showAllWells: boolean) => {
             if (showAllWells) {

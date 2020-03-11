@@ -7,7 +7,7 @@ import { Location } from './ios/location.ios';
 import { Annotation } from './ios/annotation.ios';
 
 export { CameraMode, RenderMode, LocationOptions } from './common/location.common';
-export { MapStyle } from './common/style.common';
+export { MapStyle, LayerType } from './common/style.common';
 
 export class MapboxView extends MapboxViewBase {
   delegate: MGLMapViewDelegate;
