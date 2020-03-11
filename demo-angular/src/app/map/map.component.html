@@ -18,9 +18,8 @@
       </Mapbox>
     </ContentView>
   </StackLayout>
-  <FAB (tap)="showLocation()" icon="~/images/location_search.png" rippleColor="#f1f1f1" class="fab-button show-location"></FAB>
-  <FAB (tap)="trackUser()" icon="~/images/my_location.png" rippleColor="#f1f1f1" class="fab-button track-location"></FAB>
-  <FAB (tap)="drivingMode()" [icon]="isTracking ? '~/images/stop.png' : '~/images/navigation.png'" rippleColor="#f1f1f1" class="fab-button driving-mode"></FAB>
+  <FAB (tap)="showLocationModal()" icon="~/images/location.png" rippleColor="#f1f1f1" class="fab-button location"></FAB>
+  <FAB (tap)="showStylesModal()" icon="~/images/map.png" rippleColor="#f1f1f1" class="fab-button styles"></FAB>
+  <FAB (tap)="showLayersModal()" icon="~/images/layers.png" rippleColor="#f1f1f1" class="fab-button layers"></FAB>
   <FAB (tap)="showOfflineModal()" icon="~/images/offline.png" rippleColor="#f1f1f1" class="fab-button offline"></FAB>
-  <FAB (tap)="showStylesModal()" icon="~/images/layers.png" rippleColor="#f1f1f1" class="fab-button styles"></FAB>
 </GridLayout>

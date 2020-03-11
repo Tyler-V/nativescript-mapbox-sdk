@@ -1,3 +1,4 @@
+import { LayerType, MapboxHeatmap } from './../common/style.common';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxStyle } from '../common/style.common';
@@ -7,6 +8,7 @@ declare const android, com, java, org: any;
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
+    this.heatmap = new Heatmap();
   }
 
   getStyle() {
@@ -46,5 +48,36 @@ export class Style extends MapboxStyle {
 
   addLayer(layer: any) {
     this.view.mapStyle.addLayer(layer);
+  }
+
+  removeLayer(layer: any) {
+    this.view.mapStyle.removeLayer(layer);
+  }
+
+  addVectorSource(sourceId: string, uri: string) {
+    const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource(sourceId, uri);
+    this.addSource(vectorSource);
+  }
+
+  createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
+    let layer;
+    switch (layerType) {
+      case LayerType.HEATMAP:
+        layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
+        break;
+      case LayerType.SYMBOL:
+        layer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer(layerId, sourceId);
+        break;
+    }
+    layer.setSourceLayer(sourceId);
+    if (minZoom) layer.setMinZoom(minZoom);
+    if (maxZoom) layer.setMaxZoom(maxZoom);
+    return layer;
+  }
+}
+
+export class Heatmap extends MapboxHeatmap {
+  heatmapWeight(value) {
+    console.log(value);
   }
 }

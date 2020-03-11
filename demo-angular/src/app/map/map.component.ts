@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
-import { RenderMode, CameraMode } from 'nativescript-mapbox-sdk';
+import { LatLng, RenderMode, CameraMode, LayerType } from 'nativescript-mapbox-sdk';
 import * as geolocation from 'nativescript-geolocation';
+import * as app from 'tns-core-modules/application';
 import { MapService } from './map.service';
 import { StylesComponent } from './styles/styles.component';
 import { OfflineComponent } from './offline/offline.component';
+import { LocationComponent } from './location/location.component';
+import { LayersComponent } from './layers/layers.component';
 
 @Component({
     selector: 'map',
@@ -23,8 +26,6 @@ export class MapComponent implements OnInit {
     bearing: number = 0;
     tilt: number = 0;
 
-    isTracking: boolean = false;
-
     constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {}
 
     ngOnInit(): void {}
@@ -32,60 +33,30 @@ export class MapComponent implements OnInit {
     onMapReady(args) {
         console.log(args.eventName);
         this.mapService.mapbox = args.object.mapbox;
+        this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
+            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
+            console.log(features);
+        });
     }
 
     onStyleLoaded(args) {
         console.log(args.eventName);
+        this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
     }
 
-    showLocation() {
-        geolocation.enableLocationRequest().then(() => {
-            this.mapService.mapbox.location.startTracking({
-                cameraMode: CameraMode.NONE,
-                renderMode: RenderMode.NORMAL,
-            });
-        });
-    }
+    showLocationModal() {
+        const options: ModalDialogOptions = {
+            viewContainerRef: this.vcRef,
+            fullscreen: true,
+        };
 
-    trackUser() {
-        geolocation.enableLocationRequest().then(() => {
-            this.mapService.mapbox.location.startTracking({
-                cameraMode: CameraMode.TRACKING_COMPASS,
-                renderMode: RenderMode.COMPASS,
-                zoom: 16,
-                tilt: 0,
-                animationDuration: 1000,
-                onCameraTrackingDismissed: () => {
-                    this.mapService.mapbox.location.stopTracking();
-                },
-            });
-        });
-    }
-
-    drivingMode() {
-        if (this.isTracking) {
-            this.isTracking = false;
-            this.mapService.mapbox.location.stopTracking();
-            this.mapService.mapbox.map.setAllGesturesEnabled(true);
-        } else {
-            geolocation.enableLocationRequest().then(() => {
-                this.isTracking = true;
-                this.mapService.mapbox.map.setAllGesturesEnabled(false);
-                this.mapService.mapbox.location.startTracking({
-                    cameraMode: CameraMode.TRACKING_GPS,
-                    renderMode: RenderMode.GPS,
-                    zoom: 19,
-                    tilt: 45,
-                    animationDuration: 2000,
-                });
-            });
-        }
+        return this.modalService.showModal(LocationComponent, options);
     }
 
     showOfflineModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: false,
+            fullscreen: true,
         };
 
         return this.modalService.showModal(OfflineComponent, options);
@@ -94,9 +65,18 @@ export class MapComponent implements OnInit {
     showStylesModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: false,
+            fullscreen: true,
         };
 
         return this.modalService.showModal(StylesComponent, options);
+    }
+
+    showLayersModal() {
+        const options: ModalDialogOptions = {
+            viewContainerRef: this.vcRef,
+            fullscreen: true,
+        };
+
+        return this.modalService.showModal(LayersComponent, options);
     }
 }

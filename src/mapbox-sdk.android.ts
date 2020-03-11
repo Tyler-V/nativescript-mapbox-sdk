@@ -1,15 +1,13 @@
 import { MapboxViewBase } from './mapbox-sdk.common';
-
 import { Map } from './android/map.android';
 import { Offline } from './android/offline.android';
 import { Style } from './android/style.android';
 import { Location } from './android/location.android';
 import { Annotation } from './android/annotation.android';
+import * as utils from 'tns-core-modules/utils/utils';
 
 export { CameraMode, RenderMode, LocationOptions } from './common/location.common';
-export { MapStyle } from './common/style.common';
-
-import * as utils from 'tns-core-modules/utils/utils';
+export { MapStyle, LayerType } from './common/style.common';
 
 declare const android, com, java, org: any;
 
