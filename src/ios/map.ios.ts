@@ -1,7 +1,7 @@
 import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
-import * as utils from "tns-core-modules/utils/utils";
+import * as utils from 'tns-core-modules/utils/utils';
 
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
@@ -80,9 +80,8 @@ export class Map extends MapboxMap {
   }
 
   queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {
-    debugger;
-    const {x, y} = this.view.mapView.convertCoordinateToPointToView({latitude: point.lat, longitude: point.lng}, this.view.mapView);
-    const features = this.view.mapView.visibleFeaturesAtPointInStyleLayersWithIdentifiers({x, y}, layerIds);
+    const { x, y } = this.view.mapView.convertCoordinateToPointToView({ latitude: point.lat, longitude: point.lng }, this.view.mapView);
+    const features = this.view.mapView.visibleFeaturesAtPointInStyleLayersWithIdentifiers({ x, y }, layerIds);
 
     const results = [];
     for (let i = 0; i < features.count; i++) {
@@ -90,8 +89,7 @@ export class Map extends MapboxMap {
       const properties = [];
 
       if (feature.attributes && feature.attributes.count > 0) {
-        const keys = utils.ios.collections.nsArrayToJSArray(
-          feature.attributes.allKeys);
+        const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
 
         for (let key of keys) {
           properties.push({
