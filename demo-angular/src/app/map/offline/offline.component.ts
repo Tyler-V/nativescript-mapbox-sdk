@@ -1,14 +1,14 @@
-import { Page } from "tns-core-modules/ui/page";
-import { ModalDialogParams } from "nativescript-angular/modal-dialog";
-import { Component, OnInit } from "@angular/core";
-import { MapService } from "./../map.service";
-import { Progress } from "tns-core-modules/ui/progress";
+import { Page } from 'tns-core-modules/ui/page';
+import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
+import { Component, OnInit } from '@angular/core';
+import { MapService } from './../map.service';
+import { Progress } from 'tns-core-modules/ui/progress';
 
 @Component({
-    selector: "offline",
+    selector: 'offline',
     moduleId: module.id,
-    templateUrl: "./offline.component.html",
-    styleUrls: ["./offline.component.scss"]
+    templateUrl: './offline.component.html',
+    styleUrls: ['./offline.component.scss'],
 })
 export class OfflineComponent implements OnInit {
     offlineRegions: any[];
@@ -17,13 +17,9 @@ export class OfflineComponent implements OnInit {
     isDownloading: boolean;
     progress: Progress;
 
-    constructor(
-        private mapService: MapService,
-        private params: ModalDialogParams,
-        private page: Page
-    ) {
+    constructor(private mapService: MapService, private params: ModalDialogParams, private page: Page) {
         this.progressValue = 0;
-        this.page.on("unloaded", () => {
+        this.page.on('unloaded', () => {
             this.params.closeCallback();
         });
         this.offlineRegions = [];
@@ -36,12 +32,10 @@ export class OfflineComponent implements OnInit {
     }
 
     getOfflineRegions() {
-        this.mapService.mapbox.offline
-            .listOfflineRegions()
-            .then(offlineRegions => {
-                this.offlineRegions = offlineRegions;
-                console.log(this.mapService.offlineRegions);
-            });
+        this.mapService.mapbox.offline.listOfflineRegions().then((offlineRegions) => {
+            this.offlineRegions = offlineRegions;
+            console.log(this.mapService.offlineRegions);
+        });
     }
 
     onDownloadTap() {
@@ -49,9 +43,9 @@ export class OfflineComponent implements OnInit {
         this.mapService.mapbox.offline
             .downloadOfflineRegion(
                 {
-                    name: this.regionName
+                    name: this.regionName,
                 },
-                progress => {
+                (progress) => {
                     console.log(progress);
                     this.progress.value = Math.round(progress.percentage);
                 }
@@ -59,7 +53,7 @@ export class OfflineComponent implements OnInit {
             .then(() => {
                 this.isDownloading = false;
             })
-            .catch(error => {
+            .catch((error) => {
                 this.isDownloading = false;
                 console.log(error);
             });
@@ -71,7 +65,7 @@ export class OfflineComponent implements OnInit {
 
     onResetTap() {
         this.mapService.mapbox.offline.resetDatabase().then(() => {
-            console.log("Database Reset!");
+            console.log('Database Reset!');
             this.offlineRegions = [];
         });
     }

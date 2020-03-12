@@ -7,7 +7,7 @@ import { Annotation } from './android/annotation.android';
 import * as utils from 'tns-core-modules/utils/utils';
 
 export { TrackingMode, LocationOptions } from './common/location.common';
-export { MapStyle, LayerType } from './common/style.common';
+export { MapStyle, LayerType, Color } from './common/style.common';
 
 declare const android, com, java, org: any;
 

@@ -1,9 +1,9 @@
-import { LayerType, MapboxHeatmap } from './../common/style.common';
+import { LayerType, MapboxHeatmap, Color } from '../common/style.common';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxStyle } from '../common/style.common';
 
-declare const android, com, java, org: any;
+declare const com, java: any;
 
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
@@ -76,7 +76,83 @@ export class Style extends MapboxStyle {
   }
 }
 
+const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
+const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
+const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
+const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+
+const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
+const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
+const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
+const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
+
+export const color = (color: Color) => {
+  if (color.alpha) {
+    return rgba(number(color.red), number(color.green), number(color.blue), number(color.alpha));
+  } else {
+    return rgb(number(color.red), number(color.green), number(color.blue));
+  }
+};
+
+export const number = (input: number) => {
+  if (Number.isInteger(input)) {
+    return new java.lang.Integer(input);
+  } else {
+    return new java.lang.Double(input);
+  }
+};
+
+export const isColor = (input: any) => {
+  try {
+    return input.__proto__.constructor.name === 'Color';
+  } catch {
+    return false;
+  }
+};
+
+export const marshall = (input: any) => {
+  if (isColor(input)) {
+    return color(input);
+  } else if (typeof input === 'number') {
+    return number(input);
+  }
+  return input;
+};
+
+export const expressionStops = (stops: any[][]) => {
+  const array = [];
+  for (let input of stops) {
+    const _stop = marshall(input[0]);
+    const _value = marshall(input[1]);
+    array.push(stop(_stop, _value));
+  }
+  return array;
+};
+
 export class Heatmap extends MapboxHeatmap {
+  heatmapColor(stops: any[][]) {
+    const _heatmapColor = heatmapColor(interpolate(linear(), heatmapDensity(), expressionStops(stops)));
+    return _heatmapColor;
+  }
+
+  heatmapIntensity(stops: number[][]) {
+    const _heatmapIntensity = heatmapIntensity(interpolate(linear(), zoom(), expressionStops(stops)));
+    return _heatmapIntensity;
+  }
+
+  heatmapRadius(stops: number[][]) {
+    const _heatmapRadius = heatmapRadius(interpolate(linear(), zoom(), expressionStops(stops)));
+    return _heatmapRadius;
+  }
+
+  heatmapOpacity(stops: number[][]) {
+    const _heatmapOpacity = heatmapOpacity(interpolate(linear(), zoom(), expressionStops(stops)));
+    return _heatmapOpacity;
+  }
+
   heatmapWeight(value) {
     console.log(value);
   }

@@ -1,4 +1,3 @@
-
 import { Folder, path, knownFolders } from 'tns-core-modules/file-system';
 import { ImageSource } from 'tns-core-modules/image-source';
 import { MapboxViewBase } from '../mapbox-sdk.common';
@@ -48,6 +47,24 @@ export abstract class MapboxStyle {
   }
 }
 
+export class Color {
+  red: number;
+  green: number;
+  blue: number;
+  alpha: number;
+
+  constructor(red: number, green: number, blue: number, alpha?: number) {
+    this.red = red;
+    this.green = green;
+    this.blue = blue;
+    this.alpha = alpha;
+  }
+}
+
 export abstract class MapboxHeatmap {
-  abstract heatmapWeight(value);
+  abstract heatmapColor(stops: any[][]): any;
+  abstract heatmapIntensity(value): any;
+  abstract heatmapRadius(value): any;
+  abstract heatmapOpacity(value): any;
+  abstract heatmapWeight(value): any;
 }

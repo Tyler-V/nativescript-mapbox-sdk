@@ -1,8 +1,8 @@
-import { Page, isIOS } from 'tns-core-modules/ui/page';
+import { Page, isIOS, isAndroid } from 'tns-core-modules/ui/page';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
-import { LayerType } from 'nativescript-mapbox-sdk';
+import { LayerType, Color } from 'nativescript-mapbox-sdk';
 
 declare const android, com, java: any;
 
@@ -44,69 +44,43 @@ export class LayersComponent implements OnInit {
     }
 
     addHeatmapLayer() {
-        if (isIOS) {
-            return; // TODO
+        if (isAndroid) {
+            this.androidHeatmap();
+        } else if (isIOS) {
         }
 
+        this.params.closeCallback();
+    }
+
+    androidHeatmap() {
         const maxZoom = 12;
         this.mapService.heatmapLayer = this.mapService.mapbox.style.createLayer(LayerType.HEATMAP, 'heatmap-layer-id', 'wells', null, maxZoom);
 
-        const array = [
-            ['0', '1'],
-            ['5', '0'],
-        ];
-        this.mapService.mapbox.style.heatmap.heatmapWeight(array);
+        const _heatmapColor = this.mapService.mapbox.style.heatmap.heatmapColor([
+            [0.01, new Color(255, 255, 255, 0.01)],
+            [0.25, new Color(4, 179, 183)],
+            [0.5, new Color(204, 211, 61)],
+            [0.75, new Color(252, 167, 55)],
+            [0.9, new Color(255, 78, 70)],
+        ]);
 
-        const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-        const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-        const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-        const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-        const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-        const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
-        const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-        const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-        const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-        const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-        const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+        const _heatmapIntensity = this.mapService.mapbox.style.heatmap.heatmapIntensity([
+            [0, 1.0],
+            [maxZoom, 0.5],
+        ]);
 
-        const _heatmapColor = heatmapColor(
-            interpolate(linear(), heatmapDensity(), [
-                stop(
-                    new java.lang.Float(0.01),
-                    rgba(new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(255), new java.lang.Integer(0.01))
-                ),
-                stop(new java.lang.Float(0.25), rgb(new java.lang.Integer(4), new java.lang.Integer(179), new java.lang.Integer(183))),
-                stop(new java.lang.Float(0.5), rgb(new java.lang.Integer(204), new java.lang.Integer(211), new java.lang.Integer(61))),
-                stop(new java.lang.Float(0.75), rgb(new java.lang.Integer(252), new java.lang.Integer(167), new java.lang.Integer(55))),
-                stop(new java.lang.Float(0.9), rgb(new java.lang.Integer(255), new java.lang.Integer(78), new java.lang.Integer(70))),
-            ])
-        );
+        const _heatmapRadius = this.mapService.mapbox.style.heatmap.heatmapRadius([
+            [0, 5],
+            [maxZoom, 5],
+        ]);
 
-        const _heatmapIntensity = heatmapIntensity(
-            interpolate(linear(), zoom(), [
-                stop(new java.lang.Integer(0), new java.lang.Float(1.0)),
-                stop(new java.lang.Integer(maxZoom), new java.lang.Float(0.5)),
-            ])
-        );
-
-        const _heatmapRadius = heatmapRadius(
-            interpolate(linear(), zoom(), [
-                stop(new java.lang.Integer(0), new java.lang.Integer(5)),
-                stop(new java.lang.Integer(maxZoom), new java.lang.Integer(10)),
-            ])
-        );
-
-        const _heatmapOpacity = heatmapOpacity(
-            interpolate(linear(), zoom(), [
-                stop(new java.lang.Integer(0), new java.lang.Float(1.0)),
-                stop(new java.lang.Integer(maxZoom), new java.lang.Float(1.0)),
-            ])
-        );
+        const _heatmapOpacity = this.mapService.mapbox.style.heatmap.heatmapOpacity([
+            [0, 1.0],
+            [maxZoom, 1.0],
+        ]);
 
         this.mapService.heatmapLayer.setProperties([_heatmapColor, _heatmapRadius, _heatmapIntensity, _heatmapOpacity]);
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
-
-        this.params.closeCallback();
     }
 
     removeSymbolLayer() {
@@ -142,7 +116,7 @@ export class LayersComponent implements OnInit {
 
         this.mapService.symbolLayer.setProperties([
             iconImage(get('TYPE')),
-            iconSize(new java.lang.Float(2.0)),
+            iconSize(new java.lang.Double(2.0)),
             iconAllowOverlap(new java.lang.Boolean(true)),
             iconIgnorePlacement(new java.lang.Boolean(true)),
             textAllowOverlap(new java.lang.Boolean(true)),

@@ -5,6 +5,7 @@ import { Mapbox } from 'nativescript-mapbox-sdk';
     providedIn: 'root',
 })
 export class MapService {
+    mapView: any;
     mapbox: Mapbox;
 
     offlineRegions: any[];
