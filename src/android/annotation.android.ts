@@ -1,5 +1,4 @@
 import { Color } from 'tns-core-modules/color';
-
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxAnnotation } from '../common/annotation.common';
 

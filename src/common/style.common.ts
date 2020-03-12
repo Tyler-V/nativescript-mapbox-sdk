@@ -1,6 +1,6 @@
-import { MapboxViewBase } from '../mapbox-sdk.common';
-import { ImageSource } from 'tns-core-modules/image-source';
 import { Folder, path, knownFolders } from 'tns-core-modules/file-system';
+import { ImageSource } from 'tns-core-modules/image-source';
+import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export enum MapStyle {
   MAPBOX_STREETS = 'mapbox://styles/mapbox/streets-v11',
@@ -11,6 +11,11 @@ export enum MapStyle {
   SATELLITE_STREETS = 'mapbox://styles/mapbox/satellite-streets-v11',
 }
 
+export enum LayerType {
+  HEATMAP = 'HEATMAP',
+  SYMBOL = 'SYMBOL',
+}
+
 export interface StyleOptions {
   style?: string;
   uri?: string;
@@ -18,6 +23,7 @@ export interface StyleOptions {
 
 export abstract class MapboxStyle {
   protected view: MapboxViewBase;
+  public heatmap: MapboxHeatmap;
 
   constructor(view: MapboxViewBase) {
     this.view = view;
@@ -25,12 +31,13 @@ export abstract class MapboxStyle {
 
   abstract getStyle();
   abstract getUri(): string;
-
   abstract setStyleUri(uri: string): Promise<any>;
-
-  abstract addImage(name: string, filePath: string);
-  abstract addSource(source: any);
-  abstract addLayer(layer: any);
+  abstract addImage(name: string, filePath: string): void;
+  abstract addSource(source: any): void;
+  abstract addLayer(layer: any): void;
+  abstract removeLayer(layer: any): void;
+  abstract addVectorSource(sourceId: string, uri: string): void;
+  abstract createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number): any;
 
   public getImage(filePath: string): ImageSource {
     const folder: Folder = <Folder>knownFolders.currentApp();
@@ -38,4 +45,26 @@ export abstract class MapboxStyle {
     const imageSource: ImageSource = ImageSource.fromFileSync(folderPath);
     return imageSource;
   }
+}
+
+export class Color {
+  red: number;
+  green: number;
+  blue: number;
+  alpha: number;
+
+  constructor(red: number, green: number, blue: number, alpha?: number) {
+    this.red = red;
+    this.green = green;
+    this.blue = blue;
+    this.alpha = alpha;
+  }
+}
+
+export abstract class MapboxHeatmap {
+  abstract heatmapColor(stops: any[][]): any;
+  abstract heatmapIntensity(value): any;
+  abstract heatmapRadius(value): any;
+  abstract heatmapOpacity(value): any;
+  abstract heatmapWeight(value): any;
 }

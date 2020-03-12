@@ -1,0 +1,27 @@
+<StackLayout width="100%">
+  <AbsoluteLayout width="100%" height="50">
+    <StackLayout orientation="horizontal" width="100%" height="100%">
+      <Label text="Location" fontSize="24" left="50%" top="0" width="100%" textAlignment="center" verticalAlignment="center"></Label>
+    </StackLayout>
+    <StackLayout orientation="horizontal" height="100%" width="50" (tap)="goBack()">
+      <Image src="~/images/arrow_back.png" class="m-l-5" height="30" verticalAlignment="center"></Image>
+    </StackLayout>
+  </AbsoluteLayout>
+  <StackLayout class="hr"></StackLayout>
+  <StackLayout class="p-y-20">
+    <StackLayout class="p-x-20 p-b-10">
+      <Button
+        text="Stop Tracking"
+        [ngClass]="{ '-primary': !mapService.isTracking, '-danger': mapService.isTracking }"
+        [isEnabled]="mapService.isTracking"
+        (tap)="stopTracking()"
+      ></Button>
+    </StackLayout>
+    <StackLayout class="hr"></StackLayout>
+    <StackLayout class="p-x-20 p-t-10">
+      <Button text="Track Location" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="showLocation()"></Button>
+      <Button text="Track Location With Compass" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="trackLocationWithCompass()"></Button>
+      <Button text="Track Location With GPS" class="-primary" [isEnabled]="!mapService.isTracking" (tap)="trackLocationWithGPS()"></Button>
+    </StackLayout>
+  </StackLayout>
+</StackLayout>
