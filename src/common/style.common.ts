@@ -1,6 +1,7 @@
-import { MapboxViewBase } from '../mapbox-sdk.common';
-import { ImageSource } from 'tns-core-modules/image-source';
+
 import { Folder, path, knownFolders } from 'tns-core-modules/file-system';
+import { ImageSource } from 'tns-core-modules/image-source';
+import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export enum MapStyle {
   MAPBOX_STREETS = 'mapbox://styles/mapbox/streets-v11',

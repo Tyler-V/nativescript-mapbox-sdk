@@ -1,5 +1,4 @@
-import { LatLng } from './../mapbox-sdk.common';
-import { MapboxViewBase } from '../mapbox-sdk.common';
+import { MapboxViewBase, LatLng } from '../mapbox-sdk.common';
 
 export interface CameraPosition {
   latLng: LatLng;
@@ -15,6 +14,12 @@ export interface LatLngBounds {
   west: number;
 }
 
+export interface Feature {
+  id: any;
+  type?: string;
+  properties: Object;
+}
+
 export abstract class MapboxMap {
   protected view: MapboxViewBase;
 
@@ -25,11 +30,10 @@ export abstract class MapboxMap {
   abstract addOnMapClickListener(listener: (latLng: LatLng) => void);
   abstract addOnMapLongClickListener(listener: (latLng: LatLng) => void);
 
-  abstract getMap();
-  abstract getZoom();
-  abstract getTilt();
-  abstract getBearing();
-  abstract getCenter();
+  abstract getZoom(): number;
+  abstract getTilt(): number;
+  abstract getBearing(): number;
+  abstract getCenter(): LatLng;
   abstract getBounds(): LatLngBounds;
 
   abstract setAllGesturesEnabled(enabled: boolean);
@@ -37,5 +41,5 @@ export abstract class MapboxMap {
   abstract setLogoEnabled(enabled: boolean);
 
   abstract animateCamera(options: CameraPosition, duration: number): Promise<void>;
-  abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]);
+  abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature>;
 }

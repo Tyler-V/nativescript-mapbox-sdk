@@ -1,6 +1,6 @@
-import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
+import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
 
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
@@ -47,10 +47,6 @@ export class Map extends MapboxMap {
 
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {}
 
-  getMap() {
-    return this.view.mapboxMap;
-  }
-
   getZoom() {
     const zoom = this.view.mapView.zoomLevel;
     return zoom;
@@ -66,7 +62,13 @@ export class Map extends MapboxMap {
     return bearing;
   }
 
-  getCenter() {}
+  getCenter() {
+    const coordinate = this.view.mapView.centerCoordinate;
+    return {
+      lat: coordinate.latitude,
+      lng: coordinate.longitude,
+    };
+  }
 
   getBounds(): LatLngBounds {
     let visibleCoordinateBounds = this.view.mapView.visibleCoordinateBounds;
@@ -78,11 +80,23 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {}
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
+    return null;
+  }
 
-  setAllGesturesEnabled(enabled: boolean) {}
+  setAllGesturesEnabled(enabled: boolean) {
+    this.view.mapView.zoomEnabled = enabled;
+    this.view.mapView.scrollEnabled = enabled;
+    this.view.mapView.pitchEnabled = enabled;
+    this.view.mapView.rotateEnabled = enabled;
+  }
 
-  setCompassEnabled(enabled: boolean) {}
+  setCompassEnabled(enabled: boolean) {
+    this.view.mapView.compassView.hidden = enabled;
+  }
 
-  setLogoEnabled(enabled: boolean) {}
+  setLogoEnabled(enabled: boolean) {
+    this.view.mapView.attributionButton.hidden = enabled; // This is for the info icon on bottom right
+    this.view.mapView.logoView.hidden = enabled; // This is for the mapbox logo on bottom left
+  }
 }
