@@ -78,7 +78,15 @@ export class LayersComponent implements OnInit {
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
     }
 
-    iosHeatmap() {}
+    iosHeatmap() {
+        let source = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL('wells', NSURL.URLWithString('mapbox://tvorpahl.b31830kk'));
+        this.mapService.mapView.style.addSource(source);
+
+        let _source = this.mapService.mapView.style.sourceWithIdentifier('wells');
+        let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', _source);
+
+        this.mapService.mapView.style.addLayer(heatmapLayer);
+    }
 
     removeSymbolLayer() {
         if (isIOS) {
