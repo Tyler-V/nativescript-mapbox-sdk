@@ -34,10 +34,6 @@ export class LayersComponent implements OnInit {
     }
 
     removeHeatmapLayer() {
-        if (isIOS) {
-            return; // TODO
-        }
-
         this.mapService.mapbox.style.removeLayer(this.mapService.heatmapLayer);
         this.mapService.heatmapLayer = null;
         this.params.closeCallback();
