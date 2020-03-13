@@ -58,7 +58,7 @@ export class Style extends MapboxStyle {
   addVectorSource(sourceId: string, uri: string): any {
     let source = this.view.mapView.style.sourceWithIdentifier(sourceId);
     if (source != null) {
-      return;
+      return source;
     }
     source = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL(sourceId, NSURL.URLWithString(uri));
     this.addSource(source);
