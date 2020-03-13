@@ -80,7 +80,9 @@ export class LayersComponent implements OnInit {
 
     iosHeatmap() {
         let source = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL('wells', NSURL.URLWithString('mapbox://tvorpahl.b31830kk'));
-        this.mapService.mapView.style.addSource(source);
+        if (this.mapService.mapView.style.sourceWithIdentifier('wells') == null) {
+            this.mapService.mapView.style.addSource(source);
+        }
 
         let _source = this.mapService.mapView.style.sourceWithIdentifier('wells');
         let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', _source);
