@@ -103,10 +103,11 @@ export class LayersComponent implements OnInit {
             heatmapIntensityArray
         );
 
-        const heatmapRadiusArray = NSArray.arrayWithObjects([{ 0: 5 }, { maxZoom: 5 }]);
+        let nsDict = new (NSDictionary as any)([0, 5], [maxZoom, 5]);
+        let nsArray = NSArray.arrayWithArray([nsDict]);
         this.mapService.heatmapLayer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray(
             "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-            heatmapRadiusArray
+            nsArray
         );
 
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
