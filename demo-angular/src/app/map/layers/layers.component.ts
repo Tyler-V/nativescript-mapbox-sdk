@@ -81,21 +81,21 @@ export class LayersComponent implements OnInit {
         this.mapService.heatmapLayer.sourceLayerIdentifier = 'wells';
         this.mapService.heatmapLayer.maximumZoomLevel = maxZoom;
 
-        // let colorDictionary: [NSNumber: UIColor] = [
-        //     0.0: .clear,
-        //     0.01: .white,
-        //     0.15: UIColor(red: 0.19, green: 0.30, blue: 0.80, alpha: 1.0),
-        //     0.5: UIColor(red: 0.73, green: 0.23, blue: 0.25, alpha: 1.0),
-        //     1: .yellow
-        //     ]
-
-        // let colorDictionary = [
-        //     [0.0, UIColor.colorWithRedGreenBlueAlpha(255, 255, 255, 0.01)],
-        //     [0.25, UIColor.colorWithRedGreenBlueAlpha(4, 179, 183, 255)],
-        //     [0.5, UIColor.colorWithRedGreenBlueAlpha(204, 211, 61, 255)],
-        //     [0.75, UIColor.colorWithRedGreenBlueAlpha(252, 167, 55, 255)],
-        //     [1.0, UIColor.colorWithRedGreenBlueAlpha(255, 78, 70, 255)],
-        // ];
+        let heatmapColorDictionary = new (NSDictionary as any)(
+            [
+                UIColor.colorWithRedGreenBlueAlpha(255, 255, 255, 0.01),
+                UIColor.colorWithRedGreenBlueAlpha(4, 179, 183, 255),
+                UIColor.colorWithRedGreenBlueAlpha(204, 211, 61, 255),
+                UIColor.colorWithRedGreenBlueAlpha(252, 167, 55, 255),
+                UIColor.colorWithRedGreenBlueAlpha(255, 78, 70, 255),
+            ],
+            [0, 0.25, 0.5, 0.75, 1.0]
+        );
+        let heatmapColorArray = NSArray.arrayWithArray([heatmapColorDictionary]);
+        this.mapService.heatmapLayer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
+            "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
+            heatmapColorArray
+        );
 
         // [0, 1],
         // [maxZoom, 0.5]
