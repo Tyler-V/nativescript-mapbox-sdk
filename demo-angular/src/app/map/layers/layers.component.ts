@@ -61,7 +61,7 @@ export class LayersComponent implements OnInit {
             [0.25, new Color(4, 179, 183)],
             [0.5, new Color(204, 211, 61)],
             [0.75, new Color(252, 167, 55)],
-            [0.9, new Color(255, 78, 70)],
+            [1.0, new Color(255, 78, 70)],
         ]);
         this.mapService.mapbox.style.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
             [0, 1],
@@ -84,8 +84,33 @@ export class LayersComponent implements OnInit {
             this.mapService.mapView.style.addSource(source);
         }
 
-        let _source = this.mapService.mapView.style.sourceWithIdentifier('wells');
-        let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', _source);
+        let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
+        heatmapLayer.maximumZoomLevel = 12;
+
+        // let colorDictionary: [NSNumber: UIColor] = [
+        //     0.0: .clear,
+        //     0.01: .white,
+        //     0.15: UIColor(red: 0.19, green: 0.30, blue: 0.80, alpha: 1.0),
+        //     0.5: UIColor(red: 0.73, green: 0.23, blue: 0.25, alpha: 1.0),
+        //     1: .yellow
+        //     ]
+
+        // let colorDictionary = [
+        //     [0.0, UIColor.colorWithRedGreenBlueAlpha(255, 255, 255, 0.01)],
+        //     [0.25, UIColor.colorWithRedGreenBlueAlpha(4, 179, 183, 255)],
+        //     [0.5, UIColor.colorWithRedGreenBlueAlpha(204, 211, 61, 255)],
+        //     [0.75, UIColor.colorWithRedGreenBlueAlpha(252, 167, 55, 255)],
+        //     [1.0, UIColor.colorWithRedGreenBlueAlpha(255, 78, 70, 255)],
+        // ];
+
+        // [0: 0,
+        //     6: 1]
+
+        // const nsArray = NSArray.arrayWithObject()
+
+        // heatmapLayer.heatmapWeight = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:(magnitude, 'linear', nil, %@)",
+        // [0: 0,
+        //  6: 1]);
 
         this.mapService.mapView.style.addLayer(heatmapLayer);
     }
