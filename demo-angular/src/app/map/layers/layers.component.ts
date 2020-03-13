@@ -97,14 +97,16 @@ export class LayersComponent implements OnInit {
         //     [1.0, UIColor.colorWithRedGreenBlueAlpha(255, 78, 70, 255)],
         // ];
 
-        // [0, 1],
-        // [maxZoom, 0.5],
-
-        let nsDict = new (NSDictionary as any)([0, 1], [maxZoom, 0.5]);
-        let nsArray = NSArray.arrayWithArray([nsDict]);
+        const heatmapIntensityArray = NSArray.arrayWithObjects([{ 0: 1 }, { maxZoom: 0.5 }]);
         this.mapService.heatmapLayer.heatmapItensity = NSExpression.expressionWithFormatArgumentArray(
             "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-            nsArray
+            heatmapIntensityArray
+        );
+
+        const heatmapRadiusArray = NSArray.arrayWithObjects([{ 0: 5 }, { maxZoom: 5 }]);
+        this.mapService.heatmapLayer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray(
+            "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+            heatmapRadiusArray
         );
 
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
