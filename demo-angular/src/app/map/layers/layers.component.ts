@@ -3,6 +3,7 @@ import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
 import { LayerType, Color } from 'nativescript-mapbox-sdk';
+import { Color as tnsColor } from 'tns-core-modules/color';
 
 declare const android, com, java: any;
 
@@ -83,11 +84,11 @@ export class LayersComponent implements OnInit {
 
         let heatmapColorDictionary = new (NSDictionary as any)(
             [
-                UIColor.colorWithRedGreenBlueAlpha(255, 255, 255, 0.01),
-                UIColor.colorWithRedGreenBlueAlpha(4, 179, 183, 255),
-                UIColor.colorWithRedGreenBlueAlpha(204, 211, 61, 255),
-                UIColor.colorWithRedGreenBlueAlpha(252, 167, 55, 255),
-                UIColor.colorWithRedGreenBlueAlpha(255, 78, 70, 255),
+                new tnsColor(0.01, 255, 255, 255).ios,
+                new tnsColor(255, 4, 179, 183).ios,
+                new tnsColor(255, 204, 211, 61).ios,
+                new tnsColor(255, 252, 167, 55).ios,
+                new tnsColor(255, 255, 78, 70).ios,
             ],
             [0, 0.25, 0.5, 0.75, 1.0]
         );
