@@ -54,9 +54,10 @@ export class Style extends MapboxStyle {
     this.view.mapStyle.removeLayer(layer);
   }
 
-  addVectorSource(sourceId: string, uri: string) {
+  addVectorSource(sourceId: string, uri: string): any {
     const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource(sourceId, uri);
     this.addSource(vectorSource);
+    return vectorSource;
   }
 
   createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {

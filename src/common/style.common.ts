@@ -36,7 +36,7 @@ export abstract class MapboxStyle {
   abstract addSource(source: any): void;
   abstract addLayer(layer: any): void;
   abstract removeLayer(layer: any): void;
-  abstract addVectorSource(sourceId: string, uri: string): void;
+  abstract addVectorSource(sourceId: string, uri: string): any;
   abstract createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number): any;
 
   public getImage(filePath: string): ImageSource {
