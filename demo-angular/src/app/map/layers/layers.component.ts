@@ -100,7 +100,8 @@ export class LayersComponent implements OnInit {
         // [0, 1],
         // [maxZoom, 0.5],
 
-        const nsArray = NSArray.arrayWithObjects([{ 0: 1 }, { maxZoom: 0.5 }]);
+        let nsDict = new (NSDictionary as any)([0, 1], [maxZoom, 0.5]);
+        let nsArray = NSArray.arrayWithArray([nsDict]);
         this.mapService.heatmapLayer.heatmapItensity = NSExpression.expressionWithFormatArgumentArray(
             "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
             nsArray
