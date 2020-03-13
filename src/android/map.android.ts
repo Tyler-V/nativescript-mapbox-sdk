@@ -4,7 +4,7 @@ import { MapboxMap, CameraPosition, LatLngBounds, Feature } from './../common/ma
 
 declare const android, com, java, org: any;
 
-function _getIntersectingFeatures(features) {
+function _getFeatures(features) {
   const results: Array<Feature> = [];
 
   for (let i = 0; i < features.size(); i++) {
@@ -110,10 +110,10 @@ export class Map extends MapboxMap {
 
     const features = this.view.mapboxMap.queryRenderedFeatures(pixel, layerIds);
 
-    return _getIntersectingFeatures(features);
+    return _getFeatures(features);
   }
 
-  queryRenderedFeaturesByRect(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeaturesByBounds(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
     const bbox = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
       .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.north, bounds.east))
       .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.south, bounds.west))
@@ -126,7 +126,7 @@ export class Map extends MapboxMap {
     const rect = new android.os.Parcelable.RectF(west, south, east, north);
     const features = this.view.mapboxMap.queryRenderedFeatures(rect, layerIds);
 
-    return _getIntersectingFeatures(features);
+    return _getFeatures(features);
   }
 
   setAllGesturesEnabled(enabled: boolean): void {
