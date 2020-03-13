@@ -80,9 +80,9 @@ export class LayersComponent implements OnInit {
 
     iosHeatmap() {
         const source = this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
-        let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
-        heatmapLayer.sourceLayerIdentifier = 'wells';
-        heatmapLayer.maximumZoomLevel = 12;
+        this.mapService.heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
+        this.mapService.heatmapLayer.sourceLayerIdentifier = 'wells';
+        this.mapService.heatmapLayer.maximumZoomLevel = 12;
 
         // let colorDictionary: [NSNumber: UIColor] = [
         //     0.0: .clear,
@@ -109,7 +109,7 @@ export class LayersComponent implements OnInit {
         // [0: 0,
         //  6: 1]);
 
-        this.mapService.mapbox.style.addLayer(heatmapLayer);
+        this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
     }
 
     removeSymbolLayer() {
