@@ -3,6 +3,31 @@ import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
 
+function _getIntersectingFeatures(features) {
+  const results: Array<Feature> = [];
+
+  for (let i = 0; i < features.count; i++) {
+    const feature: MGLFeature = features.objectAtIndex(i);
+    const properties = [];
+
+    if (feature.attributes && feature.attributes.count > 0) {
+      const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
+
+      for (let key of keys) {
+        properties.push({
+          key,
+          value: feature.attributes.valueForKey(key),
+        });
+      }
+    }
+    results.push({
+      id: feature.identifier,
+      properties,
+    });
+  }
+
+  return results;
+}
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
@@ -81,32 +106,22 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]) {
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
     const { x, y } = this.view.mapView.convertCoordinateToPointToView({ latitude: point.lat, longitude: point.lng }, this.view.mapView);
     const features = this.view.mapView.visibleFeaturesAtPointInStyleLayersWithIdentifiers({ x, y }, layerIds);
 
-    const results = [];
-    for (let i = 0; i < features.count; i++) {
-      const feature: MGLFeature = features.objectAtIndex(i);
-      const properties = [];
+    return _getIntersectingFeatures(features);
+  }
 
-      if (feature.attributes && feature.attributes.count > 0) {
-        const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
+  queryRenderedFeaturesByRect(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+    let swCoordinate = CLLocationCoordinate2DMake(bounds.south, bounds.west);
+    let neCoordinate = CLLocationCoordinate2DMake(bounds.north, bounds.east);
+    let bbox: MGLCoordinateBounds = { sw: swCoordinate, ne: neCoordinate };
 
-        for (let key of keys) {
-          properties.push({
-            key,
-            value: feature.attributes.valueForKey(key),
-          });
-        }
-      }
-      results.push({
-        id: feature.identifier,
-        properties,
-      });
-    }
+    const rect = this.view.mapView.convertCoordinateBoundsToRectToView(bbox, this.view.mapView);
+    const features = this.view.mapView.visibleFeaturesInRectInStyleLayersWithIdentifiers(rect, layerIds);
 
-    return results;
+    return _getIntersectingFeatures(features);
   }
 
   setAllGesturesEnabled(enabled: boolean) {
