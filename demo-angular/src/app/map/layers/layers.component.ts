@@ -80,7 +80,8 @@ export class LayersComponent implements OnInit {
 
     iosHeatmap() {
         const source = this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
-        let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('wells', source);
+        let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
+        heatmapLayer.sourceLayerIdentifier = 'wells';
         heatmapLayer.maximumZoomLevel = 12;
 
         // let colorDictionary: [NSNumber: UIColor] = [
