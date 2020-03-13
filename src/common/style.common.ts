@@ -62,9 +62,15 @@ export class Color {
 }
 
 export abstract class MapboxHeatmap {
-  abstract heatmapColor(stops: any[][]): any;
-  abstract heatmapIntensity(value): any;
-  abstract heatmapRadius(value): any;
-  abstract heatmapOpacity(value): any;
-  abstract heatmapWeight(value): any;
+  protected layer: any;
+  protected layerId: string;
+  protected sourceId: string;
+  protected minZoom: number;
+  protected maxZoom: number;
+  abstract create(layerId: string, sourceId: string, minZoom: number, maxZoom: number);
+  abstract setHeatmapColor(layer: any, stops: any[][]): void;
+  abstract setHeatmapIntensity(layer: any, stops: any[][]): void;
+  abstract setHeatmapRadius(layer: any, stops: any[][]): void;
+  abstract setHeatmapOpacity(layer: any, stops: any[][]): void;
+  abstract setHeatmapWeight(layer: any, stops: any[][]): void;
 }

@@ -47,6 +47,7 @@ export class LayersComponent implements OnInit {
         if (isAndroid) {
             this.androidHeatmap();
         } else if (isIOS) {
+            this.iosHeatmap();
         }
 
         this.params.closeCallback();
@@ -54,34 +55,30 @@ export class LayersComponent implements OnInit {
 
     androidHeatmap() {
         const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.createLayer(LayerType.HEATMAP, 'heatmap-layer-id', 'wells', null, maxZoom);
-
-        const _heatmapColor = this.mapService.mapbox.style.heatmap.heatmapColor([
-            [0.01, new Color(255, 255, 255, 0.01)],
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
+        this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
+            [0, new Color(255, 255, 255, 0.01)],
             [0.25, new Color(4, 179, 183)],
             [0.5, new Color(204, 211, 61)],
             [0.75, new Color(252, 167, 55)],
             [0.9, new Color(255, 78, 70)],
         ]);
-
-        const _heatmapIntensity = this.mapService.mapbox.style.heatmap.heatmapIntensity([
-            [0, 1.0],
+        this.mapService.mapbox.style.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
+            [0, 1],
             [maxZoom, 0.5],
         ]);
-
-        const _heatmapRadius = this.mapService.mapbox.style.heatmap.heatmapRadius([
+        this.mapService.mapbox.style.heatmap.setHeatmapRadius(this.mapService.heatmapLayer, [
             [0, 5],
             [maxZoom, 5],
         ]);
-
-        const _heatmapOpacity = this.mapService.mapbox.style.heatmap.heatmapOpacity([
-            [0, 1.0],
-            [maxZoom, 1.0],
+        this.mapService.mapbox.style.heatmap.setHeatmapOpacity(this.mapService.heatmapLayer, [
+            [0, 1],
+            [maxZoom, 1],
         ]);
-
-        this.mapService.heatmapLayer.setProperties([_heatmapColor, _heatmapRadius, _heatmapIntensity, _heatmapOpacity]);
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
     }
+
+    iosHeatmap() {}
 
     removeSymbolLayer() {
         if (isIOS) {

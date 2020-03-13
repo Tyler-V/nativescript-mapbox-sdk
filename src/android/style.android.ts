@@ -80,6 +80,7 @@ const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapCo
 const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
 const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
 const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+const heatmapWeight = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapWeight;
 
 const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
 const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
@@ -133,27 +134,40 @@ export const expressionStops = (stops: any[][]) => {
 };
 
 export class Heatmap extends MapboxHeatmap {
-  heatmapColor(stops: any[][]) {
+  create(layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
+    this.layerId = layerId;
+    this.sourceId = sourceId;
+    this.minZoom = minZoom;
+    this.maxZoom = maxZoom;
+    this.layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
+    this.layer.setSourceLayer(sourceId);
+    if (minZoom) this.layer.setMinZoom(minZoom);
+    if (maxZoom) this.layer.setMaxZoom(maxZoom);
+    return this.layer;
+  }
+
+  setHeatmapColor(layer: any, stops: any[][]) {
     const _heatmapColor = heatmapColor(interpolate(linear(), heatmapDensity(), expressionStops(stops)));
-    return _heatmapColor;
+    layer.setProperties([_heatmapColor]);
   }
 
-  heatmapIntensity(stops: number[][]) {
+  setHeatmapIntensity(layer: any, stops: number[][]) {
     const _heatmapIntensity = heatmapIntensity(interpolate(linear(), zoom(), expressionStops(stops)));
-    return _heatmapIntensity;
+    layer.setProperties([_heatmapIntensity]);
   }
 
-  heatmapRadius(stops: number[][]) {
+  setHeatmapRadius(layer: any, stops: number[][]) {
     const _heatmapRadius = heatmapRadius(interpolate(linear(), zoom(), expressionStops(stops)));
-    return _heatmapRadius;
+    layer.setProperties([_heatmapRadius]);
   }
 
-  heatmapOpacity(stops: number[][]) {
+  setHeatmapOpacity(layer: any, stops: number[][]) {
     const _heatmapOpacity = heatmapOpacity(interpolate(linear(), zoom(), expressionStops(stops)));
-    return _heatmapOpacity;
+    layer.setProperties([_heatmapOpacity]);
   }
 
-  heatmapWeight(value) {
-    console.log(value);
+  setHeatmapWeight(layer: any, stops: number[][]) {
+    const _heatmapWeight = heatmapWeight(interpolate(linear(), zoom(), expressionStops(stops)));
+    layer.setProperties([_heatmapWeight]);
   }
 }
