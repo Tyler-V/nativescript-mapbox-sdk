@@ -189,3 +189,30 @@ export class MapClickHandlerImpl extends NSObject {
     tap: { returns: interop.types.void, params: [interop.types.id] },
   };
 }
+
+export class MapLongClickHandlerImpl extends NSObject {
+  private _owner: WeakRef<Map>;
+  private _listener: (data?: LatLng) => void;
+  private _mapView: MGLMapView;
+
+  public static initWithOwnerAndListenerForMap(owner: WeakRef<Map>, listener: (data?: LatLng) => void, mapView: MGLMapView): MapLongClickHandlerImpl {
+    let handler = <MapLongClickHandlerImpl>MapLongClickHandlerImpl.new();
+    handler._owner = owner;
+    handler._listener = listener;
+    handler._mapView = mapView;
+    return handler;
+  }
+
+  public longClick(recognizer: UILongPressGestureRecognizer): void {
+    const longClickPoint = recognizer.locationInView(this._mapView);
+    const longClickCoordinate = this._mapView.convertPointToCoordinateFromView(longClickPoint, this._mapView);
+    this._listener({
+      lat: longClickCoordinate.latitude,
+      lng: longClickCoordinate.longitude,
+    });
+  }
+
+  public static ObjCExposedMethods = {
+    longClick: { returns: interop.types.void, params: [interop.types.id] },
+  };
+}
