@@ -115,6 +115,15 @@ export class LayersComponent implements OnInit {
             heatmapRadiusArray
         );
 
+        // [0, 1],
+        // [maxZoom, 1]
+        let heatmapOpacityDictionary = new (NSDictionary as any)([1, 1], [0, maxZoom]);
+        let heatmapOpacityArray = NSArray.arrayWithArray([heatmapOpacityDictionary]);
+        this.mapService.heatmapLayer.heatmapOpacity = NSExpression.expressionWithFormatArgumentArray(
+            "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+            heatmapOpacityArray
+        );
+
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
     }
 
