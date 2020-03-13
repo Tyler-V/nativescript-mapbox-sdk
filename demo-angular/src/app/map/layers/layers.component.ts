@@ -85,6 +85,7 @@ export class LayersComponent implements OnInit {
         }
 
         let heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
+        heatmapLayer.sourceLayerIdentifier = 'wells';
         heatmapLayer.maximumZoomLevel = 12;
 
         // let colorDictionary: [NSNumber: UIColor] = [
