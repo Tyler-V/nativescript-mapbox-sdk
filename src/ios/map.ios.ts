@@ -116,9 +116,9 @@ export class Map extends MapboxMap {
   queryRenderedFeaturesByBounds(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
     let swCoordinate = CLLocationCoordinate2DMake(bounds.south, bounds.west);
     let neCoordinate = CLLocationCoordinate2DMake(bounds.north, bounds.east);
-    let bbox: MGLCoordinateBounds = { sw: swCoordinate, ne: neCoordinate };
+    let coordBounds: MGLCoordinateBounds = { sw: swCoordinate, ne: neCoordinate };
 
-    const rect = this.view.mapView.convertCoordinateBoundsToRectToView(bbox, this.view.mapView);
+    const rect = this.view.mapView.convertCoordinateBoundsToRectToView(coordBounds, this.view.mapView);
     const features = this.view.mapView.visibleFeaturesInRectInStyleLayersWithIdentifiers(rect, layerIds);
 
     return _getFeatures(features);

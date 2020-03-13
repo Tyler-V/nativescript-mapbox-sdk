@@ -114,17 +114,17 @@ export class Map extends MapboxMap {
   }
 
   queryRenderedFeaturesByBounds(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
-    const bbox = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
+    const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
       .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.north, bounds.east))
       .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.south, bounds.west))
       .build();
-    const west = this.view.mapboxMap.getProjection().toScreenLocation(bbox.getLonWest());
-    const south = this.view.mapboxMap.getProjection().toScreenLocation(bbox.getLatSouth());
-    const east = this.view.mapboxMap.getProjection().toScreenLocation(bbox.getLonEast());
-    const north = this.view.mapboxMap.getProjection().toScreenLocation(bbox.getLatNorth());
+    const west = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLonWest());
+    const south = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLatSouth());
+    const east = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLonEast());
+    const north = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLatNorth());
 
-    const rect = new android.os.Parcelable.RectF(west, south, east, north);
-    const features = this.view.mapboxMap.queryRenderedFeatures(rect, layerIds);
+    const coordinates = new android.os.Parcelable.RectF(west, south, east, north);
+    const features = this.view.mapboxMap.queryRenderedFeatures(coordinates, layerIds);
 
     return _getFeatures(features);
   }
