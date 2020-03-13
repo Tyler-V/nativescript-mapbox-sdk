@@ -75,10 +75,11 @@ export class LayersComponent implements OnInit {
     }
 
     iosHeatmap() {
+        const maxZoom = 12;
         const source = this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
         this.mapService.heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
         this.mapService.heatmapLayer.sourceLayerIdentifier = 'wells';
-        this.mapService.heatmapLayer.maximumZoomLevel = 12;
+        this.mapService.heatmapLayer.maximumZoomLevel = maxZoom;
 
         // let colorDictionary: [NSNumber: UIColor] = [
         //     0.0: .clear,
@@ -96,14 +97,14 @@ export class LayersComponent implements OnInit {
         //     [1.0, UIColor.colorWithRedGreenBlueAlpha(255, 78, 70, 255)],
         // ];
 
-        // [0: 0,
-        //     6: 1]
+        // [0, 1],
+        // [maxZoom, 0.5],
 
-        // const nsArray = NSArray.arrayWithObject()
-
-        // heatmapLayer.heatmapWeight = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:(magnitude, 'linear', nil, %@)",
-        // [0: 0,
-        //  6: 1]);
+        const nsArray = NSArray.arrayWithObjects([{ 0: 1 }, { maxZoom: 0.5 }]);
+        this.mapService.heatmapLayer.heatmapItensity = NSExpression.expressionWithFormatArgumentArray(
+            "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+            nsArray
+        );
 
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
     }
