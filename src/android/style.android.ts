@@ -135,15 +135,11 @@ export const expressionStops = (stops: any[][]) => {
 
 export class Heatmap extends MapboxHeatmap {
   create(layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
-    this.layerId = layerId;
-    this.sourceId = sourceId;
-    this.minZoom = minZoom;
-    this.maxZoom = maxZoom;
-    this.layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
-    this.layer.setSourceLayer(sourceId);
-    if (minZoom) this.layer.setMinZoom(minZoom);
-    if (maxZoom) this.layer.setMaxZoom(maxZoom);
-    return this.layer;
+    const layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
+    layer.setSourceLayer(sourceId);
+    if (minZoom) layer.setMinZoom(minZoom);
+    if (maxZoom) layer.setMaxZoom(maxZoom);
+    return layer;
   }
 
   setHeatmapColor(layer: any, stops: any[][]) {
