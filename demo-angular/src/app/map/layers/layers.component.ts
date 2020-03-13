@@ -112,7 +112,7 @@ export class LayersComponent implements OnInit {
         // [0: 0,
         //  6: 1]);
 
-        this.mapService.mapView.style.addLayer(heatmapLayer);
+        this.mapService.mapbox.style.addLayer(heatmapLayer);
     }
 
     removeSymbolLayer() {

@@ -8,12 +8,11 @@ export class Style extends MapboxStyle {
   }
 
   getStyle() {
-    return this.view.mapStyle;
+    return null; // TODO
   }
 
-  getUri() {
-    const uri = this.view.mapStyle.getUri();
-    return uri;
+  getUri() {  
+    return null; // TODO
   }
 
   setStyleUri(uri: string): Promise<void> {
@@ -41,15 +40,15 @@ export class Style extends MapboxStyle {
   }
 
   addSource(source: any) {
-    this.view.mapStyle.addSource(source);
+    this.view.mapView.addSource(source);
   }
 
   addLayer(layer: any) {
-    this.view.mapStyle.addLayer(layer);
+    this.view.mapView.addLayer(layer);
   }
 
   removeLayer(layer: any) {
-    this.view.mapStyle.removeLayer(layer);
+    this.view.mapView.removeLayer(layer);
   }
 
   addVectorSource(sourceId: string, uri: string) {
@@ -59,7 +58,7 @@ export class Style extends MapboxStyle {
 
   createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
     let layer;
-    const source = this.view.mapStyle.sourceWithIdentifier(NSURL.URLWithString(sourceId));
+    const source = this.view.mapView.style.sourceWithIdentifier(NSURL.URLWithString(sourceId));
     switch (layerType) {
       case LayerType.HEATMAP:
         layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
