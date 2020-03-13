@@ -51,9 +51,17 @@ export class Style extends MapboxStyle {
     this.view.mapView.style.removeLayer(layer);
   }
 
-  addVectorSource(sourceId: string, uri: string) {
-    let vectorSource = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL(sourceId, NSURL.URLWithString(uri));
-    this.addSource(vectorSource);
+  getSource(sourceId: string) {
+    return this.view.mapView.style.sourceWithIdentifier(sourceId);
+  }
+
+  addVectorSource(sourceId: string, uri: string): any {
+    if (this.view.mapView.style.sourceWithIdentifier(sourceId) != null) {
+      return;
+    }
+    let source = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL(sourceId, NSURL.URLWithString(uri));
+    this.addSource(source);
+    return source;
   }
 
   createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
