@@ -8,10 +8,10 @@ export class Style extends MapboxStyle {
   }
 
   getStyle() {
-    return null; // TODO
+    return this.view.mapView.style;
   }
 
-  getUri() {  
+  getUri() {
     return null; // TODO
   }
 
@@ -40,15 +40,15 @@ export class Style extends MapboxStyle {
   }
 
   addSource(source: any) {
-    this.view.mapView.addSource(source);
+    this.view.mapView.style.addSource(source);
   }
 
   addLayer(layer: any) {
-    this.view.mapView.addLayer(layer);
+    this.view.mapView.style.addLayer(layer);
   }
 
   removeLayer(layer: any) {
-    this.view.mapView.removeLayer(layer);
+    this.view.mapView.style.removeLayer(layer);
   }
 
   addVectorSource(sourceId: string, uri: string) {
