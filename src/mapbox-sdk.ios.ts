@@ -1,4 +1,4 @@
-import { MapboxViewBase } from './mapbox-sdk.common';
+import { MapboxViewBase, LatLng } from './mapbox-sdk.common';
 import { Map } from './ios/map.ios';
 import { Offline } from './ios/offline.ios';
 import { Style } from './ios/style.ios';
@@ -160,4 +160,32 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   setStyleLoadedCallback(callback) {
     this.styleLoadedCallback = callback;
   }
+}
+
+export class MapClickHandlerImpl extends NSObject {
+  private _owner: WeakRef<Map>;
+  private _listener: (data: LatLng) => void;
+  private _mapView: MGLMapView;
+
+  public static initWithOwnerAndListenerForMap(owner: WeakRef<Map>, listener: (data: LatLng) => void, mapView: MGLMapView): MapClickHandlerImpl {
+    let handler = <MapClickHandlerImpl>MapClickHandlerImpl.new();
+    handler._owner = owner;
+    handler._listener = listener;
+    handler._mapView = mapView;
+    return handler;
+  }
+
+  public tap(recognizer: UITapGestureRecognizer): void {
+    const tapPoint = recognizer.locationInView(this._mapView);
+
+    const tapCoordinate = this._mapView.convertPointToCoordinateFromView(tapPoint, this._mapView);
+    this._listener({
+      lat: tapCoordinate.latitude,
+      lng: tapCoordinate.longitude,
+    });
+  }
+
+  public static ObjCExposedMethods = {
+    tap: { returns: interop.types.void, params: [interop.types.id] },
+  };
 }
