@@ -6,6 +6,7 @@ import { MapboxColor } from '../common/color.common';
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
+    this.heatmap = new Heatmap();
   }
 
   getStyle() {
