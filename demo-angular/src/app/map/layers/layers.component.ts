@@ -76,22 +76,13 @@ export class LayersComponent implements OnInit {
     iosHeatmap() {
         const maxZoom = 12;
         this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
-
-        let heatmapColorDictionary = new (NSDictionary as any)(
-            [
-                new tnsColor(0.01, 255, 255, 255).ios,
-                new tnsColor(255, 4, 179, 183).ios,
-                new tnsColor(255, 204, 211, 61).ios,
-                new tnsColor(255, 252, 167, 55).ios,
-                new tnsColor(255, 255, 78, 70).ios,
-            ],
-            [0, 0.25, 0.5, 0.75, 1.0]
-        );
-        let heatmapColorArray = NSArray.arrayWithArray([heatmapColorDictionary]);
-        this.mapService.heatmapLayer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
-            "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
-            heatmapColorArray
-        );
+        this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
+            [0, new MapboxColor(255, 255, 255, 0.01)],
+            [0.25, new MapboxColor(4, 179, 183)],
+            [0.5, new MapboxColor(204, 211, 61)],
+            [0.75, new MapboxColor(252, 167, 55)],
+            [1.0, new MapboxColor(255, 78, 70)],
+        ]);
 
         // [0, 1],
         // [maxZoom, 0.5]
