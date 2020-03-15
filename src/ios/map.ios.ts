@@ -1,7 +1,33 @@
 import { MapboxView } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
+import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
 
+function _getFeatures(features) {
+  const results: Array<Feature> = [];
+
+  for (let i = 0; i < features.count; i++) {
+    const feature: MGLFeature = features.objectAtIndex(i);
+    const properties = [];
+
+    if (feature.attributes && feature.attributes.count > 0) {
+      const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
+
+      for (let key of keys) {
+        properties.push({
+          key,
+          value: feature.attributes.valueForKey(key),
+        });
+      }
+    }
+    results.push({
+      id: feature.identifier,
+      properties,
+    });
+  }
+
+  return results;
+}
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
@@ -81,7 +107,21 @@ export class Map extends MapboxMap {
   }
 
   queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
-    return null;
+    const { x, y } = this.view.mapView.convertCoordinateToPointToView({ latitude: point.lat, longitude: point.lng }, this.view.mapView);
+    const features = this.view.mapView.visibleFeaturesAtPointInStyleLayersWithIdentifiers({ x, y }, layerIds);
+
+    return _getFeatures(features);
+  }
+
+  queryRenderedFeaturesByBounds(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+    let swCoordinate = CLLocationCoordinate2DMake(bounds.south, bounds.west);
+    let neCoordinate = CLLocationCoordinate2DMake(bounds.north, bounds.east);
+    let coordBounds: MGLCoordinateBounds = { sw: swCoordinate, ne: neCoordinate };
+
+    const rect = this.view.mapView.convertCoordinateBoundsToRectToView(coordBounds, this.view.mapView);
+    const features = this.view.mapView.visibleFeaturesInRectInStyleLayersWithIdentifiers(rect, layerIds);
+
+    return _getFeatures(features);
   }
 
   setAllGesturesEnabled(enabled: boolean) {

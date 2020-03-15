@@ -4,6 +4,20 @@ import { MapboxMap, CameraPosition, LatLngBounds, Feature } from './../common/ma
 
 declare const android, com, java, org: any;
 
+function _getFeatures(features) {
+  const results: Array<Feature> = [];
+
+  for (let i = 0; i < features.size(); i++) {
+    const feature = features.get(i);
+    results.push({
+      id: feature.id(),
+      type: feature.type(),
+      properties: JSON.parse(feature.properties().toString()),
+    });
+  }
+
+  return results;
+}
 export class Map extends MapboxMap {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
@@ -95,18 +109,24 @@ export class Map extends MapboxMap {
     const pixel = this.view.mapboxMap.getProjection().toScreenLocation(latLng);
 
     const features = this.view.mapboxMap.queryRenderedFeatures(pixel, layerIds);
-    const results: Array<Feature> = [];
 
-    for (let i = 0; i < features.size(); i++) {
-      const feature = features.get(i);
-      results.push({
-        id: feature.id(),
-        type: feature.type(),
-        properties: JSON.parse(feature.properties().toString()),
-      });
-    }
+    return _getFeatures(features);
+  }
 
-    return results;
+  queryRenderedFeaturesByBounds(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+    const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
+      .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.north, bounds.east))
+      .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.south, bounds.west))
+      .build();
+    const west = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLonWest());
+    const south = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLatSouth());
+    const east = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLonEast());
+    const north = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getLatNorth());
+
+    const coordinates = new android.os.Parcelable.RectF(west, south, east, north);
+    const features = this.view.mapboxMap.queryRenderedFeatures(coordinates, layerIds);
+
+    return _getFeatures(features);
   }
 
   setAllGesturesEnabled(enabled: boolean): void {
