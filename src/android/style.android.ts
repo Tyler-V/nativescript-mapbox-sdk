@@ -133,7 +133,7 @@ export const marshall = (input: number | MapboxColor) => {
   return input;
 };
 
-export const expressionStops = (stops: any[][]) => {
+export const expressionStops = (stops: (number | MapboxColor)[][]) => {
   const array = [];
   for (let input of stops) {
     const _stop = marshall(input[0]);

@@ -22,11 +22,11 @@ export class LayersComponent implements OnInit {
     SWD = true;
     OTHER = true;
 
-    vectorSource: any;
-
     constructor(public mapService: MapService, private params: ModalDialogParams) {}
 
-    ngOnInit(): void {}
+    ngOnInit() {
+        this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
+    }
 
     goBack() {
         this.params.closeCallback();
@@ -39,7 +39,6 @@ export class LayersComponent implements OnInit {
     }
 
     addHeatmapLayer() {
-        this.vectorSource = this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
         if (isAndroid) {
             this.androidHeatmap();
         } else if (isIOS) {

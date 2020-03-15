@@ -2,6 +2,7 @@ import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
 import { MapboxStyle, LayerType, MapboxHeatmap } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxColor } from '../common/color.common';
+import { Color } from 'tns-core-modules/color';
 
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
@@ -85,6 +86,37 @@ export class Style extends MapboxStyle {
   }
 }
 
+export const isColor = (input: any) => {
+  try {
+    return input.__proto__.constructor.name === 'MapboxColor';
+  } catch {
+    return false;
+  }
+};
+
+export const color = (color: MapboxColor) => {
+  return new Color(color.alpha ? color.alpha : 255, color.red, color.green, color.blue).ios;
+};
+
+export const marshall = (input: number | MapboxColor) => {
+  if (isColor(input)) {
+    return color(input as MapboxColor);
+  }
+  return input;
+};
+
+export const expressionStops = (expression: (number | MapboxColor)[][]) => {
+  const stops = [];
+  const values = [];
+  for (let i = 0; i < expression.length; i++) {
+    stops.push(marshall(marshall[i][0]));
+    values.push(marshall(marshall[i][1]));
+  }
+  let nsDictionary = new (NSDictionary as any)(values, stops);
+  let nsArray = NSArray.arrayWithArray([nsDictionary]);
+  return nsArray;
+};
+
 export class Heatmap extends MapboxHeatmap {
   create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
     const source = this.view.mapbox.style.getSource(sourceId);
@@ -95,7 +127,12 @@ export class Heatmap extends MapboxHeatmap {
     return layer;
   }
 
-  setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]) {}
+  setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
+    layer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
+      "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
+      expressionStops(stops)
+    );
+  }
 
   setHeatmapIntensity(layer: any, stops: number[][]) {}
 
