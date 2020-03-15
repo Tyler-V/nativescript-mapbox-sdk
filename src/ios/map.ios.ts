@@ -1,4 +1,4 @@
-import { MapboxView } from '../mapbox-sdk.ios';
+import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
@@ -69,9 +69,37 @@ export class Map extends MapboxMap {
     });
   }
 
-  addOnMapClickListener(listener: (latLng: LatLng) => void) {}
+  addOnMapClickListener(listener: (latLng: LatLng) => void) {
+    this.view.mapView['mapClickHandler'] = MapClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    const tapGestureRecognizer = UITapGestureRecognizer.alloc().initWithTargetAction(this.view.mapView['mapClickHandler'], 'tap');
 
-  addOnMapLongClickListener(listener: (latLng: LatLng) => void) {}
+    for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
+      let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
+      if (recognizer instanceof UITapGestureRecognizer) {
+        tapGestureRecognizer.requireGestureRecognizerToFail(recognizer);
+      }
+    }
+
+    this.view.mapView.addGestureRecognizer(tapGestureRecognizer);
+
+    return false;
+  }
+
+  addOnMapLongClickListener(listener: (latLng: LatLng) => void) {
+    this.view.mapView['mapLongClickHandler'] = MapLongClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    const longClickGestureRecognizer = UILongPressGestureRecognizer.alloc().initWithTargetAction(this.view.mapView['mapLongClickHandler'], 'longClick');
+
+    for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
+      let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
+      if (recognizer instanceof UILongPressGestureRecognizer) {
+        longClickGestureRecognizer.requireGestureRecognizerToFail(recognizer);
+      }
+    }
+
+    this.view.mapView.addGestureRecognizer(longClickGestureRecognizer);
+
+    return false;
+  }
 
   getZoom() {
     const zoom = this.view.mapView.zoomLevel;
