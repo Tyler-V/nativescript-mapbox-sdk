@@ -134,11 +134,31 @@ export class Heatmap extends MapboxHeatmap {
     );
   }
 
-  setHeatmapIntensity(layer: any, stops: number[][]) {}
+  setHeatmapIntensity(layer: any, stops: number[][]) {
+    layer.heatmapIntensity = NSExpression.expressionWithFormatArgumentArray(
+      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+      expressionStops(stops)
+    );
+  }
 
-  setHeatmapRadius(layer: any, stops: number[][]) {}
+  setHeatmapRadius(layer: any, stops: number[][]) {
+    layer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray(
+      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+      expressionStops(stops)
+    );
+  }
 
-  setHeatmapOpacity(layer: any, stops: number[][]) {}
+  setHeatmapOpacity(layer: any, stops: number[][]) {
+    layer.heatmapOpacity = NSExpression.expressionWithFormatArgumentArray(
+      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+      expressionStops(stops)
+    );
+  }
 
-  setHeatmapWeight(layer: any, stops: number[][]) {}
+  setHeatmapWeight(layer: any, stops: number[][]) {
+    layer.heatmapWeight = NSExpression.expressionWithFormatArgumentArray(
+      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+      expressionStops(stops)
+    );
+  }
 }

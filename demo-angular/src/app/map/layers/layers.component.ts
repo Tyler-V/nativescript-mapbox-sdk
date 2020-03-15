@@ -39,16 +39,6 @@ export class LayersComponent implements OnInit {
     }
 
     addHeatmapLayer() {
-        if (isAndroid) {
-            this.androidHeatmap();
-        } else if (isIOS) {
-            this.iosHeatmap();
-        }
-
-        this.params.closeCallback();
-    }
-
-    androidHeatmap() {
         const maxZoom = 12;
         this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
         this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
@@ -71,47 +61,8 @@ export class LayersComponent implements OnInit {
             [maxZoom, 1],
         ]);
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
-    }
 
-    iosHeatmap() {
-        const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
-        this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
-            [0, new MapboxColor(255, 255, 255, 0.01)],
-            [0.25, new MapboxColor(4, 179, 183)],
-            [0.5, new MapboxColor(204, 211, 61)],
-            [0.75, new MapboxColor(252, 167, 55)],
-            [1.0, new MapboxColor(255, 78, 70)],
-        ]);
-
-        // [0, 1],
-        // [maxZoom, 0.5]
-        let heatmapIntensityDictionary = new (NSDictionary as any)([1, 0.5], [0, maxZoom]);
-        let heatmapIntensityArray = NSArray.arrayWithArray([heatmapIntensityDictionary]);
-        this.mapService.heatmapLayer.heatmapIntensity = NSExpression.expressionWithFormatArgumentArray(
-            "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-            heatmapIntensityArray
-        );
-
-        // [0, 5],
-        // [maxZoom, 5]
-        let heatmapRadiusDictionary = new (NSDictionary as any)([5, 5], [0, maxZoom]);
-        let heatmapRadiusArray = NSArray.arrayWithArray([heatmapRadiusDictionary]);
-        this.mapService.heatmapLayer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray(
-            "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-            heatmapRadiusArray
-        );
-
-        // [0, 1],
-        // [maxZoom, 1]
-        let heatmapOpacityDictionary = new (NSDictionary as any)([1, 1], [0, maxZoom]);
-        let heatmapOpacityArray = NSArray.arrayWithArray([heatmapOpacityDictionary]);
-        this.mapService.heatmapLayer.heatmapOpacity = NSExpression.expressionWithFormatArgumentArray(
-            "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-            heatmapOpacityArray
-        );
-
-        this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
+        this.params.closeCallback();
     }
 
     removeSymbolLayer() {
