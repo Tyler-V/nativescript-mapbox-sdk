@@ -97,6 +97,8 @@ const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolat
 const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
+const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
 
 export const number = (input: number) => {
   if (Number.isInteger(input)) {
@@ -114,9 +116,17 @@ export const isColor = (input: any) => {
   }
 };
 
+export const color = (color: MapboxColor) => {
+  if (color.alpha) {
+    return rgba(number(color.red), number(color.green), number(color.blue), number(color.alpha));
+  } else {
+    return rgb(number(color.red), number(color.green), number(color.blue));
+  }
+};
+
 export const marshall = (input: number | MapboxColor) => {
   if (isColor(input)) {
-    return (input as MapboxColor).getColor();
+    return color(input as MapboxColor);
   } else if (typeof input === 'number') {
     return number(input);
   }
