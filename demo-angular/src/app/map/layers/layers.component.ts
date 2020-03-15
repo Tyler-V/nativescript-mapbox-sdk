@@ -22,6 +22,8 @@ export class LayersComponent implements OnInit {
     SWD = true;
     OTHER = true;
 
+    vectorSource: any;
+
     constructor(public mapService: MapService, private params: ModalDialogParams) {}
 
     ngOnInit(): void {}
@@ -37,6 +39,7 @@ export class LayersComponent implements OnInit {
     }
 
     addHeatmapLayer() {
+        this.vectorSource = this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
         if (isAndroid) {
             this.androidHeatmap();
         } else if (isIOS) {
@@ -48,7 +51,7 @@ export class LayersComponent implements OnInit {
 
     androidHeatmap() {
         const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', this.vectorSource, 'wells', null, maxZoom);
         this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
             [0, new MapboxColor(255, 255, 255, 0.01)],
             [0.25, new MapboxColor(4, 179, 183)],
@@ -73,10 +76,7 @@ export class LayersComponent implements OnInit {
 
     iosHeatmap() {
         const maxZoom = 12;
-        const source = this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
-        this.mapService.heatmapLayer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource('heatmap-layer-id', source);
-        this.mapService.heatmapLayer.sourceLayerIdentifier = 'wells';
-        this.mapService.heatmapLayer.maximumZoomLevel = maxZoom;
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', this.vectorSource, 'wells', null, maxZoom);
 
         let heatmapColorDictionary = new (NSDictionary as any)(
             [

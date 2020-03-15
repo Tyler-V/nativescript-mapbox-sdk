@@ -56,9 +56,17 @@ export class Style extends MapboxStyle {
   }
 
   addVectorSource(sourceId: string, uri: string): any {
-    const vectorSource = new com.mapbox.mapboxsdk.style.sources.VectorSource(sourceId, uri);
-    this.addSource(vectorSource);
-    return vectorSource;
+    let source = this.getSource(sourceId);
+    if (source != null) {
+      return source;
+    }
+    source = new com.mapbox.mapboxsdk.style.sources.VectorSource(sourceId, uri);
+    this.addSource(source);
+    return source;
+  }
+
+  getSource(sourceId: string): any {
+    return this.view.mapStyle.getSource(sourceId);
   }
 
   createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
@@ -126,7 +134,7 @@ export const expressionStops = (stops: any[][]) => {
 };
 
 export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
+  create(layerId: string, source: any, sourceId: string, minZoom?: number, maxZoom?: number) {
     const layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
     layer.setSourceLayer(sourceId);
     if (minZoom) layer.setMinZoom(minZoom);

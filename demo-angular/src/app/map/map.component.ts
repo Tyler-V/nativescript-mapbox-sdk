@@ -40,7 +40,6 @@ export class MapComponent implements OnInit {
 
     onStyleLoaded(args) {
         console.log(args.eventName);
-        this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
     }
 
     showLocationModal() {

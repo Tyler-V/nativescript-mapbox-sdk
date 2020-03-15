@@ -1,6 +1,7 @@
 import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
-import { MapboxStyle, LayerType } from '../common/style.common';
+import { MapboxStyle, LayerType, MapboxHeatmap } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
+import { MapboxColor } from '../common/color.common';
 
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
@@ -51,18 +52,18 @@ export class Style extends MapboxStyle {
     this.view.mapView.style.removeLayer(layer);
   }
 
-  getSource(sourceId: string) {
-    return this.view.mapView.style.sourceWithIdentifier(sourceId);
-  }
-
   addVectorSource(sourceId: string, uri: string): any {
-    let source = this.view.mapView.style.sourceWithIdentifier(sourceId);
+    let source = this.getSource(sourceId);
     if (source != null) {
       return source;
     }
     source = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL(sourceId, NSURL.URLWithString(uri));
     this.addSource(source);
     return source;
+  }
+
+  getSource(sourceId: string) {
+    return this.view.mapView.style.sourceWithIdentifier(sourceId);
   }
 
   createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
@@ -81,4 +82,24 @@ export class Style extends MapboxStyle {
     if (maxZoom) layer.maximumZoomLevel = maxZoom;
     return layer;
   }
+}
+
+export class Heatmap extends MapboxHeatmap {
+  create(layerId: string, source: any, sourceId: string, minZoom?: number, maxZoom?: number) {
+    const layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
+    layer.sourceLayerIdentifier = sourceId;
+    if (minZoom) layer.minimumZoomLevel = minZoom;
+    if (maxZoom) layer.maximumZoomLevel = maxZoom;
+    return layer;
+  }
+
+  setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]) {}
+
+  setHeatmapIntensity(layer: any, stops: number[][]) {}
+
+  setHeatmapRadius(layer: any, stops: number[][]) {}
+
+  setHeatmapOpacity(layer: any, stops: number[][]) {}
+
+  setHeatmapWeight(layer: any, stops: number[][]) {}
 }

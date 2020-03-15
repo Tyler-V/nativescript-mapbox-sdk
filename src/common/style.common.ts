@@ -38,6 +38,7 @@ export abstract class MapboxStyle {
   abstract addLayer(layer: any): void;
   abstract removeLayer(layer: any): void;
   abstract addVectorSource(sourceId: string, uri: string): any;
+  abstract getSource(sourceId: string): any;
   abstract createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number): any;
 
   public getImage(filePath: string): ImageSource {
@@ -49,7 +50,7 @@ export abstract class MapboxStyle {
 }
 
 export abstract class MapboxHeatmap {
-  abstract create(layerId: string, sourceId: string, minZoom: number, maxZoom: number);
+  abstract create(layerId: string, source: any, sourceId: string, minZoom?: number, maxZoom?: number);
   abstract setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]): void;
   abstract setHeatmapIntensity(layer: any, stops: number[][]): void;
   abstract setHeatmapRadius(layer: any, stops: number[][]): void;
