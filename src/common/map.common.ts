@@ -16,7 +16,7 @@ export interface LatLngBounds {
 
 export interface Feature {
   id: any;
-  type?: string;
+  type: string;
   properties: Object;
 }
 
