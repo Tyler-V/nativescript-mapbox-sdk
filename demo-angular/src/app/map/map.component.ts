@@ -33,7 +33,14 @@ export class MapComponent implements OnInit {
         this.mapService.mapbox = args.object.mapbox;
         this.mapService.mapView = args.object.mapView;
         this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
-            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
+            console.log(latLng);
+            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng);
+            console.log(features);
+        });
+        this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
+            console.log(latLng);
+            const bounds = this.mapService.mapbox.map.getBounds();
+            const features = this.mapService.mapbox.map.queryRenderedFeaturesByBounds(bounds);
             console.log(features);
         });
     }
