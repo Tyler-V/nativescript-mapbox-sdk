@@ -109,8 +109,8 @@ export const expressionStops = (expression: (number | MapboxColor)[][]) => {
   const stops = [];
   const values = [];
   for (let i = 0; i < expression.length; i++) {
-    stops.push(marshall(marshall[i][0]));
-    values.push(marshall(marshall[i][1]));
+    stops.push(marshall[i][0]);
+    values.push(marshall[i][1]);
   }
   let nsDictionary = new (NSDictionary as any)(values, stops);
   let nsArray = NSArray.arrayWithArray([nsDictionary]);
