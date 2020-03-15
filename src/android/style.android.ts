@@ -9,7 +9,7 @@ declare const com, java: any;
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
-    this.heatmap = new Heatmap();
+    this.heatmap = new Heatmap(mapboxView);
   }
 
   getStyle() {
@@ -144,7 +144,7 @@ export const expressionStops = (stops: any[][]) => {
 };
 
 export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, source: any, sourceId: string, minZoom?: number, maxZoom?: number) {
+  create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
     const layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
     layer.setSourceLayer(sourceId);
     if (minZoom) layer.setMinZoom(minZoom);

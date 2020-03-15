@@ -50,7 +50,13 @@ export abstract class MapboxStyle {
 }
 
 export abstract class MapboxHeatmap {
-  abstract create(layerId: string, source: any, sourceId: string, minZoom?: number, maxZoom?: number);
+  protected view: MapboxViewBase;
+
+  constructor(view: MapboxViewBase) {
+    this.view = view;
+  }
+
+  abstract create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number);
   abstract setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]): void;
   abstract setHeatmapIntensity(layer: any, stops: number[][]): void;
   abstract setHeatmapRadius(layer: any, stops: number[][]): void;

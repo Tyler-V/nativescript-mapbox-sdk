@@ -6,7 +6,7 @@ import { MapboxColor } from '../common/color.common';
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
-    this.heatmap = new Heatmap();
+    this.heatmap = new Heatmap(mapboxView);
   }
 
   getStyle() {
@@ -86,7 +86,8 @@ export class Style extends MapboxStyle {
 }
 
 export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, source: any, sourceId: string, minZoom?: number, maxZoom?: number) {
+  create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
+    const source = this.view.mapbox.style.getSource(sourceId);
     const layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
     layer.sourceLayerIdentifier = sourceId;
     if (minZoom) layer.minimumZoomLevel = minZoom;

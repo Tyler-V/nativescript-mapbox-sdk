@@ -51,7 +51,7 @@ export class LayersComponent implements OnInit {
 
     androidHeatmap() {
         const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', this.vectorSource, 'wells', null, maxZoom);
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
         this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
             [0, new MapboxColor(255, 255, 255, 0.01)],
             [0.25, new MapboxColor(4, 179, 183)],
@@ -76,7 +76,7 @@ export class LayersComponent implements OnInit {
 
     iosHeatmap() {
         const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', this.vectorSource, 'wells', null, maxZoom);
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
 
         let heatmapColorDictionary = new (NSDictionary as any)(
             [
