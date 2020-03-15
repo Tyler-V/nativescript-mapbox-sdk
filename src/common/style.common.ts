@@ -1,6 +1,7 @@
 import { Folder, path, knownFolders } from 'tns-core-modules/file-system';
 import { ImageSource } from 'tns-core-modules/image-source';
 import { MapboxViewBase } from '../mapbox-sdk.common';
+import { MapboxColor } from './color.common';
 
 export enum MapStyle {
   MAPBOX_STREETS = 'mapbox://styles/mapbox/streets-v11',
@@ -47,25 +48,11 @@ export abstract class MapboxStyle {
   }
 }
 
-export class Color {
-  red: number;
-  green: number;
-  blue: number;
-  alpha: number;
-
-  constructor(red: number, green: number, blue: number, alpha?: number) {
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
-    this.alpha = alpha;
-  }
-}
-
 export abstract class MapboxHeatmap {
   abstract create(layerId: string, sourceId: string, minZoom: number, maxZoom: number);
-  abstract setHeatmapColor(layer: any, stops: any[][]): void;
-  abstract setHeatmapIntensity(layer: any, stops: any[][]): void;
-  abstract setHeatmapRadius(layer: any, stops: any[][]): void;
-  abstract setHeatmapOpacity(layer: any, stops: any[][]): void;
-  abstract setHeatmapWeight(layer: any, stops: any[][]): void;
+  abstract setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]): void;
+  abstract setHeatmapIntensity(layer: any, stops: number[][]): void;
+  abstract setHeatmapRadius(layer: any, stops: number[][]): void;
+  abstract setHeatmapOpacity(layer: any, stops: number[][]): void;
+  abstract setHeatmapWeight(layer: any, stops: number[][]): void;
 }

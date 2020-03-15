@@ -1,7 +1,8 @@
-import { LayerType, MapboxHeatmap, Color } from '../common/style.common';
+import { LayerType, MapboxHeatmap } from '../common/style.common';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxStyle } from '../common/style.common';
+import { MapboxColor } from '../common/color.common';
 
 declare const com, java: any;
 
@@ -88,16 +89,6 @@ const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolat
 const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-
-export const color = (color: Color) => {
-  if (color.alpha) {
-    return rgba(number(color.red), number(color.green), number(color.blue), number(color.alpha));
-  } else {
-    return rgb(number(color.red), number(color.green), number(color.blue));
-  }
-};
 
 export const number = (input: number) => {
   if (Number.isInteger(input)) {
@@ -109,15 +100,15 @@ export const number = (input: number) => {
 
 export const isColor = (input: any) => {
   try {
-    return input.__proto__.constructor.name === 'Color';
+    return input.__proto__.constructor.name === 'MapboxColor';
   } catch {
     return false;
   }
 };
 
-export const marshall = (input: any) => {
+export const marshall = (input: number | MapboxColor) => {
   if (isColor(input)) {
-    return color(input);
+    return (input as MapboxColor).getColor();
   } else if (typeof input === 'number') {
     return number(input);
   }
@@ -143,7 +134,7 @@ export class Heatmap extends MapboxHeatmap {
     return layer;
   }
 
-  setHeatmapColor(layer: any, stops: any[][]) {
+  setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]) {
     const _heatmapColor = heatmapColor(interpolate(linear(), heatmapDensity(), expressionStops(stops)));
     layer.setProperties([_heatmapColor]);
   }

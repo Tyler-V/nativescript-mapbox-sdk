@@ -1,8 +1,8 @@
-import { Page, isIOS, isAndroid } from 'tns-core-modules/ui/page';
+import { isIOS, isAndroid } from 'tns-core-modules/platform';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
-import { LayerType, Color } from 'nativescript-mapbox-sdk';
+import { LayerType, MapboxColor } from 'nativescript-mapbox-sdk';
 import { Color as tnsColor } from 'tns-core-modules/color';
 
 declare const android, com, java: any;
@@ -22,11 +22,7 @@ export class LayersComponent implements OnInit {
     SWD = true;
     OTHER = true;
 
-    constructor(public mapService: MapService, private params: ModalDialogParams, private page: Page) {
-        this.page.on('unloaded', () => {
-            this.params.closeCallback();
-        });
-    }
+    constructor(public mapService: MapService, private params: ModalDialogParams) {}
 
     ngOnInit(): void {}
 
@@ -54,11 +50,11 @@ export class LayersComponent implements OnInit {
         const maxZoom = 12;
         this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
         this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
-            [0, new Color(255, 255, 255, 0.01)],
-            [0.25, new Color(4, 179, 183)],
-            [0.5, new Color(204, 211, 61)],
-            [0.75, new Color(252, 167, 55)],
-            [1.0, new Color(255, 78, 70)],
+            [0, new MapboxColor(255, 255, 255, 0.01)],
+            [0.25, new MapboxColor(4, 179, 183)],
+            [0.5, new MapboxColor(204, 211, 61)],
+            [0.75, new MapboxColor(252, 167, 55)],
+            [1.0, new MapboxColor(255, 78, 70)],
         ]);
         this.mapService.mapbox.style.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
             [0, 1],
