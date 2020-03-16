@@ -62,7 +62,7 @@ export class MapboxView extends MapboxViewBase {
         // this.mapboxView.rotateEnabled = true;
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
-        // _setMapboxMapOptions(this.mapboxView, settings);
+        this.getMapboxMapOptions(this.mapView, settings);
 
         this.nativeView.addSubview(this.mapView);
       };
@@ -82,6 +82,25 @@ export class MapboxView extends MapboxViewBase {
     if (this.mapbox) {
       // this.getMapboxApi().setScrollingEnabled(!newValue);
     }
+  }
+
+  private getMapboxMapOptions(mapView: MGLMapView, settings) {
+    mapView.compassView.hidden = settings.hideCompass;
+    mapView.rotateEnabled = !settings.disableRotation;
+    mapView.scrollEnabled = !settings.disableScroll;
+    mapView.allowsTilting = !settings.disableTilt;
+    mapView.zoomEnabled = !settings.disableZoom;
+    mapView.attributionButton.hidden = settings.hideAttribution;
+    mapView.logoView.hidden = settings.hideLogo;
+
+    if (settings.center && settings.center.lat && settings.center.lng) {
+      let centerCoordinate = CLLocationCoordinate2DMake(settings.center.lat, settings.center.lng);
+      mapView.setCenterCoordinateZoomLevelAnimated(centerCoordinate, this.config.zoomLevel, false);
+    } else {
+      mapView.setZoomLevelAnimated(this.config.zoomLevel, false);
+    }
+
+    mapView.showsUserLocation = this.config.showUserLocation;
   }
 }
 
