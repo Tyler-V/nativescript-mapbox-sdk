@@ -8,20 +8,18 @@ function _getFeatures(features) {
 
   for (let i = 0; i < features.count; i++) {
     const feature: MGLFeature = features.objectAtIndex(i);
-    const properties = [];
+    const properties = {};
 
     if (feature.attributes && feature.attributes.count > 0) {
       const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
-
       for (let key of keys) {
-        properties.push({
-          key,
-          value: feature.attributes.valueForKey(key),
-        });
+        properties[key] = feature.attributes.valueForKey(key);
       }
     }
+
     results.push({
       id: feature.identifier,
+      type: 'Feature',
       properties,
     });
   }
@@ -135,19 +133,42 @@ export class Map extends MapboxMap {
   }
 
   queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
-    const { x, y } = this.view.mapView.convertCoordinateToPointToView({ latitude: point.lat, longitude: point.lng }, this.view.mapView);
-    const features = this.view.mapView.visibleFeaturesAtPointInStyleLayersWithIdentifiers({ x, y }, layerIds);
+    const mapView: MGLMapView = this.view.mapView;
+    const coordinate = CLLocationCoordinate2DMake(point.lat, point.lng);
+    const cgPoint = mapView.convertCoordinateToPointToView(coordinate, mapView);
+
+    let features;
+    if (layerIds != null && layerIds.length) {
+      const styleLayerIdentifiers = NSSet.setWithArray(layerIds);
+      features = mapView.visibleFeaturesAtPointInStyleLayersWithIdentifiers(cgPoint, styleLayerIdentifiers);
+    } else {
+      features = mapView.visibleFeaturesAtPoint(cgPoint);
+    }
 
     return _getFeatures(features);
   }
 
-  queryRenderedFeaturesByBounds(bounds: LatLngBounds, ...layerIds: string[]): Array<Feature> {
-    let swCoordinate = CLLocationCoordinate2DMake(bounds.south, bounds.west);
-    let neCoordinate = CLLocationCoordinate2DMake(bounds.north, bounds.east);
-    let coordBounds: MGLCoordinateBounds = { sw: swCoordinate, ne: neCoordinate };
+  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+    const mapView: MGLMapView = this.view.mapView;
+    let rect;
 
-    const rect = this.view.mapView.convertCoordinateBoundsToRectToView(coordBounds, this.view.mapView);
-    const features = this.view.mapView.visibleFeaturesInRectInStyleLayersWithIdentifiers(rect, layerIds);
+    if (!bounds) {
+      let mglCoordinateBounds = mapView.visibleCoordinateBounds;
+      rect = mapView.convertCoordinateBoundsToRectToView(mglCoordinateBounds, mapView);
+    } else {
+      let swCoordinate = CLLocationCoordinate2DMake(bounds.south, bounds.west);
+      let neCoordinate = CLLocationCoordinate2DMake(bounds.north, bounds.east);
+      let mglCoordinateBounds: MGLCoordinateBounds = { sw: swCoordinate, ne: neCoordinate };
+      rect = mapView.convertCoordinateBoundsToRectToView(mglCoordinateBounds, mapView);
+    }
+
+    let features;
+    if (layerIds != null && layerIds.length) {
+      const styleLayerIdentifiers = NSSet.setWithArray(layerIds);
+      features = mapView.visibleFeaturesInRectInStyleLayersWithIdentifiers(rect, styleLayerIdentifiers);
+    } else {
+      features = mapView.visibleFeaturesInRect(rect);
+    }
 
     return _getFeatures(features);
   }
