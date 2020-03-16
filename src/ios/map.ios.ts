@@ -8,14 +8,12 @@ function _getFeatures(features) {
 
   for (let i = 0; i < features.count; i++) {
     const feature: MGLFeature = features.objectAtIndex(i);
-    const properties = [];
+    const properties = {};
 
     if (feature.attributes && feature.attributes.count > 0) {
       const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
       for (let key of keys) {
-        let property = {};
-        property[key] = feature.attributes.valueForKey(key);
-        properties.push(property);
+        properties[key] = feature.attributes.valueForKey(key);
       }
     }
 
