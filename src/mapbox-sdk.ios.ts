@@ -59,7 +59,6 @@ export class MapboxView extends MapboxViewBase {
           });
         });
 
-        // this.mapboxView.rotateEnabled = true;
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
         this.getMapboxMapOptions(this.mapView, settings);
