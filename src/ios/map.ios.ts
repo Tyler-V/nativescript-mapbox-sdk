@@ -13,7 +13,9 @@ function _getFeatures(features) {
     if (feature.attributes && feature.attributes.count > 0) {
       const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
       for (let key of keys) {
-        properties.push({ key: feature.attributes.valueForKey(key) });
+        let property;
+        property[key] = feature.attributes.valueForKey(key);
+        properties.push(property);
       }
     }
 
