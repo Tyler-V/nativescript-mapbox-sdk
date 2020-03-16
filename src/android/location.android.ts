@@ -48,7 +48,7 @@ export class Location extends MapboxLocation {
       case TrackingMode.GPS:
         return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_GPS;
       default:
-        return com.mapbox.mapboxsdk.location.modes.RenderMode.TRACKING;
+        return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING;
     }
   }
 

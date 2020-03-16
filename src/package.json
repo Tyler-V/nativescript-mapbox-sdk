@@ -1,61 +1,61 @@
 {
-	"name": "nativescript-mapbox-sdk",
-	"version": "1.0.0",
-	"description": "A Nativescript plugin for Mapbox.",
-	"main": "mapbox-sdk",
-	"typings": "index.d.ts",
-	"nativescript": {
-		"platforms": {
-			"android": "6.4.1",
-			"ios": "6.4.2"
-		}
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Tyler-V/nativescript-mapbox-sdk.git"
-	},
-	"scripts": {
-		"tsc": "npm i && tsc",
-		"build": "npm run tsc && npm run build.native",
-		"build.native": "node scripts/build-native.js",
-		"tslint": "cd .. && tslint \"**/*.ts\" --config tslint.json --exclude \"**/node_modules/**\"",
-		"ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/platforms/**'",
-		"prepack": "npm run build.native",
-		"demo.ios": "npm run tsc && cd ../demo && tns run ios --emulator",
-		"demo.android": "npm run tsc && cd ../demo && tns run android --emulator",
-		"demo.reset": "cd ../demo && npx rimraf -- hooks node_modules platforms package-lock.json",
-		"demo-angular.ios": "npm run tsc && cd ../demo-angular && tns run ios --emulator",
-		"demo-angular.android": "npm run tsc && cd ../demo-angular && tns run android --emulator",
-		"demo-angular.reset": "cd ../demo-angular && npx rimraf -- hooks node_modules platforms package-lock.json",
-		"plugin.prepare": "npm run build && cd ../demo && tns plugin remove nativescript-mapbox-sdk && tns plugin add ../src && cd ../demo-angular && tns plugin remove nativescript-mapbox-sdk && tns plugin add ../src",
-		"clean": "npm run demo.reset && npm run demo-angular.reset && npx rimraf -- node_modules package-lock.json && npm i"
-	},
-	"keywords": [
-		"ecosystem:nativescript",
-		"NativeScript",
-		"Map",
-		"Maps",
-		"Native Maps",
-		"Mapbox"
-	],
-	"author": {
-		"name": "Tyler Vorpahl",
-		"email": "tyler.vorpahl@gmail.com"
-	},
-	"bugs": {
-		"url": "https://github.com/Tyler-V/nativescript-mapbox-sdk/issues"
-	},
-	"license": "MIT",
-	"homepage": "https://github.com/Tyler-V/nativescript-mapbox-sdk",
-	"devDependencies": {
-		"prompt": "^1.0.0",
-		"rimraf": "^3.0.1",
-		"semver": "^7.1.1",
-		"tns-core-modules": "^6.3.2",
-		"tns-platform-declarations": "^6.3.2",
-		"tslint": "^6.0.0",
-		"typescript": "~3.5.3"
-	},
-	"dependencies": {},
-	"bootstrapper": "nativescript-plugin-seed"
+  "name": "nativescript-mapbox-sdk",
+  "version": "1.0.0",
+  "description": "A Nativescript plugin for Mapbox.",
+  "main": "mapbox-sdk",
+  "typings": "index.d.ts",
+  "nativescript": {
+    "platforms": {
+      "android": "6.4.1",
+      "ios": "6.4.2"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tyler-V/nativescript-mapbox-sdk.git"
+  },
+  "scripts": {
+    "tsc": "npm i && tsc",
+    "build": "npm run tsc && npm run build.native",
+    "build.native": "node scripts/build-native.js",
+    "tslint": "cd .. && tslint \"**/*.ts\" --config tslint.json --exclude \"**/node_modules/**\"",
+    "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/platforms/**'",
+    "prepack": "npm run build.native",
+    "demo.ios": "npm run tsc && cd ../demo && tns run ios --emulator",
+    "demo.android": "npm run tsc && cd ../demo && tns run android --emulator",
+    "demo.reset": "cd ../demo && npx rimraf -- hooks node_modules platforms package-lock.json",
+    "demo-angular.ios": "npm run tsc && cd ../demo-angular && tns run ios --emulator",
+    "demo-angular.android": "npm run tsc && cd ../demo-angular && tns run android --emulator",
+    "demo-angular.reset": "cd ../demo-angular && npx rimraf -- hooks node_modules platforms package-lock.json",
+    "plugin.prepare": "npm run build && cd ../demo && tns plugin remove nativescript-mapbox-sdk && tns plugin add ../src && cd ../demo-angular && tns plugin remove nativescript-mapbox-sdk && tns plugin add ../src",
+    "clean": "npm run demo.reset && npm run demo-angular.reset && npx rimraf -- node_modules package-lock.json && npm i"
+  },
+  "keywords": [
+    "ecosystem:nativescript",
+    "NativeScript",
+    "Map",
+    "Maps",
+    "Native Maps",
+    "Mapbox"
+  ],
+  "author": {
+    "name": "Tyler Vorpahl",
+    "email": "tyler.vorpahl@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/Tyler-V/nativescript-mapbox-sdk/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Tyler-V/nativescript-mapbox-sdk",
+  "devDependencies": {
+    "prompt": "^1.0.0",
+    "rimraf": "^3.0.1",
+    "semver": "^7.1.1",
+    "tns-core-modules": "^6.3.2",
+    "tns-platform-declarations": "^6.3.2",
+    "tslint": "^6.0.0",
+    "typescript": "~3.5.3"
+  },
+  "dependencies": {},
+  "bootstrapper": "nativescript-plugin-seed"
 }
