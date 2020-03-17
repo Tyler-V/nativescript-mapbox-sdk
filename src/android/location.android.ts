@@ -83,8 +83,8 @@ export class Location extends MapboxLocation {
           onLocationCameraTransitionFinished: (currentMode: number) => {
             if (options.animated) {
               locationComponent.zoomWhileTracking(
-                16,
-                2000,
+                15,
+                1000,
                 new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
                   onCancel: () => {},
                   onFinish: () => {
