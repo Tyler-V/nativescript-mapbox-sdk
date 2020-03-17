@@ -61,12 +61,12 @@ export class MapboxView extends MapboxViewBase {
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
-        this.getMapboxMapOptions(this.mapView, settings);
+        this.setMapboxOptions(this.mapView, settings);
 
         this.nativeView.addSubview(this.mapView);
       };
 
-      setTimeout(drawMap, settings.delay ? settings.delay : 0);
+      setTimeout(drawMap, 0);
     }
   }
 
@@ -83,7 +83,7 @@ export class MapboxView extends MapboxViewBase {
     }
   }
 
-  private getMapboxMapOptions(mapView: MGLMapView, settings) {
+  private setMapboxOptions(mapView: MGLMapView, settings) {
     mapView.compassView.hidden = settings.hideCompass;
     mapView.rotateEnabled = !settings.disableRotation;
     mapView.scrollEnabled = !settings.disableScroll;
@@ -98,8 +98,6 @@ export class MapboxView extends MapboxViewBase {
     } else {
       mapView.setZoomLevelAnimated(this.config.zoomLevel, false);
     }
-
-    mapView.showsUserLocation = this.config.showUserLocation;
   }
 }
 

@@ -15,7 +15,7 @@ import { LayersComponent } from './layers/layers.component';
 })
 export class MapComponent implements OnInit {
     accessToken: string = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
-    mapStyle: string = 'mapbox://styles/mapbox/streets-v11';
+    style: string = 'mapbox://styles/mapbox/streets-v11';
     latitude: number = 39.8283;
     longitude: number = -98.5795;
     zoom: number = 2.5;
