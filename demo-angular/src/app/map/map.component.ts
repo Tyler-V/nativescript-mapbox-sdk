@@ -36,6 +36,7 @@ export class MapComponent implements OnInit {
             console.log(latLng);
             const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng);
             console.log(features);
+            this.mapService.mapbox.map.setCameraToBounds({north: 42.652580, south: 42.652580, east: -73.756233, west: -73}, 25, true);
         });
         this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
             console.log(latLng);
