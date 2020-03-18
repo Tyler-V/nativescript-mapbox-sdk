@@ -41,14 +41,26 @@ export class Location extends MapboxLocation {
     }
   }
 
-  _getCameraMode(mode: TrackingMode) {
+  _getCameraMode(mode: TrackingMode, animated: boolean) {
     switch (mode) {
       case TrackingMode.COMPASS:
-        return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_COMPASS;
+        if (animated) {
+          return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_COMPASS;
+        } else {
+          return com.mapbox.mapboxsdk.location.modes.CameraMode.NONE_COMPASS;
+        }
       case TrackingMode.GPS:
-        return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_GPS;
+        if (animated) {
+          return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING_GPS;
+        } else {
+          return com.mapbox.mapboxsdk.location.modes.CameraMode.NONE_GPS;
+        }
       default:
-        return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING;
+        if (animated) {
+          return com.mapbox.mapboxsdk.location.modes.CameraMode.TRACKING;
+        } else {
+          return com.mapbox.mapboxsdk.location.modes.CameraMode.NONE;
+        }
     }
   }
 
@@ -65,14 +77,14 @@ export class Location extends MapboxLocation {
       locationComponent.setLocationComponentEnabled(true);
       locationComponent.setRenderMode(this._getRenderMode(options.mode));
       locationComponent.setCameraMode(
-        this._getCameraMode(options.mode),
+        this._getCameraMode(options.mode, options.animated),
         new com.mapbox.mapboxsdk.location.OnLocationCameraTransitionListener({
           onLocationCameraTransitionCanceled: (currentMode: number) => {},
           onLocationCameraTransitionFinished: (currentMode: number) => {
             if (options.animated) {
               locationComponent.zoomWhileTracking(
-                16,
-                2000,
+                15,
+                1000,
                 new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
                   onCancel: () => {},
                   onFinish: () => {
