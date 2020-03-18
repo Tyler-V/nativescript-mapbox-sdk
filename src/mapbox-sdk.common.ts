@@ -54,7 +54,7 @@ export class MapboxStatic {
 
 export interface MapViewOptions {
   accessToken: string;
-  style?: string;
+  mapsStyle?: string;
   center?: LatLng;
   zoomLevel?: number;
   hideLogo?: boolean;
@@ -161,7 +161,6 @@ export abstract class MapboxViewBase extends MapboxApi {
   }
 
   [mapStyleProperty.setNative](value: string) {
-    this.config.style = value;
     this.config.mapStyle = value;
   }
 

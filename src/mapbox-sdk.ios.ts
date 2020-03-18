@@ -66,7 +66,7 @@ export class MapboxView extends MapboxViewBase {
         this.nativeView.addSubview(this.mapView);
       };
 
-      setTimeout(drawMap, 0);
+      setTimeout(drawMap);
     }
   }
 
