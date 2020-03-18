@@ -189,24 +189,25 @@ export class Map extends MapboxMap {
     this.view.mapView.logoView.hidden = enabled; // This is for the mapbox logo on bottom left
   }
 
-  setCameraToBounds(latLngBounds: LatLngBounds, padding: number, animated: boolean): Promise<void> {
+  setCameraToBounds(latLngBounds: LatLngBounds, padding: number, animated?: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
       const mapView: MGLMapView = this.view.mapView;
 
       let bounds: MGLCoordinateBounds = {
         sw: CLLocationCoordinate2DMake(latLngBounds.south, latLngBounds.west),
-        ne: CLLocationCoordinate2DMake(latLngBounds.north, latLngBounds.east)
+        ne: CLLocationCoordinate2DMake(latLngBounds.north, latLngBounds.east),
       };
 
       let mapPadding: UIEdgeInsets = {
         top: padding,
         left: padding,
         bottom: padding,
-        right: padding
+        right: padding,
       };
 
-      mapView.setVisibleCoordinateBoundsEdgePaddingAnimated(bounds, mapPadding, animated);
-      resolve();
+      mapView.setVisibleCoordinateBoundsEdgePaddingAnimatedCompletionHandler(bounds, mapPadding, animated, () => {
+        resolve();
+      });
     });
   }
 }

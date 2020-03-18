@@ -155,10 +155,7 @@ export class Map extends MapboxMap {
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
         .build();
 
-      this.view.mapboxMap.easeCamera(
-        com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding),
-        500
-      );
+      this.view.mapboxMap.easeCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding), 1000);
       resolve();
     });
   }
