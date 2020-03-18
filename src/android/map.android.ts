@@ -148,15 +148,18 @@ export class Map extends MapboxMap {
     this.view.mapboxMap.getUiSettings().setLogoEnabled(enabled);
   }
 
-  setCameraToBounds(latLngBounds: LatLngBounds, padding: number): Promise<void> {
+  setCameraToBounds(latLngBounds: LatLngBounds, padding: number, animated: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
       const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
         .build();
-
-      this.view.mapboxMap.easeCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding), 1000);
-      resolve();
+      if (animated) {
+        this.view.mapboxMap.easeCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding), 1000);
+        resolve();
+      } else {
+        this.view.mapboxMap.moveCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding));
+      }
     });
   }
 }
