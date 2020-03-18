@@ -20,7 +20,6 @@ export class MapboxStatic {
       bottom: 0,
     },
     zoomLevel: 0, // 0 (a big part of the world) to 20 (street level)
-    showUserLocation: false, // true requires adding `NSLocationWhenInUseUsageDescription` or `NSLocationAlwaysUsageDescription` in the .plist
     hideLogo: false, // required for the 'starter' plan
     hideAttribution: true,
     hideCompass: false,
@@ -28,7 +27,6 @@ export class MapboxStatic {
     disableScroll: false,
     disableZoom: false,
     disableTilt: false,
-    delay: 0,
   };
 
   public static merge(obj1: {}, obj2: {}): any {
@@ -54,13 +52,11 @@ export class MapboxStatic {
   }
 }
 
-export interface ShowOptions {
+export interface MapViewOptions {
   accessToken: string;
-  style?: string;
-  styleUri?: string;
+  mapsStyle?: string;
   center?: LatLng;
   zoomLevel?: number;
-  showUserLocation?: boolean;
   hideLogo?: boolean;
   hideAttribution?: boolean;
   hideCompass?: boolean;
@@ -86,13 +82,6 @@ latitudeProperty.register(MapboxApi);
 
 export const longitudeProperty = new Property<MapboxApi, number>({ name: 'longitude' });
 longitudeProperty.register(MapboxApi);
-
-export const showUserLocationProperty = new Property<MapboxApi, boolean>({
-  name: 'showUserLocation',
-  defaultValue: MapboxStatic.defaults.showUserLocation,
-  valueConverter: booleanConverter,
-});
-showUserLocationProperty.register(MapboxApi);
 
 export const hideLogoProperty = new Property<MapboxApi, boolean>({
   name: 'hideLogo',
@@ -143,9 +132,6 @@ export const disableTiltProperty = new Property<MapboxApi, boolean>({
 });
 disableTiltProperty.register(MapboxApi);
 
-export const delayProperty = new Property<MapboxApi, number>({ name: 'delay' });
-delayProperty.register(MapboxApi);
-
 export class Mapbox {
   public map: MapboxMap;
   public style: MapboxStyle;
@@ -175,16 +161,11 @@ export abstract class MapboxViewBase extends MapboxApi {
   }
 
   [mapStyleProperty.setNative](value: string) {
-    this.config.style = value;
     this.config.mapStyle = value;
   }
 
   [accessTokenProperty.setNative](value: string) {
     this.config.accessToken = value;
-  }
-
-  [delayProperty.setNative](value: number) {
-    this.config.delay = parseInt('' + value);
   }
 
   [latitudeProperty.setNative](value: number) {
@@ -195,10 +176,6 @@ export abstract class MapboxViewBase extends MapboxApi {
   [longitudeProperty.setNative](value: number) {
     this.config.center = this.config.center || {};
     this.config.center.lng = +value;
-  }
-
-  [showUserLocationProperty.setNative](value: boolean) {
-    this.config.showUserLocation = value;
   }
 
   [hideLogoProperty.setNative](value: boolean) {
