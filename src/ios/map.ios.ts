@@ -221,7 +221,7 @@ export class Map extends MapboxMap {
         coordinates.push(coordinate);
       }
 
-      const array: any = NSArray.arrayWithArray(coordinates);
+      const array: any = NSArray.arrayWithArray([coordinates]);
 
       let insets: UIEdgeInsets = {
         top: padding ? padding : 0,
