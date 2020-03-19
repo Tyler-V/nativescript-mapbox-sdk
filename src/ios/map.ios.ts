@@ -227,8 +227,9 @@ export class Map extends MapboxMap {
       for (let latLng of latLngs) {
         const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
         coordinates.push(coordinate);
-        array.addObject(coordinate);
       }
+
+      array.setArray(coordinates);
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
         array,
