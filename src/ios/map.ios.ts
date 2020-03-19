@@ -215,20 +215,20 @@ export class Map extends MapboxMap {
     return new Promise((resolve, reject) => {
       const mapView: MGLMapView = this.view.mapView;
 
-      const coordinates: CLLocationCoordinate2D[] = [];
-      for (let latLng of latLngs) {
-        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
-        coordinates.push(coordinate);
-      }
-
-      const array: any = NSArray.arrayWithObjects(coordinates);
-
       let insets: UIEdgeInsets = {
         top: padding ? padding : 0,
         left: padding ? padding : 0,
         bottom: padding ? padding : 0,
         right: padding ? padding : 0,
       };
+
+      const array: any = NSMutableArray.alloc();
+      const coordinates: CLLocationCoordinate2D[] = [];
+      for (let latLng of latLngs) {
+        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+        coordinates.push(coordinate);
+        array.addObject(coordinate);
+      }
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
         array,
