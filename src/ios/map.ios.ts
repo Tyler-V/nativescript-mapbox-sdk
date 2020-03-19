@@ -229,7 +229,7 @@ export class Map extends MapboxMap {
         coordinates.push(coordinate);
       }
 
-      array.setArray(coordinates);
+      array.addObjectsFromArray(coordinates);
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
         array,
