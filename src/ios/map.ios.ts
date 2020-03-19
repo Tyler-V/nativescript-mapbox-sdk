@@ -222,7 +222,7 @@ export class Map extends MapboxMap {
         right: padding ? padding : 0,
       };
 
-      let array: any = new NSMutableArray({ capacity: latLngs.length });
+      let array: any = new NSMutableArray<CLLocationCoordinate2D>({ capacity: latLngs.length });
       const coordinates: CLLocationCoordinate2D[] = [];
       for (let latLng of latLngs) {
         const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
