@@ -1168,6 +1168,8 @@ declare class MGLMapView extends UIView {
 
     setVisibleCoordinateBoundsEdgePaddingAnimated(bounds: MGLCoordinateBounds, insets: UIEdgeInsets, animated: boolean): void;
 
+    setVisibleCoordinateBoundsEdgePaddingAnimatedCompletionHandler(bounds: MGLCoordinateBounds, insets: UIEdgeInsets, animated: boolean, completion: () => void): void;
+
     setVisibleCoordinatesCountEdgePaddingAnimated(coordinates: interop.Pointer | interop.Reference<CLLocationCoordinate2D>, count: number, insets: UIEdgeInsets, animated: boolean): void;
 
     setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(coordinates: interop.Pointer | interop.Reference<CLLocationCoordinate2D>, count: number, insets: UIEdgeInsets, direction: number, duration: number, _function: CAMediaTimingFunction, completion: () => void): void;

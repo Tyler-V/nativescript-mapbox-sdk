@@ -147,4 +147,31 @@ export class Map extends MapboxMap {
   setLogoEnabled(enabled: boolean): void {
     this.view.mapboxMap.getUiSettings().setLogoEnabled(enabled);
   }
+
+  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
+        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
+        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
+        .build();
+
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+      if (animated) {
+        this.view.mapboxMap.easeCamera(
+          cameraUpdate,
+          1000,
+          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
+            onCancel: () => {},
+            onFinish: () => {
+              resolve();
+            },
+          })
+        );
+      } else {
+        this.view.mapboxMap.moveCamera(cameraUpdate);
+        resolve();
+      }
+    });
+  }
 }
