@@ -198,16 +198,47 @@ export class Map extends MapboxMap {
         ne: CLLocationCoordinate2DMake(latLngBounds.north, latLngBounds.east),
       };
 
-      let mapPadding: UIEdgeInsets = {
+      let insets: UIEdgeInsets = {
         top: padding ? padding : 0,
         left: padding ? padding : 0,
         bottom: padding ? padding : 0,
         right: padding ? padding : 0,
       };
 
-      mapView.setVisibleCoordinateBoundsEdgePaddingAnimatedCompletionHandler(bounds, mapPadding, animated, () => {
+      mapView.setVisibleCoordinateBoundsEdgePaddingAnimatedCompletionHandler(bounds, insets, animated, () => {
         resolve();
       });
+    });
+  }
+
+  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const mapView: MGLMapView = this.view.mapView;
+
+      const coordinates: CLLocationCoordinate2D[] = [];
+      for (let latLng of latLngs) {
+        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+        coordinates.push(coordinate);
+      }
+
+      let insets: UIEdgeInsets = {
+        top: padding ? padding : 0,
+        left: padding ? padding : 0,
+        bottom: padding ? padding : 0,
+        right: padding ? padding : 0,
+      };
+
+      mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
+        <any>coordinates,
+        coordinates.length,
+        insets,
+        0,
+        duration / 1000,
+        CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut),
+        () => {
+          resolve();
+        }
+      );
     });
   }
 }

@@ -50,12 +50,15 @@ export class MapComponent implements OnInit {
     }
 
     showLocationModal() {
-        const options: ModalDialogOptions = {
-            viewContainerRef: this.vcRef,
-            fullscreen: true,
-        };
-
-        return this.modalService.showModal(LocationComponent, options);
+        const latLngs: LatLng[] = [
+            { lat: 31.555134, lng: -84.153126 },
+            { lat: 31.339563, lng: -84.611444 },
+            { lat: 31.17521, lng: -84.122755 },
+            { lat: 31.714149, lng: -83.59563 },
+        ];
+        this.mapService.mapbox.map.setCameraToCoordinates(latLngs, null, 3000).then(() => {
+            console.log('COMPLETE');
+        });
     }
 
     showOfflineModal() {

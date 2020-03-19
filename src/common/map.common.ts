@@ -44,4 +44,5 @@ export abstract class MapboxMap {
   abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature>;
   abstract queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<Feature>;
   abstract setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void>;
+  abstract setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void>;
 }
