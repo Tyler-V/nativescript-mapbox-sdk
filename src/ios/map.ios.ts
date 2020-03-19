@@ -228,7 +228,7 @@ export class Map extends MapboxMap {
         coordinates.push(coordinate);
       }
 
-      const array: any = NSArray.array<CLLocationCoordinate2D>().initWithArray(coordinates);
+      const array: any = NSArray.arrayWithArray<CLLocationCoordinate2D>(coordinates);
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
         array,
