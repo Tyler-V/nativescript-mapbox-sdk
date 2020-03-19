@@ -217,11 +217,11 @@ export class Map extends MapboxMap {
 
       const coordinates: CLLocationCoordinate2D[] = [];
       for (let latLng of latLngs) {
-        const coordinate = CLLocationCoordinate2DMake(latLng.lng, latLng.lat);
+        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
         coordinates.push(coordinate);
       }
 
-      const array: any = NSArray.arrayWithArray([coordinates]);
+      const array: any = NSArray.arrayWithObjects(coordinates);
 
       let insets: UIEdgeInsets = {
         top: padding ? padding : 0,
