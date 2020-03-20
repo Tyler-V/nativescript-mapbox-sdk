@@ -222,17 +222,17 @@ export class Map extends MapboxMap {
         right: padding ? padding : 0,
       };
 
-      const coordinates: CLLocationCoordinate2D[] = [];
-      for (let latLng of latLngs) {
-        const coordinate = CLLocationCoordinate2DMake(latLng.lng, latLng.lat);
-        coordinates.push(coordinate);
-      }
+      const array: NativePointer<CLLocationCoordinate2D> = malloc(latLngs.length * interop.sizeof(CLLocationCoordinate2D)) as NativePointer<
+        CLLocationCoordinate2D
+      >;
 
-      const array: any = NSArray.arrayWithArray([coordinates]);
+      latLngs.forEach((latLng: LatLng, index: number) => {
+        array[index] = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+      });
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
         array,
-        coordinates.length,
+        latLngs.length,
         insets,
         0,
         duration / 1000,
