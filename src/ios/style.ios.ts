@@ -108,15 +108,9 @@ export const marshall = (input: number | MapboxColor) => {
 export const expressionStops = (expression: (number | MapboxColor)[][]) => {
   const stops = [];
   const values = [];
-
-  const colorDictionary: { [key: number]: UIColor } = {
-    0.0: UIColor.blueColor,
-    0.01: UIColor.brownColor,
-  };
-
   for (let i = 0; i < expression.length; i++) {
-    const _stop = marshall(expression[i][0]);
-    const _value = marshall(expression[i][1]);
+    stops.push(marshall(expression[i][0]));
+    values.push(marshall(expression[i][1]));
   }
   let nsDictionary = new (NSDictionary as any)(values, stops);
   let nsArray = NSArray.arrayWithArray([nsDictionary]);
