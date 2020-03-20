@@ -131,15 +131,13 @@ export class Heatmap extends MapboxHeatmap {
     const colorDictionary: { [key: number]: UIColor } = {
       0.0: UIColor.blueColor,
       0.25: UIColor.brownColor,
-      0.50: UIColor.redColor,
+      0.5: UIColor.redColor,
       0.75: UIColor.greenColor,
-      1: UIColor.orangeColor
+      1: UIColor.orangeColor,
     };
-    const nsArray = NSArray.arrayWithArray([colorDictionary]);
-
     layer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
       "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
-      nsArray
+      <any>colorDictionary
     );
   }
 
