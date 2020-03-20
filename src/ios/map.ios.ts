@@ -224,14 +224,14 @@ export class Map extends MapboxMap {
 
       const coordinates: CLLocationCoordinate2D[] = [];
       for (let latLng of latLngs) {
-        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+        const coordinate = CLLocationCoordinate2DMake(latLng.lng, latLng.lat);
         coordinates.push(coordinate);
       }
 
       const array: any = NSArray.arrayWithArray<CLLocationCoordinate2D>(coordinates);
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
-        <any>coordinates,
+        array,
         coordinates.length,
         insets,
         0,
