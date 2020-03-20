@@ -2903,7 +2903,3 @@ declare function MGLZoomLevelForAltitude(altitude: number, pitch: number, latitu
 declare var MapboxVersionNumber: number;
 
 declare var MapboxVersionString: interop.Reference<number>;
-
-interface NativePointer<T> extends interop.Reference<T> {
-    [index: number]: T;
-} 
