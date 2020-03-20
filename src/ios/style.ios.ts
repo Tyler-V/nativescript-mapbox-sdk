@@ -108,9 +108,15 @@ export const marshall = (input: number | MapboxColor) => {
 export const expressionStops = (expression: (number | MapboxColor)[][]) => {
   const stops = [];
   const values = [];
+
+  const colorDictionary: { [key: number]: UIColor } = {
+    0.0: UIColor.blueColor,
+    0.01: UIColor.brownColor,
+  };
+
   for (let i = 0; i < expression.length; i++) {
-    stops.push(marshall(expression[i][0]));
-    values.push(marshall(expression[i][1]));
+    const _stop = marshall(expression[i][0]);
+    const _value = marshall(expression[i][1]);
   }
   let nsDictionary = new (NSDictionary as any)(values, stops);
   let nsArray = NSArray.arrayWithArray([nsDictionary]);
@@ -128,9 +134,18 @@ export class Heatmap extends MapboxHeatmap {
   }
 
   setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
+    const colorDictionary: { [key: number]: UIColor } = {
+      0.0: UIColor.blueColor,
+      0.25: UIColor.brownColor,
+      0.50: UIColor.redColor,
+      0.75: UIColor.greenColor,
+      1: UIColor.orangeColor
+    };
+    const nsArray = NSArray.arrayWithArray([colorDictionary]);
+
     layer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
       "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
-      expressionStops(stops)
+      nsArray
     );
   }
 
