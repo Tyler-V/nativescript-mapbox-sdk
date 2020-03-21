@@ -128,6 +128,8 @@ export class Heatmap extends MapboxHeatmap {
   }
 
   setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
+    const test = new (NSDictionary as any)(['.mp3', 16, 44100.0, 2], ['AVFormatIDKey', 'AVEncoderBitRateKey', 'AVSampleRateKey', 'AVNumberOfChannelsKey']);
+
     const colorDictionary: { [key: number]: UIColor } = {
       0.0: UIColor.blueColor,
       0.25: UIColor.brownColor,
@@ -135,9 +137,12 @@ export class Heatmap extends MapboxHeatmap {
       0.75: UIColor.greenColor,
       1: UIColor.orangeColor,
     };
+
+    const test2 = new (NSDictionary as any)(colorDictionary);
+
     layer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
       "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
-      <any>colorDictionary
+      test2
     );
   }
 
