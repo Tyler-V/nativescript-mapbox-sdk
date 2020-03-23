@@ -105,6 +105,6 @@ export class Location extends MapboxLocation {
     const locationComponent = this._getLocationComponent();
     locationComponent.setCameraMode(com.mapbox.mapboxsdk.location.modes.CameraMode.NONE);
     locationComponent.setRenderMode(com.mapbox.mapboxsdk.location.modes.RenderMode.NORMAL);
-    locationComponent.setLocationComponentEnabled(false);
+    // locationComponent.setLocationComponentEnabled(false);
   }
 }
