@@ -174,4 +174,32 @@ export class Map extends MapboxMap {
       }
     });
   }
+
+  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
+      for (let latLng of latLngs) {
+        latLngBoundsBuilder.include(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng));
+      }
+      const bounds = latLngBoundsBuilder.build();
+
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+      if (duration) {
+        this.view.mapboxMap.easeCamera(
+          cameraUpdate,
+          duration,
+          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
+            onCancel: () => {},
+            onFinish: () => {
+              resolve();
+            },
+          })
+        );
+      } else {
+        this.view.mapboxMap.moveCamera(cameraUpdate);
+        resolve();
+      }
+    });
+  }
 }
