@@ -2,6 +2,7 @@ import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl } from '../map
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
+import { toReferenceToCArray } from './utils.ios';
 
 function _getFeatures(features) {
   const results: Array<Feature> = [];
@@ -228,14 +229,6 @@ export class Map extends MapboxMap {
         coordinates.push(coordinate);
       }
 
-      function toReferenceToCArray<T>(a: T[], type: interop.Type<T>): interop.Reference<T> {
-        const ref = new interop.Reference<T>(type, interop.alloc(interop.sizeof(CLLocationCoordinate2D) * coordinates.length));
-        for (let i = 0; i < coordinates.length; i++) {
-          ref[i] = coordinates[i];
-        }
-
-        return ref;
-      }
       const coordinatesAsCArray = toReferenceToCArray(coordinates, CLLocationCoordinate2D);
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
