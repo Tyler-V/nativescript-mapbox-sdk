@@ -128,21 +128,9 @@ export class Heatmap extends MapboxHeatmap {
   }
 
   setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
-    const colorDictionary1: { [key: number]: UIColor } = {
-      0.0: UIColor.blueColor,
-      0.25: UIColor.brownColor,
-      0.5: UIColor.redColor,
-      0.75: UIColor.greenColor,
-      1: UIColor.orangeColor,
-    };
-
-    const colorDictionary2 = [
-      new (NSDictionary as any)([UIColor.blueColor, UIColor.brownColor, UIColor.redColor, UIColor.greenColor, UIColor.orangeColor], [0.0, 0.25, 0.5, 0.75, 1]),
-    ];
-
     layer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
       "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
-      colorDictionary2
+      expressionStops(stops)
     );
   }
 
