@@ -224,14 +224,22 @@ export class Map extends MapboxMap {
 
       const coordinates: CLLocationCoordinate2D[] = [];
       for (let latLng of latLngs) {
-        const coordinate = CLLocationCoordinate2DMake(latLng.lng, latLng.lat);
+        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
         coordinates.push(coordinate);
       }
 
-      const array: any = NSArray.arrayWithArray([coordinates]);
+      function toReferenceToCArray<T>(a: T[], type: interop.Type<T>): interop.Reference<T> {
+        const ref = new interop.Reference<T>(type, interop.alloc(interop.sizeof(CLLocationCoordinate2D) * coordinates.length));
+        for (let i = 0; i < coordinates.length; i++) {
+          ref[i] = coordinates[i];
+        }
+
+        return ref;
+      }
+      const coordinatesAsCArray = toReferenceToCArray(coordinates, CLLocationCoordinate2D);
 
       mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
-        array,
+        coordinatesAsCArray,
         coordinates.length,
         insets,
         0,
