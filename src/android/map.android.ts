@@ -158,14 +158,12 @@ export class Map extends MapboxMap {
       const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
       if (animated) {
-        this.view.mapboxMap.easeCamera(
+        this.view.mapboxMap.animateCamera(
           cameraUpdate,
           1000,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => {},
-            onFinish: () => {
-              resolve();
-            },
+            onCancel: () => reject('Cancelled'),
+            onFinish: () => resolve(),
           })
         );
       } else {
@@ -186,14 +184,12 @@ export class Map extends MapboxMap {
       const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
       if (duration) {
-        this.view.mapboxMap.easeCamera(
+        this.view.mapboxMap.animateCamera(
           cameraUpdate,
           duration,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => {},
-            onFinish: () => {
-              resolve();
-            },
+            onCancel: () => reject('Cancelled'),
+            onFinish: () => resolve(),
           })
         );
       } else {
