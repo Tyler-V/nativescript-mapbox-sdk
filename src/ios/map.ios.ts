@@ -53,14 +53,9 @@ export class Map extends MapboxMap {
         camera.pitch = options.tilt;
         camera.altitude = altitude;
 
-        this.view.mapView.setCameraWithDurationAnimationTimingFunctionCompletionHandler(
-          camera,
-          duration / 1000,
-          CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut),
-          () => {
-            resolve();
-          }
-        );
+        this.view.mapView.flyToCameraWithDurationCompletionHandler(camera, duration / 1000, () => {
+          resolve();
+        });
       } catch (ex) {
         console.log('Error in mapbox.animateCamera: ' + ex);
         reject(ex);
