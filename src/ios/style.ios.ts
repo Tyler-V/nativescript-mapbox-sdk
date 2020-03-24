@@ -128,7 +128,18 @@ export class Heatmap extends MapboxHeatmap {
   }
 
   setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
-    const colorDictionary = {
+    function toHeatmapDictionary(a: object): NSDictionary<NSNumber, UIColor> {
+      const keys = Object.getOwnPropertyNames(a);
+      let dict = new NSMutableDictionary<NSNumber, UIColor>({ capacity: keys.length });
+
+      for (let key of keys) {
+        dict.setObjectForKey(<any>a[key], <NSNumber>(<unknown>NSString.stringWithString(key).intValue));
+      }
+
+      return dict;
+    }
+
+    const colorDictionary1 = {
       0.0: UIColor.blueColor,
       0.25: UIColor.brownColor,
       0.5: UIColor.redColor,
@@ -136,10 +147,10 @@ export class Heatmap extends MapboxHeatmap {
       1: UIColor.orangeColor,
     };
 
+    const nsDict = toHeatmapDictionary(colorDictionary1);
     const heatmapColor = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)", [
-      colorDictionary,
+      nsDict,
     ]);
-
     layer.heatmapColor = heatmapColor;
   }
 
