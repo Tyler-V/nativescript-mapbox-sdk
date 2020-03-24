@@ -34,32 +34,27 @@ export class Map extends MapboxMap {
 
   animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
     return new Promise((resolve, reject) => {
-      try {
-        if (!options.latLng) {
-          reject('A position is required');
-          return;
-        }
-
-        options.bearing = options.bearing ? options.bearing : this.getBearing();
-        options.tilt = options.tilt ? options.tilt : this.getTilt();
-        options.zoom = options.zoom ? options.zoom : this.getZoom();
-
-        const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
-        const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, options.latLng.lat, viewportSize);
-
-        let camera = MGLMapCamera.alloc();
-        camera.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
-        camera.heading = options.bearing;
-        camera.pitch = options.tilt;
-        camera.altitude = altitude;
-
-        this.view.mapView.flyToCameraWithDurationCompletionHandler(camera, duration / 1000, () => {
-          resolve();
-        });
-      } catch (ex) {
-        console.log('Error in mapbox.animateCamera: ' + ex);
-        reject(ex);
+      if (!options.latLng) {
+        reject('A position is required');
+        return;
       }
+
+      options.bearing = options.bearing ? options.bearing : this.getBearing();
+      options.tilt = options.tilt ? options.tilt : this.getTilt();
+      options.zoom = options.zoom ? options.zoom : this.getZoom();
+
+      const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
+      const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, options.latLng.lat, viewportSize);
+
+      let camera = MGLMapCamera.alloc();
+      camera.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
+      camera.heading = options.bearing;
+      camera.pitch = options.tilt;
+      camera.altitude = altitude;
+
+      this.view.mapView.flyToCameraWithDurationCompletionHandler(camera, duration / 1000, () => {
+        resolve();
+      });
     });
   }
 
