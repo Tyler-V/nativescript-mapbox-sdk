@@ -19,12 +19,12 @@ export class Style extends MapboxStyle {
 
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
+      this.view.mapView.styleURL = NSURL.URLWithString(uri);
       let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.view.mapView.delegate;
       delegate.setStyleLoadedCallback(() => {
         console.log('Mapbox:setMapStyle(): style loaded callback returned.');
         resolve();
       });
-      this.view.mapView.styleURL = NSURL.URLWithString(uri);
       this.view.notify({
         eventName: MapboxViewBase.styleLoadedEvent,
         object: this.view,
