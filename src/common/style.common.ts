@@ -1,7 +1,7 @@
 import { Folder, path, knownFolders } from 'tns-core-modules/file-system';
 import { ImageSource } from 'tns-core-modules/image-source';
 import { MapboxViewBase } from '../mapbox-sdk.common';
-import { MapboxColor } from './color.common';
+import { MapboxLayers } from './layers/layers.common';
 
 export enum MapStyle {
   MAPBOX_STREETS = 'mapbox://styles/mapbox/streets-v11',
@@ -24,7 +24,7 @@ export interface StyleOptions {
 
 export abstract class MapboxStyle {
   protected view: MapboxViewBase;
-  public heatmap: MapboxHeatmap;
+  public layers: MapboxLayers;
 
   constructor(view: MapboxViewBase) {
     this.view = view;
@@ -47,19 +47,4 @@ export abstract class MapboxStyle {
     const imageSource: ImageSource = ImageSource.fromFileSync(folderPath);
     return imageSource;
   }
-}
-
-export abstract class MapboxHeatmap {
-  protected view: MapboxViewBase;
-
-  constructor(view: MapboxViewBase) {
-    this.view = view;
-  }
-
-  abstract create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number);
-  abstract setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]): void;
-  abstract setHeatmapIntensity(layer: any, stops: number[][]): void;
-  abstract setHeatmapRadius(layer: any, stops: number[][]): void;
-  abstract setHeatmapOpacity(layer: any, stops: number[][]): void;
-  abstract setHeatmapWeight(layer: any, stops: number[][]): void;
 }
