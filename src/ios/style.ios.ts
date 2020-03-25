@@ -2,7 +2,7 @@ import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
 import { MapboxStyle, LayerType, MapboxHeatmap } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxColor } from '../common/color.common';
-import { Color } from 'tns-core-modules/color';
+import { toExpressionStop } from '../ios/utils.ios';
 
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
@@ -86,37 +86,6 @@ export class Style extends MapboxStyle {
   }
 }
 
-export const isColor = (input: any) => {
-  try {
-    return input.__proto__.constructor.name === 'MapboxColor';
-  } catch {
-    return false;
-  }
-};
-
-export const color = (color: MapboxColor) => {
-  return new Color(color.alpha ? color.alpha : 255, color.red, color.green, color.blue).ios;
-};
-
-export const marshall = (input: number | MapboxColor) => {
-  if (isColor(input)) {
-    return color(input as MapboxColor);
-  }
-  return input;
-};
-
-export const expressionStops = (expression: (number | MapboxColor)[][]) => {
-  const stops = [];
-  const values = [];
-  for (let i = 0; i < expression.length; i++) {
-    stops.push(marshall(expression[i][0]));
-    values.push(marshall(expression[i][1]));
-  }
-  let nsDictionary = new (NSDictionary as any)(values, stops);
-  let nsArray = NSArray.arrayWithArray([nsDictionary]);
-  return nsArray;
-};
-
 export class Heatmap extends MapboxHeatmap {
   create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
     const source = this.view.mapbox.style.getSource(sourceId);
@@ -128,51 +97,34 @@ export class Heatmap extends MapboxHeatmap {
   }
 
   setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
-    function arrayToDictionary(array: (number | MapboxColor)[][]): NSDictionary<NSNumber, UIColor> {
-      let dict = new NSMutableDictionary<any, any>({ capacity: array.length });
-      for (let i = 0; i < array.length; i++) {
-        const aKey = array[i][0];
-        const anObject = color(array[i][1] as MapboxColor);
-        dict.setObjectForKey(anObject, aKey);
-      }
-
-      return dict;
-    }
-
-    const nsDict = arrayToDictionary(stops);
-
     const heatmapColor = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)", [
-      nsDict,
+      toExpressionStop(stops),
     ]);
 
     layer.heatmapColor = heatmapColor;
   }
 
   setHeatmapIntensity(layer: any, stops: number[][]) {
-    layer.heatmapIntensity = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
+    layer.heatmapIntensity = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
+      toExpressionStop(stops),
+    ]);
   }
 
   setHeatmapRadius(layer: any, stops: number[][]) {
-    layer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
+    layer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
+      toExpressionStop(stops),
+    ]);
   }
 
   setHeatmapOpacity(layer: any, stops: number[][]) {
-    layer.heatmapOpacity = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
+    layer.heatmapOpacity = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
+      toExpressionStop(stops),
+    ]);
   }
 
   setHeatmapWeight(layer: any, stops: number[][]) {
-    layer.heatmapWeight = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
+    layer.heatmapWeight = NSExpression.expressionWithFormatArgumentArray("mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
+      toExpressionStop(stops),
+    ]);
   }
 }
