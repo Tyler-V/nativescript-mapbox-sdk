@@ -36,7 +36,7 @@ export class Map extends MapboxMap {
         com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(position),
         duration,
         new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-          onCancel: () => reject('Cancelled'),
+          onCancel: () => resolve(),
           onFinish: () => resolve(),
         })
       );
@@ -162,7 +162,7 @@ export class Map extends MapboxMap {
           cameraUpdate,
           1000,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => reject('Cancelled'),
+            onCancel: () => resolve(),
             onFinish: () => resolve(),
           })
         );
@@ -188,7 +188,7 @@ export class Map extends MapboxMap {
           cameraUpdate,
           duration,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => reject('Cancelled'),
+            onCancel: () => resolve(),
             onFinish: () => resolve(),
           })
         );
