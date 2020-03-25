@@ -10,7 +10,7 @@ export function toReferenceToCArray<T>(input: T[], type: interop.Type<T>): inter
   return ref;
 }
 
-export function toExpressionStop(array: (number | MapboxColor)[][]): NSDictionary<NSNumber, UIColor> {
+export function toExpressionStop(array: (number | MapboxColor)[][]): any {
   let dict = new NSMutableDictionary<any, any>({ capacity: array.length });
   for (let i = 0; i < array.length; i++) {
     const aKey = array[i][0];
@@ -21,7 +21,7 @@ export function toExpressionStop(array: (number | MapboxColor)[][]): NSDictionar
     dict.setObjectForKey(anObject, aKey);
   }
 
-  return dict;
+  return [dict];
 }
 
 export const isMapboxColor = (input: any) => {
