@@ -57,6 +57,8 @@ export interface MapViewOptions {
   mapsStyle?: string;
   center?: LatLng;
   zoomLevel?: number;
+  minZoom?: number;
+  maxZoom?: number;
   hideLogo?: boolean;
   hideAttribution?: boolean;
   hideCompass?: boolean;
