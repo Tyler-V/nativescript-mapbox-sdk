@@ -79,6 +79,12 @@ mapStyleProperty.register(MapboxApi);
 export const zoomLevelProperty = new Property<MapboxApi, number>({ name: 'zoomLevel' });
 zoomLevelProperty.register(MapboxApi);
 
+export const minZoomLevelProperty = new Property<MapboxApi, number>({ name: 'minZoom' });
+minZoomLevelProperty.register(MapboxApi);
+
+export const maxZoomLevelProperty = new Property<MapboxApi, number>({ name: 'maxZoom' });
+maxZoomLevelProperty.register(MapboxApi);
+
 export const latitudeProperty = new Property<MapboxApi, number>({ name: 'latitude' });
 latitudeProperty.register(MapboxApi);
 

@@ -43,6 +43,8 @@ export class MapComponent implements OnInit {
             const features = this.mapService.mapbox.map.queryRenderedFeaturesByBounds(bounds);
             console.log(features);
         });
+        this.mapService.mapbox.map.setMinimumZoomLevel(this.minZoom);
+        this.mapService.mapbox.map.setMaximumZoomLevel(this.maxZoom);
     }
 
     onStyleLoaded(args) {
