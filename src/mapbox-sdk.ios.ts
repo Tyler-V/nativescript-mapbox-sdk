@@ -45,18 +45,14 @@ export class MapboxView extends MapboxViewBase {
           NSURL.URLWithString('mapbox://styles/mapbox/streets-v11')
         );
 
-        // this delegate class is defined later in this file and is where, in Obj-C land,
-        // callbacks are delivered and handled.
-
         this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback(() => {
-          console.log('MapboxView:initMap(): MLMapViewDeleteImpl onMapReady callback');
-          if (settings.mapStyle) {
-            this.mapbox.style.setStyleUri(settings.mapStyle);
-          }
           this.notify({
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
           });
+          if (settings.mapStyle) {
+            this.mapbox.style.setStyleUri(settings.mapStyle);
+          }
         });
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
@@ -74,12 +70,6 @@ export class MapboxView extends MapboxViewBase {
     super.onLayout(left, top, right, bottom);
     if (this.mapView) {
       this.mapView.layer.frame = this.ios.layer.bounds;
-    }
-  }
-
-  protected onDisableScrollChanged(oldValue: boolean, newValue: boolean) {
-    if (this.mapbox) {
-      // this.getMapboxApi().setScrollingEnabled(!newValue);
     }
   }
 
@@ -118,7 +108,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   /**
    * initialize with the mapReady callback
    */
-
   public initWithCallback(mapLoadedCallback: (mapView: MGLMapView) => void): MGLMapViewDelegateImpl {
     console.log('MGLMapViewDelegateImpl::initWithCallback()');
     this.mapLoadedCallback = mapLoadedCallback;
@@ -128,7 +117,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   /**
    * map ready callback
    */
-
   mapViewDidFinishLoadingMap(mapView: MGLMapView): void {
     console.log('MGLMapViewDelegateImpl:mapViewDidFinishLoadingMap(): top');
 
@@ -150,7 +138,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
    *
    * @link https://mapbox.github.io/mapbox-gl-native/macos/0.3.0/Protocols/MGLMapViewDelegate.html#/c:objc(pl)MGLMapViewDelegate(im)mapView:didFinishLoadingStyle:
    */
-
   mapViewDidFinishLoadingStyle(mapView: MGLMapView): void {
     console.log('MGLMapViewDelegateImpl:mapViewDidFinishLoadingStyle(): callback called.');
 
@@ -173,7 +160,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
    *
    * @param {function} callback function with loaded style as parameter.
    */
-
   setStyleLoadedCallback(callback) {
     this.styleLoadedCallback = callback;
   }
