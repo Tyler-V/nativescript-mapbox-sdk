@@ -132,7 +132,7 @@ export class Heatmap extends MapboxHeatmap {
       let dict = new NSMutableDictionary<any, any>({ capacity: array.length });
       for (let i = 0; i < array.length; i++) {
         const aKey = array[i][0];
-        const anObject = array[i][1];
+        const anObject = color(array[i][1] as MapboxColor);
         dict.setObjectForKey(anObject, aKey);
       }
 
