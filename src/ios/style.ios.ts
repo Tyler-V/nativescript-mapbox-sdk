@@ -1,13 +1,12 @@
+import { Layers } from './layers/layers.ios';
 import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
-import { MapboxStyle, LayerType, MapboxHeatmap } from '../common/style.common';
+import { MapboxStyle, LayerType } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
-import { MapboxColor } from '../common/color.common';
-import { Color } from 'tns-core-modules/color';
 
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
-    this.heatmap = new Heatmap(mapboxView);
+    this.layers = new Layers(mapboxView);
   }
 
   getStyle() {
@@ -83,82 +82,5 @@ export class Style extends MapboxStyle {
     if (minZoom) layer.minimumZoomLevel = minZoom;
     if (maxZoom) layer.maximumZoomLevel = maxZoom;
     return layer;
-  }
-}
-
-export const isColor = (input: any) => {
-  try {
-    return input.__proto__.constructor.name === 'MapboxColor';
-  } catch {
-    return false;
-  }
-};
-
-export const color = (color: MapboxColor) => {
-  return new Color(color.alpha ? color.alpha : 255, color.red, color.green, color.blue).ios;
-};
-
-export const marshall = (input: number | MapboxColor) => {
-  if (isColor(input)) {
-    return color(input as MapboxColor);
-  }
-  return input;
-};
-
-export const expressionStops = (expression: (number | MapboxColor)[][]) => {
-  const stops = [];
-  const values = [];
-  for (let i = 0; i < expression.length; i++) {
-    stops.push(marshall(expression[i][0]));
-    values.push(marshall(expression[i][1]));
-  }
-  let nsDictionary = new (NSDictionary as any)(values, stops);
-  let nsArray = NSArray.arrayWithArray([nsDictionary]);
-  return nsArray;
-};
-
-export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
-    const source = this.view.mapbox.style.getSource(sourceId);
-    const layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
-    layer.sourceLayerIdentifier = sourceId;
-    if (minZoom) layer.minimumZoomLevel = minZoom;
-    if (maxZoom) layer.maximumZoomLevel = maxZoom;
-    return layer;
-  }
-
-  setHeatmapColor(layer: MGLHeatmapStyleLayer, stops: (number | MapboxColor)[][]) {
-    layer.heatmapColor = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
-  }
-
-  setHeatmapIntensity(layer: any, stops: number[][]) {
-    layer.heatmapIntensity = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
-  }
-
-  setHeatmapRadius(layer: any, stops: number[][]) {
-    layer.heatmapRadius = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
-  }
-
-  setHeatmapOpacity(layer: any, stops: number[][]) {
-    layer.heatmapOpacity = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
-  }
-
-  setHeatmapWeight(layer: any, stops: number[][]) {
-    layer.heatmapWeight = NSExpression.expressionWithFormatArgumentArray(
-      "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-      expressionStops(stops)
-    );
   }
 }

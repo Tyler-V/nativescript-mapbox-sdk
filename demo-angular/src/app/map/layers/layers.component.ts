@@ -40,23 +40,23 @@ export class LayersComponent implements OnInit {
 
     addHeatmapLayer() {
         const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
-        this.mapService.mapbox.style.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.layers.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
+        this.mapService.mapbox.style.layers.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
             [0, new MapboxColor(255, 255, 255, 0.01)],
             [0.25, new MapboxColor(4, 179, 183)],
             [0.5, new MapboxColor(204, 211, 61)],
             [0.75, new MapboxColor(252, 167, 55)],
             [1.0, new MapboxColor(255, 78, 70)],
         ]);
-        this.mapService.mapbox.style.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
+        this.mapService.mapbox.style.layers.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
             [0, 1],
             [maxZoom, 0.5],
         ]);
-        this.mapService.mapbox.style.heatmap.setHeatmapRadius(this.mapService.heatmapLayer, [
+        this.mapService.mapbox.style.layers.heatmap.setHeatmapRadius(this.mapService.heatmapLayer, [
             [0, 5],
             [maxZoom, 5],
         ]);
-        this.mapService.mapbox.style.heatmap.setHeatmapOpacity(this.mapService.heatmapLayer, [
+        this.mapService.mapbox.style.layers.heatmap.setHeatmapOpacity(this.mapService.heatmapLayer, [
             [0, 1],
             [maxZoom, 1],
         ]);

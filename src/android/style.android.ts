@@ -1,15 +1,15 @@
-import { LayerType, MapboxHeatmap } from '../common/style.common';
+import { Layers } from './layers/layers.android';
+import { LayerType } from '../common/style.common';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxStyle } from '../common/style.common';
-import { MapboxColor } from '../common/color.common';
 
 declare const com, java: any;
 
 export class Style extends MapboxStyle {
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
-    this.heatmap = new Heatmap(mapboxView);
+    this.layers = new Layers(mapboxView);
   }
 
   getStyle() {
@@ -83,97 +83,5 @@ export class Style extends MapboxStyle {
     if (minZoom) layer.setMinZoom(minZoom);
     if (maxZoom) layer.setMaxZoom(maxZoom);
     return layer;
-  }
-}
-
-const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-const heatmapRadius = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-const heatmapWeight = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapWeight;
-
-const heatmapDensity = com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
-const interpolate = com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-
-export const number = (input: number) => {
-  if (Number.isInteger(input)) {
-    return new java.lang.Integer(input);
-  } else {
-    return new java.lang.Double(input);
-  }
-};
-
-export const isColor = (input: any) => {
-  try {
-    return input.__proto__.constructor.name === 'MapboxColor';
-  } catch {
-    return false;
-  }
-};
-
-export const color = (color: MapboxColor) => {
-  if (color.alpha) {
-    return rgba(number(color.red), number(color.green), number(color.blue), number(color.alpha));
-  } else {
-    return rgb(number(color.red), number(color.green), number(color.blue));
-  }
-};
-
-export const marshall = (input: number | MapboxColor) => {
-  if (isColor(input)) {
-    return color(input as MapboxColor);
-  } else if (typeof input === 'number') {
-    return number(input);
-  }
-  return input;
-};
-
-export const expressionStops = (stops: (number | MapboxColor)[][]) => {
-  const array = [];
-  for (let input of stops) {
-    const _stop = marshall(input[0]);
-    const _value = marshall(input[1]);
-    array.push(stop(_stop, _value));
-  }
-  return array;
-};
-
-export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
-    const layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
-    layer.setSourceLayer(sourceId);
-    if (minZoom) layer.setMinZoom(minZoom);
-    if (maxZoom) layer.setMaxZoom(maxZoom);
-    return layer;
-  }
-
-  setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]) {
-    const _heatmapColor = heatmapColor(interpolate(linear(), heatmapDensity(), expressionStops(stops)));
-    layer.setProperties([_heatmapColor]);
-  }
-
-  setHeatmapIntensity(layer: any, stops: number[][]) {
-    const _heatmapIntensity = heatmapIntensity(interpolate(linear(), zoom(), expressionStops(stops)));
-    layer.setProperties([_heatmapIntensity]);
-  }
-
-  setHeatmapRadius(layer: any, stops: number[][]) {
-    const _heatmapRadius = heatmapRadius(interpolate(linear(), zoom(), expressionStops(stops)));
-    layer.setProperties([_heatmapRadius]);
-  }
-
-  setHeatmapOpacity(layer: any, stops: number[][]) {
-    const _heatmapOpacity = heatmapOpacity(interpolate(linear(), zoom(), expressionStops(stops)));
-    layer.setProperties([_heatmapOpacity]);
-  }
-
-  setHeatmapWeight(layer: any, stops: number[][]) {
-    const _heatmapWeight = heatmapWeight(interpolate(linear(), zoom(), expressionStops(stops)));
-    layer.setProperties([_heatmapWeight]);
   }
 }
