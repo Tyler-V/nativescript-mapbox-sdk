@@ -38,21 +38,17 @@ export class MapboxView extends MapboxViewBase {
       let settings = this.config;
 
       let drawMap = () => {
-        MGLAccountManager.accessToken = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
+        MGLAccountManager.accessToken = this.config.accessToken;
 
-        this.mapView = MGLMapView.alloc().initWithFrameStyleURL(
-          CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height),
-          NSURL.URLWithString('mapbox://styles/mapbox/streets-v11')
-        );
+        this.mapView = MGLMapView.alloc().initWithFrame(CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height));
 
         this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback(() => {
           this.notify({
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
           });
-          if (settings.mapStyle) {
-            this.mapbox.style.setStyleUri(settings.mapStyle);
-          }
+          const mapStyle = settings.mapStyle ? settings.mapStyle : 'mapbox://styles/mapbox/streets-v11';
+          this.mapbox.style.setStyleUri(mapStyle);
         });
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
@@ -124,7 +120,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
       this.mapLoadedCallback(mapView);
 
       // this should be fired only once, but it's also fired when the style changes, so just remove the callback
-
       this.mapLoadedCallback = undefined;
     }
   }
@@ -145,7 +140,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
       this.styleLoadedCallback(mapView);
 
       // to avoid multiple calls. This is only invoked from setMapStyle().
-
       this.styleLoadedCallback = undefined;
     }
   }
