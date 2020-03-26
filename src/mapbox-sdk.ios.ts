@@ -48,7 +48,12 @@ export class MapboxView extends MapboxViewBase {
             object: this,
           });
           const mapStyle = settings.mapStyle ? settings.mapStyle : 'mapbox://styles/mapbox/streets-v11';
-          this.mapbox.style.setStyleUri(mapStyle);
+          this.mapbox.style.setStyleUri(mapStyle).then(() => {
+            this.notify({
+              eventName: MapboxViewBase.styleLoadedEvent,
+              object: this,
+            });
+          });
         });
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
@@ -122,6 +127,40 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
       // this should be fired only once, but it's also fired when the style changes, so just remove the callback
       this.mapLoadedCallback = undefined;
     }
+  }
+
+  /**
+   * Callback when the style has been loaded.
+   *
+   * Based on my testing, it looks like this callback is invoked multiple times.
+   *
+   * @see Mapbox:setMapStyle()
+   *
+   * @link https://mapbox.github.io/mapbox-gl-native/macos/0.3.0/Protocols/MGLMapViewDelegate.html#/c:objc(pl)MGLMapViewDelegate(im)mapView:didFinishLoadingStyle:
+   */
+  mapViewDidFinishLoadingStyle(mapView: MGLMapView, style: MGLStyle): void {
+    console.log('MGLMapViewDelegateImpl:mapViewDidFinishLoadingStyle(): callback called.');
+
+    if (this.styleLoadedCallback !== undefined) {
+      this.styleLoadedCallback(mapView, style);
+
+      // to avoid multiple calls. This is only invoked from setMapStyle().
+      this.styleLoadedCallback = undefined;
+    }
+  }
+  /**
+   * set style loaded callback.
+   *
+   * set an optional callback to be invoked when a style set with
+   * setMapStyle() is finished loading
+   *
+   * Note, from testing, it seems this callback can be invoked multiple times
+   * for a single style setting. It is up to the caller to handle this.
+   *
+   * @param {function} callback function with loaded style as parameter.
+   */
+  setStyleLoadedCallback(callback) {
+    this.styleLoadedCallback = callback;
   }
 }
 
