@@ -43,7 +43,7 @@ export class MapboxView extends MapboxViewBase {
 
         this.mapView = MGLMapView.alloc().initWithFrame(CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height));
 
-        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback((mapLoadedCallback) => {
+        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback((mapView: MGLMapView) => {
           this.notify({
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
