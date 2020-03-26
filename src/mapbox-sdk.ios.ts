@@ -4,6 +4,7 @@ import { Offline } from './ios/offline.ios';
 import { Style } from './ios/style.ios';
 import { Location } from './ios/location.ios';
 import { Annotation } from './ios/annotation.ios';
+import { MapStyle } from './common/style.common';
 
 export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
@@ -47,13 +48,8 @@ export class MapboxView extends MapboxViewBase {
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
           });
-          const mapStyle = settings.mapStyle ? settings.mapStyle : 'mapbox://styles/mapbox/streets-v11';
-          this.mapbox.style.setStyleUri(mapStyle).then(() => {
-            this.notify({
-              eventName: MapboxViewBase.styleLoadedEvent,
-              object: this,
-            });
-          });
+          const mapStyle = settings.mapStyle ? settings.mapStyle : MapStyle.MAPBOX_STREETS;
+          this.mapbox.style.setStyleUri(mapStyle);
         });
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
