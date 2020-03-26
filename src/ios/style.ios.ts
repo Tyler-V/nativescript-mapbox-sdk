@@ -22,14 +22,12 @@ export class Style extends MapboxStyle {
       this.view.mapView.styleURL = NSURL.URLWithString(uri);
       let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.view.mapView.delegate;
       delegate.setStyleLoadedCallback((mapView, style) => {
-        if (this.view.mapView.style) {
-          console.log('setStyleUri():mapViewDidFinishLoadingStyle');
-          this.view.notify({
-            eventName: MapboxViewBase.styleLoadedEvent,
-            object: this.view,
-          });
-          resolve();
-        }
+        console.log('setStyleUri():mapViewDidFinishLoadingStyle');
+        this.view.notify({
+          eventName: MapboxViewBase.styleLoadedEvent,
+          object: this.view,
+        });
+        resolve();
       });
     });
   }
