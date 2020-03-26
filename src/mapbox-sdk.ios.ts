@@ -38,21 +38,17 @@ export class MapboxView extends MapboxViewBase {
       let settings = this.config;
 
       let drawMap = () => {
-        MGLAccountManager.accessToken = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
+        MGLAccountManager.accessToken = this.config.accessToken;
 
-        this.mapView = MGLMapView.alloc().initWithFrameStyleURL(
-          CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height),
-          NSURL.URLWithString('mapbox://styles/mapbox/streets-v11')
-        );
+        this.mapView = MGLMapView.alloc().initWithFrame(CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height));
 
-        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback(() => {
+        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback((mapLoadedCallback) => {
           this.notify({
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
           });
-          if (settings.mapStyle) {
-            this.mapbox.style.setStyleUri(settings.mapStyle);
-          }
+          const mapStyle = settings.mapStyle ? settings.mapStyle : 'mapbox://styles/mapbox/streets-v11';
+          this.mapbox.style.setStyleUri(mapStyle);
         });
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
@@ -94,7 +90,7 @@ export class MapboxView extends MapboxViewBase {
 export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelegate {
   public static ObjCProtocols = [MGLMapViewDelegate];
   private mapLoadedCallback: (mapView: MGLMapView) => void;
-  private styleLoadedCallback: (mapView: MGLMapView) => void;
+  private styleLoadedCallback: (mapView: MGLMapView, style: MGLStyle) => void;
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -124,7 +120,6 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
       this.mapLoadedCallback(mapView);
 
       // this should be fired only once, but it's also fired when the style changes, so just remove the callback
-
       this.mapLoadedCallback = undefined;
     }
   }
@@ -138,14 +133,13 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
    *
    * @link https://mapbox.github.io/mapbox-gl-native/macos/0.3.0/Protocols/MGLMapViewDelegate.html#/c:objc(pl)MGLMapViewDelegate(im)mapView:didFinishLoadingStyle:
    */
-  mapViewDidFinishLoadingStyle(mapView: MGLMapView): void {
+  mapViewDidFinishLoadingStyle(mapView: MGLMapView, style: MGLStyle): void {
     console.log('MGLMapViewDelegateImpl:mapViewDidFinishLoadingStyle(): callback called.');
 
     if (this.styleLoadedCallback !== undefined) {
-      this.styleLoadedCallback(mapView);
+      this.styleLoadedCallback(mapView, style);
 
       // to avoid multiple calls. This is only invoked from setMapStyle().
-
       this.styleLoadedCallback = undefined;
     }
   }
