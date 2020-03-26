@@ -77,6 +77,8 @@ export class MapboxView extends MapboxViewBase {
       .tiltGesturesEnabled(!this.config.disableTilt)
       .zoomGesturesEnabled(!this.config.disableZoom)
       .attributionEnabled(!this.config.hideAttribution)
+      .maxZoomPreference(this.config.maxZoom)
+      .minZoomPreference(this.config.minZoom)
       .logoEnabled(!this.config.hideLogo);
 
     if (this.config.center && this.config.center.lat && this.config.center.lng) {
