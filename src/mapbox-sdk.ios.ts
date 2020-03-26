@@ -48,7 +48,12 @@ export class MapboxView extends MapboxViewBase {
             object: this,
           });
           const mapStyle = settings.mapStyle ? settings.mapStyle : 'mapbox://styles/mapbox/streets-v11';
-          this.mapbox.style.setStyleUri(mapStyle);
+          this.mapbox.style.setStyleUri(mapStyle).then(() => {
+            this.notify({
+              eventName: MapboxViewBase.styleLoadedEvent,
+              object: this,
+            });
+          });
         });
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
