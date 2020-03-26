@@ -168,6 +168,14 @@ export abstract class MapboxViewBase extends MapboxApi {
     this.config.zoomLevel = +value;
   }
 
+  [maxZoomLevelProperty.setNative](value: number) {
+    this.config.maxZoom = +value;
+  }
+
+  [minZoomLevelProperty.setNative](value: number) {
+    this.config.minZoom = +value;
+  }
+
   [mapStyleProperty.setNative](value: string) {
     this.config.mapStyle = value;
   }
