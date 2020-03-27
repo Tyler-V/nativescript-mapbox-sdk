@@ -33,7 +33,7 @@ export class Style extends MapboxStyle {
   }
 
   addImage(name: string, filePath: string) {
-    this.view.mapStyle.addImage(name, this.getImage(filePath).ios);
+    (<MGLMapView>this.view.mapView).style.setImageForName(this.getImage(filePath).ios, name);
   }
 
   addSource(source: any) {
