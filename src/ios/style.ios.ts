@@ -4,16 +4,13 @@ import { MapboxStyle, LayerType } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export class Style extends MapboxStyle {
-  mapView: MGLMapView;
-
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
-    this.mapView = this.mapView;
     this.layers = new Layers(mapboxView);
   }
 
   getStyle() {
-    return this.mapView.style;
+    return this.view.mapView.style;
   }
 
   getUri() {
@@ -22,7 +19,7 @@ export class Style extends MapboxStyle {
 
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.mapView.styleURL = NSURL.URLWithString(uri);
+      this.view.mapView.styleURL = NSURL.URLWithString(uri);
       let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.view.mapView.delegate;
       delegate.setStyleLoadedCallback((mapView, style) => {
         console.log('setStyleUri():mapViewDidFinishLoadingStyle');
@@ -36,19 +33,19 @@ export class Style extends MapboxStyle {
   }
 
   addImage(name: string, filePath: string) {
-    this.mapView.style.setImageForName(this.getImage(filePath).ios, name);
+    this.view.mapView.style.setImageForName(this.getImage(filePath).ios, name);
   }
 
   addSource(source: any) {
-    this.mapView.style.addSource(source);
+    this.view.mapView.style.addSource(source);
   }
 
   addLayer(layer: any) {
-    this.mapView.style.addLayer(layer);
+    this.view.mapView.style.addLayer(layer);
   }
 
   removeLayer(layer: any) {
-    this.mapView.style.removeLayer(layer);
+    this.view.mapView.style.removeLayer(layer);
   }
 
   addVectorSource(sourceId: string, uri: string): any {
@@ -62,6 +59,23 @@ export class Style extends MapboxStyle {
   }
 
   getSource(sourceId: string) {
-    return this.mapView.style.sourceWithIdentifier(sourceId);
+    return this.view.mapView.style.sourceWithIdentifier(sourceId);
+  }
+
+  createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
+    let layer;
+    const source = this.view.mapView.style.sourceWithIdentifier(NSURL.URLWithString(sourceId));
+    switch (layerType) {
+      case LayerType.HEATMAP:
+        layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
+        break;
+      case LayerType.SYMBOL:
+        layer = MGLSymbolStyleLayer.alloc().initWithIdentifierSource(layerId, source);
+        break;
+    }
+    layer.sourceLayerIdentifier = sourceId;
+    if (minZoom) layer.minimumZoomLevel = minZoom;
+    if (maxZoom) layer.maximumZoomLevel = maxZoom;
+    return layer;
   }
 }
