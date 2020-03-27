@@ -66,22 +66,13 @@ export class LayersComponent implements OnInit {
     }
 
     removeSymbolLayer() {
-        if (isIOS) {
-            return; // TODO
-        }
-
         this.mapService.mapbox.style.removeLayer(this.mapService.symbolLayer);
         this.mapService.symbolLayer = null;
+
         this.params.closeCallback();
     }
 
     addSymbolLayer() {
-        if (isIOS) {
-            return; // TODO
-        }
-
-        this.mapService.symbolLayer = this.mapService.mapbox.style.createLayer(LayerType.SYMBOL, 'symbol-layer-id', 'wells', null, null);
-
         this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
         this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
         this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
@@ -89,22 +80,9 @@ export class LayersComponent implements OnInit {
         this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
         this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
 
-        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-        const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
-        const iconSize = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
-
-        this.mapService.symbolLayer.setProperties([
-            iconImage(get('TYPE')),
-            iconSize(new java.lang.Double(2.0)),
-            iconAllowOverlap(new java.lang.Boolean(true)),
-            iconIgnorePlacement(new java.lang.Boolean(true)),
-            textAllowOverlap(new java.lang.Boolean(true)),
-        ]);
-
+        this.mapService.symbolLayer = this.mapService.mapbox.style.layers.symbolLayer.create('symbol-layer-id', 'wells', null, null);
         this.mapService.mapbox.style.addLayer(this.mapService.symbolLayer);
+
         this.params.closeCallback();
     }
 
