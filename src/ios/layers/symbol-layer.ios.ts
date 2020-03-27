@@ -8,7 +8,9 @@ export class SymbolLayer extends MapboxSymbolLayer {
     if (minZoom) layer.minimumZoomLevel = minZoom;
     if (maxZoom) layer.maximumZoomLevel = maxZoom;
     layer.iconImageName = NSExpression.expressionForKeyPath('TYPE');
+    layer.iconScale = NSExpression.expressionForConstantValue(2.0);
     layer.iconAllowsOverlap = NSExpression.expressionForConstantValue(true);
+    layer.iconIgnoresPlacement = NSExpression.expressionForConstantValue(true);
     return layer;
   }
 }
