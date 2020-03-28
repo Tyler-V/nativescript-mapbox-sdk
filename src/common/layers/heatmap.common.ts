@@ -11,7 +11,7 @@ export abstract class MapboxHeatmap {
     this.view = view;
   }
 
-  abstract create(layerId: string, sourceId: string, options: HeatmapLayerOptions);
+  abstract create(layerId: string, sourceId: string, options?: HeatmapLayerOptions);
   abstract setHeatmapColor(layer: any, stops: (number | MapboxColor)[][]): void;
   abstract setHeatmapIntensity(layer: any, stops: number[][]): void;
   abstract setHeatmapRadius(layer: any, stops: number[][]): void;

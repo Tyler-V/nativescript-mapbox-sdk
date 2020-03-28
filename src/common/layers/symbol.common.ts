@@ -15,5 +15,5 @@ export abstract class MapboxSymbolLayer {
     this.view = view;
   }
 
-  abstract create(layerId: string, sourceId: string, options: SymbolLayerOptions);
+  abstract create(layerId: string, sourceId: string, options?: SymbolLayerOptions);
 }
