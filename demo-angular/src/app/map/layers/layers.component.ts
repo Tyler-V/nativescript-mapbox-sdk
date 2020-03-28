@@ -2,8 +2,7 @@ import { isIOS, isAndroid } from 'tns-core-modules/platform';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
-import { LayerType, MapboxColor, SymbolLayerOptions } from 'nativescript-mapbox-sdk';
-import { Color as tnsColor } from 'tns-core-modules/color';
+import { MapboxColor, SymbolLayerOptions } from 'nativescript-mapbox-sdk';
 import { LayerOptions } from 'nativescript-mapbox-sdk/common/layers/layers.common';
 
 declare const android, com, java: any;
