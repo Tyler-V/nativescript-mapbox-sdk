@@ -7,8 +7,12 @@ export class Heatmap extends MapboxHeatmap {
     const source = this.view.mapbox.style.getSource(sourceId);
     const layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
     layer.sourceLayerIdentifier = sourceId;
-    if (options.minZoom) layer.minimumZoomLevel = options.minZoom;
-    if (options.maxZoom) layer.maximumZoomLevel = options.maxZoom;
+
+    if (options) {
+      if (options.minZoom) layer.minimumZoomLevel = options.minZoom;
+      if (options.maxZoom) layer.maximumZoomLevel = options.maxZoom;
+    }
+
     return layer;
   }
 

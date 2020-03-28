@@ -12,15 +12,16 @@ export class SymbolLayer extends MapboxSymbolLayer {
     const layer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer(layerId, sourceId);
     layer.setSourceLayer(sourceId);
 
-    if (options.minZoom) layer.setMinZoom(options.minZoom);
-    if (options.maxZoom) layer.setMaxZoom(options.maxZoom);
-
-    const properties = [];
-    if (options.iconImageKey) properties.push(iconImage(get(options.iconImageKey)));
-    if (options.iconSize) properties.push(iconSize(new java.lang.Float(options.iconSize)));
-    if (options.iconAllowOverlap) properties.push(iconAllowOverlap(new java.lang.Boolean(options.iconAllowOverlap)));
-    if (options.iconIgnorePlacement) properties.push(iconIgnorePlacement(new java.lang.Boolean(options.iconIgnorePlacement)));
-    layer.setProperties(properties);
+    if (options) {
+      if (options.minZoom) layer.setMinZoom(options.minZoom);
+      if (options.maxZoom) layer.setMaxZoom(options.maxZoom);
+      const properties = [];
+      if (options.iconImageKey) properties.push(iconImage(get(options.iconImageKey)));
+      if (options.iconSize) properties.push(iconSize(new java.lang.Float(options.iconSize)));
+      if (options.iconAllowOverlap) properties.push(iconAllowOverlap(new java.lang.Boolean(options.iconAllowOverlap)));
+      if (options.iconIgnorePlacement) properties.push(iconIgnorePlacement(new java.lang.Boolean(options.iconIgnorePlacement)));
+      layer.setProperties(properties);
+    }
 
     return layer;
   }

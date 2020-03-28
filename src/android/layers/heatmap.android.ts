@@ -19,8 +19,12 @@ export class Heatmap extends MapboxHeatmap {
   create(layerId: string, sourceId: string, options?: HeatmapLayerOptions) {
     const layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
     layer.setSourceLayer(sourceId);
-    if (options.minZoom) layer.setMinZoom(options.minZoom);
-    if (options.maxZoom) layer.setMaxZoom(options.maxZoom);
+
+    if (options) {
+      if (options.minZoom) layer.setMinZoom(options.minZoom);
+      if (options.maxZoom) layer.setMaxZoom(options.maxZoom);
+    }
+
     return layer;
   }
 
