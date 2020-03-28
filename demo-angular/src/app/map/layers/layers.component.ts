@@ -86,7 +86,7 @@ export class LayersComponent implements OnInit {
         const options: SymbolLayerOptions = {
             minZoom: 12,
             iconImageKey: 'TYPE',
-            iconSize: 2,
+            iconSize: isAndroid ? 2 : 0.75,
             iconAllowOverlap: true,
             iconIgnorePlacement: true,
         };
