@@ -1,7 +1,7 @@
 import { MapboxView } from '../../mapbox-sdk.ios';
 import { MapboxLayers } from '../../common/layers/layers.common';
 import { Heatmap } from './heatmap.ios';
-import { SymbolLayer } from './symbol-layer.ios';
+import { SymbolLayer } from './symbol.ios';
 
 export class Layers extends MapboxLayers {
   constructor(mapboxView: MapboxView) {

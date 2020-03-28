@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
 import { LayerType, MapboxColor, SymbolLayerOptions } from 'nativescript-mapbox-sdk';
 import { Color as tnsColor } from 'tns-core-modules/color';
+import { LayerOptions } from 'nativescript-mapbox-sdk/common/layers/layers.common';
 
 declare const android, com, java: any;
 
@@ -39,8 +40,10 @@ export class LayersComponent implements OnInit {
     }
 
     addHeatmapLayer() {
-        const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.layers.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
+        const options: LayerOptions = {
+            maxZoom: 12,
+        };
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.layers.heatmap.create('heatmap-layer-id', 'wells', options);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
             [0, new MapboxColor(255, 255, 255, 0.01)],
             [0.25, new MapboxColor(4, 179, 183)],
@@ -50,15 +53,15 @@ export class LayersComponent implements OnInit {
         ]);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
             [0, 1],
-            [maxZoom, 0.5],
+            [options.maxZoom, 0.5],
         ]);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapRadius(this.mapService.heatmapLayer, [
             [0, 5],
-            [maxZoom, 5],
+            [options.maxZoom, 5],
         ]);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapOpacity(this.mapService.heatmapLayer, [
             [0, 1],
-            [maxZoom, 1],
+            [options.maxZoom, 1],
         ]);
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
 
@@ -81,6 +84,7 @@ export class LayersComponent implements OnInit {
         this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
 
         const options: SymbolLayerOptions = {
+            minZoom: 12,
             iconImageKey: 'TYPE',
             iconSize: 2,
             iconAllowOverlap: true,

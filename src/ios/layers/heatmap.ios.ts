@@ -1,14 +1,14 @@
-import { MapboxHeatmap } from '../../common/layers/heatmap.common';
+import { MapboxHeatmap, HeatmapLayerOptions } from '../../common/layers/heatmap.common';
 import { MapboxColor } from '../../common/color.common';
 import { toExpressionStop } from '../utils.ios';
 
 export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
+  create(layerId: string, sourceId: string, options?: HeatmapLayerOptions) {
     const source = this.view.mapbox.style.getSource(sourceId);
     const layer = MGLHeatmapStyleLayer.alloc().initWithIdentifierSource(layerId, source);
     layer.sourceLayerIdentifier = sourceId;
-    if (minZoom) layer.minimumZoomLevel = minZoom;
-    if (maxZoom) layer.maximumZoomLevel = maxZoom;
+    if (options.minZoom) layer.minimumZoomLevel = options.minZoom;
+    if (options.maxZoom) layer.maximumZoomLevel = options.maxZoom;
     return layer;
   }
 

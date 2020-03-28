@@ -1,6 +1,6 @@
 import { MapboxViewBase } from '../../mapbox-sdk.common';
 import { MapboxHeatmap } from './heatmap.common';
-import { MapboxSymbolLayer } from './symbol-layer.common';
+import { MapboxSymbolLayer } from './symbol.common';
 
 export interface LayerOptions {
   minZoom?: number;

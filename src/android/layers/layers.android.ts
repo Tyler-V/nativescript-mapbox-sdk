@@ -1,7 +1,7 @@
 import { MapboxView } from './../../mapbox-sdk.android';
 import { MapboxLayers } from '../../common/layers/layers.common';
 import { Heatmap } from './heatmap.android';
-import { SymbolLayer } from './symbol-layer.android';
+import { SymbolLayer } from './symbol.android';
 
 export class Layers extends MapboxLayers {
   constructor(mapboxView: MapboxView) {
