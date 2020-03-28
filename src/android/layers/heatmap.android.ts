@@ -1,4 +1,4 @@
-import { MapboxHeatmap } from '../../common/layers/heatmap.common';
+import { MapboxHeatmap, HeatmapLayerOptions } from '../../common/layers/heatmap.common';
 import { MapboxColor } from '../../common/color.common';
 import { toExpressionStop } from '../utils.android';
 
@@ -16,11 +16,15 @@ const linear = com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 const zoom = com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 
 export class Heatmap extends MapboxHeatmap {
-  create(layerId: string, sourceId: string, minZoom?: number, maxZoom?: number) {
+  create(layerId: string, sourceId: string, options?: HeatmapLayerOptions) {
     const layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
     layer.setSourceLayer(sourceId);
-    if (minZoom) layer.setMinZoom(minZoom);
-    if (maxZoom) layer.setMaxZoom(maxZoom);
+
+    if (options) {
+      if (options.minZoom) layer.setMinZoom(options.minZoom);
+      if (options.maxZoom) layer.setMaxZoom(options.maxZoom);
+    }
+
     return layer;
   }
 

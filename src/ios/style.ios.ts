@@ -33,7 +33,7 @@ export class Style extends MapboxStyle {
   }
 
   addImage(name: string, filePath: string) {
-    return Promise.reject('Error, method not implemented.');
+    this.view.mapView.style.setImageForName(this.getImage(filePath).ios, name);
   }
 
   addSource(source: any) {

@@ -39,7 +39,6 @@ export abstract class MapboxStyle {
   abstract removeLayer(layer: any): void;
   abstract addVectorSource(sourceId: string, uri: string): any;
   abstract getSource(sourceId: string): any;
-  abstract createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number): any;
 
   public getImage(filePath: string): ImageSource {
     const folder: Folder = <Folder>knownFolders.currentApp();
