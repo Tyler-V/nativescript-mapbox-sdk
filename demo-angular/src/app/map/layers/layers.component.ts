@@ -2,7 +2,7 @@ import { isIOS, isAndroid } from 'tns-core-modules/platform';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
-import { LayerType, MapboxColor } from 'nativescript-mapbox-sdk';
+import { LayerType, MapboxColor, SymbolLayerOptions } from 'nativescript-mapbox-sdk';
 import { Color as tnsColor } from 'tns-core-modules/color';
 
 declare const android, com, java: any;
@@ -80,7 +80,13 @@ export class LayersComponent implements OnInit {
         this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
         this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
 
-        this.mapService.symbolLayer = this.mapService.mapbox.style.layers.symbolLayer.create('symbol-layer-id', 'wells', null, null);
+        const options: SymbolLayerOptions = {
+            iconImageKey: 'TYPE',
+            iconSize: 2,
+            iconAllowOverlap: true,
+            iconIgnorePlacement: true,
+        };
+        this.mapService.symbolLayer = this.mapService.mapbox.style.layers.symbolLayer.create('symbol-layer-id', 'wells', options);
         this.mapService.mapbox.style.addLayer(this.mapService.symbolLayer);
 
         this.params.closeCallback();
