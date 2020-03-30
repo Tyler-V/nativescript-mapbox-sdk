@@ -52,6 +52,14 @@ export class MapboxView extends MapboxViewBase {
           this.mapbox.style.setStyleUri(mapStyle);
         });
 
+        let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapView.delegate;
+        delegate.onMapViewDidBecomeIdle = (mapView: MGLMapView) => {
+          this.notify({
+            eventName: MapboxViewBase.mapReadyEvent,
+            object: this,
+          });
+        };
+
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
         this.setMapboxOptions(this.mapView, settings);
@@ -92,6 +100,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   public static ObjCProtocols = [MGLMapViewDelegate];
   private mapLoadedCallback: (mapView: MGLMapView) => void;
   private styleLoadedCallback: (mapView: MGLMapView, style: MGLStyle) => void;
+  public onMapViewDidBecomeIdle: (mapView: MGLMapView) => void;
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -157,6 +166,11 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
    */
   setStyleLoadedCallback(callback) {
     this.styleLoadedCallback = callback;
+  }
+
+  mapViewDidBecomeIdle(mapView: MGLMapView): void {
+    console.log('MGLMapViewDelegateImpl:mapViewDidBecomeIdle(): callback called.');
+    this.onMapViewDidBecomeIdle(mapView);
   }
 }
 
