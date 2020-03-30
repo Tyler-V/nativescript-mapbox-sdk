@@ -5,6 +5,7 @@ import { Style } from './android/style.android';
 import { Location } from './android/location.android';
 import { Annotation } from './android/annotation.android';
 import * as utils from 'tns-core-modules/utils/utils';
+import { MapStyle } from './common/style.common';
 
 export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
@@ -50,14 +51,24 @@ export class MapboxView extends MapboxViewBase {
             onMapReady: (mapboxMap) => {
               this.mapboxMap = mapboxMap;
 
-              if (settings.mapStyle) {
-                this.mapbox.style.setStyleUri(settings.mapStyle);
-              }
+              const mapStyle = settings.mapStyle ? settings.mapStyle : MapStyle.MAPBOX_STREETS;
+              this.mapbox.style.setStyleUri(mapStyle);
 
               this.notify({
                 eventName: MapboxViewBase.mapReadyEvent,
                 object: this,
               });
+
+              mapboxMap.addOnCameraIdleListener(
+                new com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraIdleListener({
+                  onCameraIdle: () => {
+                    this.notify({
+                      eventName: MapboxViewBase.cameraMove,
+                      object: this,
+                    });
+                  },
+                })
+              );
             },
           })
         );

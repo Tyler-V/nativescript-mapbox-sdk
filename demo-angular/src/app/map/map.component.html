@@ -14,8 +14,7 @@
         disableTilt="false"
         (mapReady)="onMapReady($event)"
         (styleLoaded)="onStyleLoaded($event)"
-        [minZoom]="minZoom"
-        [maxZoom]="maxZoom"
+        (cameraMove)="onCameraMove($event)"
       >
       </Mapbox>
     </ContentView>

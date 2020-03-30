@@ -4,6 +4,7 @@ import { Offline } from './ios/offline.ios';
 import { Style } from './ios/style.ios';
 import { Location } from './ios/location.ios';
 import { Annotation } from './ios/annotation.ios';
+import { MapStyle } from './common/style.common';
 
 export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
@@ -42,14 +43,22 @@ export class MapboxView extends MapboxViewBase {
 
         this.mapView = MGLMapView.alloc().initWithFrame(CGRectMake(0, 0, this.nativeView.frame.size.width, this.nativeView.frame.size.height));
 
-        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback(() => {
+        this.mapView.delegate = this.delegate = MGLMapViewDelegateImpl.new().initWithCallback((mapView: MGLMapView) => {
           this.notify({
             eventName: MapboxViewBase.mapReadyEvent,
             object: this,
           });
-          const mapStyle = settings.mapStyle ? settings.mapStyle : 'mapbox://styles/mapbox/streets-v11';
+          const mapStyle = settings.mapStyle ? settings.mapStyle : MapStyle.MAPBOX_STREETS;
           this.mapbox.style.setStyleUri(mapStyle);
         });
+
+        let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapView.delegate;
+        delegate.onMapViewDidBecomeIdle = (mapView: MGLMapView) => {
+          this.notify({
+            eventName: MapboxViewBase.cameraMove,
+            object: this,
+          });
+        };
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
@@ -77,8 +86,6 @@ export class MapboxView extends MapboxViewBase {
     mapView.zoomEnabled = !settings.disableZoom;
     mapView.attributionButton.hidden = settings.hideAttribution;
     mapView.logoView.hidden = settings.hideLogo;
-    mapView.maximumZoomLevel = settings.maxZoom;
-    mapView.minimumZoomLevel = settings.minZoom;
 
     if (settings.center && settings.center.lat && settings.center.lng) {
       let centerCoordinate = CLLocationCoordinate2DMake(settings.center.lat, settings.center.lng);
@@ -92,7 +99,8 @@ export class MapboxView extends MapboxViewBase {
 export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelegate {
   public static ObjCProtocols = [MGLMapViewDelegate];
   private mapLoadedCallback: (mapView: MGLMapView) => void;
-  private styleLoadedCallback: (mapView: MGLMapView) => void;
+  private styleLoadedCallback: (mapView: MGLMapView, style: MGLStyle) => void;
+  public onMapViewDidBecomeIdle: (mapView: MGLMapView) => void;
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -135,11 +143,11 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
    *
    * @link https://mapbox.github.io/mapbox-gl-native/macos/0.3.0/Protocols/MGLMapViewDelegate.html#/c:objc(pl)MGLMapViewDelegate(im)mapView:didFinishLoadingStyle:
    */
-  mapViewDidFinishLoadingStyle(mapView: MGLMapView): void {
+  mapViewDidFinishLoadingStyle(mapView: MGLMapView, style: MGLStyle): void {
     console.log('MGLMapViewDelegateImpl:mapViewDidFinishLoadingStyle(): callback called.');
 
     if (this.styleLoadedCallback !== undefined) {
-      this.styleLoadedCallback(mapView);
+      this.styleLoadedCallback(mapView, style);
 
       // to avoid multiple calls. This is only invoked from setMapStyle().
       this.styleLoadedCallback = undefined;
@@ -158,6 +166,11 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
    */
   setStyleLoadedCallback(callback) {
     this.styleLoadedCallback = callback;
+  }
+
+  mapViewDidBecomeIdle(mapView: MGLMapView): void {
+    console.log('MGLMapViewDelegateImpl:mapViewDidBecomeIdle(): callback called.');
+    this.onMapViewDidBecomeIdle(mapView);
   }
 }
 

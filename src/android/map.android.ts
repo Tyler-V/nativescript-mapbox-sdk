@@ -76,14 +76,6 @@ export class Map extends MapboxMap {
     return zoom;
   }
 
-  setMinimumZoomLevel(zoomLevel: number): void {
-    this.view.mapboxMap.setMinZoomPreference(zoomLevel);
-  }
-
-  setMaximumZoomLevel(zoomLevel: number): void {
-    this.view.mapboxMap.setMaxZoomPreference(zoomLevel);
-  }
-
   getTilt(): number {
     const tilt = this.view.mapboxMap.getCameraPosition().tilt;
     return tilt;
@@ -123,22 +115,17 @@ export class Map extends MapboxMap {
     let coordinates;
 
     if (!bounds) {
-      coordinates = new android.graphics.RectF(
-        this.view.mapView.getLeft(),
-        this.view.mapView.getTop(),
-        this.view.mapView.getBottom(),
-        this.view.mapView.getRight()
-      );
-    } else {
-      const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
-        .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.north, bounds.east))
-        .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.south, bounds.west))
-        .build();
-
-      const northWest = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getNorthWest());
-      const southEast = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getSouthEast());
-      coordinates = new android.graphics.RectF(northWest.x, northWest.y, southEast.x, southEast.y);
+      bounds = this.getBounds();
     }
+
+    const latLngBounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
+      .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.north, bounds.east))
+      .include(new com.mapbox.mapboxsdk.geometry.LatLng(bounds.south, bounds.west))
+      .build();
+
+    const northWest = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getNorthWest());
+    const southEast = this.view.mapboxMap.getProjection().toScreenLocation(latLngBounds.getSouthEast());
+    coordinates = new android.graphics.RectF(northWest.x, northWest.y, southEast.x, southEast.y);
 
     const features = this.view.mapboxMap.queryRenderedFeatures(coordinates, layerIds);
     return _getFeatures(features);

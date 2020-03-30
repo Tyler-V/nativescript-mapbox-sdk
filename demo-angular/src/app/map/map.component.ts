@@ -49,6 +49,11 @@ export class MapComponent implements OnInit {
         console.log(args.eventName);
     }
 
+    onCameraMove(args) {
+        console.log(args.eventName);
+        console.log(this.mapService.mapbox.map.getZoom());
+    }
+
     showLocationModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,

@@ -2,8 +2,8 @@ import { isIOS, isAndroid } from 'tns-core-modules/platform';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
-import { LayerType, MapboxColor } from 'nativescript-mapbox-sdk';
-import { Color as tnsColor } from 'tns-core-modules/color';
+import { MapboxColor, SymbolLayerOptions } from 'nativescript-mapbox-sdk';
+import { LayerOptions } from 'nativescript-mapbox-sdk/common/layers/layers.common';
 
 declare const android, com, java: any;
 
@@ -39,8 +39,10 @@ export class LayersComponent implements OnInit {
     }
 
     addHeatmapLayer() {
-        const maxZoom = 12;
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.layers.heatmap.create('heatmap-layer-id', 'wells', null, maxZoom);
+        const options: LayerOptions = {
+            maxZoom: 12,
+        };
+        this.mapService.heatmapLayer = this.mapService.mapbox.style.layers.heatmap.create('heatmap-layer-id', 'wells', options);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
             [0, new MapboxColor(255, 255, 255, 0.01)],
             [0.25, new MapboxColor(4, 179, 183)],
@@ -50,15 +52,15 @@ export class LayersComponent implements OnInit {
         ]);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
             [0, 1],
-            [maxZoom, 0.5],
+            [options.maxZoom, 0.5],
         ]);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapRadius(this.mapService.heatmapLayer, [
             [0, 5],
-            [maxZoom, 5],
+            [options.maxZoom, 5],
         ]);
         this.mapService.mapbox.style.layers.heatmap.setHeatmapOpacity(this.mapService.heatmapLayer, [
             [0, 1],
-            [maxZoom, 1],
+            [options.maxZoom, 1],
         ]);
         this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
 
@@ -66,22 +68,13 @@ export class LayersComponent implements OnInit {
     }
 
     removeSymbolLayer() {
-        if (isIOS) {
-            return; // TODO
-        }
-
         this.mapService.mapbox.style.removeLayer(this.mapService.symbolLayer);
         this.mapService.symbolLayer = null;
+
         this.params.closeCallback();
     }
 
     addSymbolLayer() {
-        if (isIOS) {
-            return; // TODO
-        }
-
-        this.mapService.symbolLayer = this.mapService.mapbox.style.createLayer(LayerType.SYMBOL, 'symbol-layer-id', 'wells', null, null);
-
         this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
         this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
         this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
@@ -89,22 +82,16 @@ export class LayersComponent implements OnInit {
         this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
         this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
 
-        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-        const textAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
-        const iconSize = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
-
-        this.mapService.symbolLayer.setProperties([
-            iconImage(get('TYPE')),
-            iconSize(new java.lang.Double(2.0)),
-            iconAllowOverlap(new java.lang.Boolean(true)),
-            iconIgnorePlacement(new java.lang.Boolean(true)),
-            textAllowOverlap(new java.lang.Boolean(true)),
-        ]);
-
+        const options: SymbolLayerOptions = {
+            minZoom: 12,
+            iconImageKey: 'TYPE',
+            iconSize: isAndroid ? 2 : 0.75,
+            iconAllowOverlap: true,
+            iconIgnorePlacement: true,
+        };
+        this.mapService.symbolLayer = this.mapService.mapbox.style.layers.symbolLayer.create('symbol-layer-id', 'wells', options);
         this.mapService.mapbox.style.addLayer(this.mapService.symbolLayer);
+
         this.params.closeCallback();
     }
 

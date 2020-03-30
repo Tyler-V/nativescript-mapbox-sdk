@@ -68,20 +68,4 @@ export class Style extends MapboxStyle {
   getSource(sourceId: string): any {
     return this.view.mapStyle.getSource(sourceId);
   }
-
-  createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
-    let layer;
-    switch (layerType) {
-      case LayerType.HEATMAP:
-        layer = new com.mapbox.mapboxsdk.style.layers.HeatmapLayer(layerId, sourceId);
-        break;
-      case LayerType.SYMBOL:
-        layer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer(layerId, sourceId);
-        break;
-    }
-    layer.setSourceLayer(sourceId);
-    if (minZoom) layer.setMinZoom(minZoom);
-    if (maxZoom) layer.setMaxZoom(maxZoom);
-    return layer;
-  }
 }

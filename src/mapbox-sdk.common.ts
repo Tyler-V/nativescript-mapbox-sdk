@@ -57,8 +57,6 @@ export interface MapViewOptions {
   mapsStyle?: string;
   center?: LatLng;
   zoomLevel?: number;
-  minZoom?: number;
-  maxZoom?: number;
   hideLogo?: boolean;
   hideAttribution?: boolean;
   hideCompass?: boolean;
@@ -78,12 +76,6 @@ mapStyleProperty.register(MapboxApi);
 
 export const zoomLevelProperty = new Property<MapboxApi, number>({ name: 'zoomLevel' });
 zoomLevelProperty.register(MapboxApi);
-
-export const minZoomLevelProperty = new Property<MapboxApi, number>({ name: 'minZoom' });
-minZoomLevelProperty.register(MapboxApi);
-
-export const maxZoomLevelProperty = new Property<MapboxApi, number>({ name: 'maxZoom' });
-maxZoomLevelProperty.register(MapboxApi);
 
 export const latitudeProperty = new Property<MapboxApi, number>({ name: 'latitude' });
 latitudeProperty.register(MapboxApi);
@@ -151,6 +143,7 @@ export class Mapbox {
 export abstract class MapboxViewBase extends MapboxApi {
   static mapReadyEvent: string = 'mapReady';
   static styleLoadedEvent: string = 'styleLoaded';
+  static cameraMove: string = 'cameraMove';
 
   protected config: any = {};
 
@@ -166,14 +159,6 @@ export abstract class MapboxViewBase extends MapboxApi {
 
   [zoomLevelProperty.setNative](value: number) {
     this.config.zoomLevel = +value;
-  }
-
-  [maxZoomLevelProperty.setNative](value: number) {
-    this.config.maxZoom = +value;
-  }
-
-  [minZoomLevelProperty.setNative](value: number) {
-    this.config.minZoom = +value;
   }
 
   [mapStyleProperty.setNative](value: string) {
