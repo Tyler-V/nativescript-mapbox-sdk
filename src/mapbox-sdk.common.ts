@@ -53,8 +53,8 @@ export class MapboxStatic {
 }
 
 export interface MapViewOptions {
-  accessToken: string;
-  mapsStyle?: string;
+  accessToken?: string;
+  mapStyle?: string;
   center?: LatLng;
   zoomLevel?: number;
   minZoom?: number;
@@ -153,7 +153,7 @@ export abstract class MapboxViewBase extends MapboxApi {
   static styleLoadedEvent: string = 'styleLoaded';
   static cameraMove: string = 'cameraMove';
 
-  protected config: any = {};
+  protected config: MapViewOptions = {};
 
   public mapbox: Mapbox;
   public mapView;
@@ -186,12 +186,12 @@ export abstract class MapboxViewBase extends MapboxApi {
   }
 
   [latitudeProperty.setNative](value: number) {
-    this.config.center = this.config.center || {};
+    if (!this.config.center) this.config.center = { lat: 0, lng: 0 };
     this.config.center.lat = +value;
   }
 
   [longitudeProperty.setNative](value: number) {
-    this.config.center = this.config.center || {};
+    if (!this.config.center) this.config.center = { lat: 0, lng: 0 };
     this.config.center.lng = +value;
   }
 

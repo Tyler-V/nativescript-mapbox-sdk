@@ -88,23 +88,16 @@ export class MapboxView extends MapboxViewBase {
       .tiltGesturesEnabled(!this.config.disableTilt)
       .zoomGesturesEnabled(!this.config.disableZoom)
       .attributionEnabled(!this.config.hideAttribution)
-      .maxZoomPreference(this.config.maxZoom)
-      .minZoomPreference(this.config.minZoom)
       .logoEnabled(!this.config.hideLogo);
+
+    if (this.config.maxZoom) mapboxMapOptions.maxZoomPreference(this.config.maxZoom);
+    if (this.config.minZoom) mapboxMapOptions.minZoomPreference(this.config.minZoom);
 
     if (this.config.center && this.config.center.lat && this.config.center.lng) {
       const cameraPositionBuilder = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
         .target(new com.mapbox.mapboxsdk.geometry.LatLng(this.config.center.lat, this.config.center.lng))
         .zoom(this.config.zoomLevel);
       mapboxMapOptions.camera(cameraPositionBuilder.build());
-    }
-
-    if (this.config.maxZoom) {
-        mapboxMapOptions.maxZoomPreference(this.config.maxZoom);
-    }
-
-    if (this.config.minZoom) {
-      mapboxMapOptions.minZoomPreference(this.config.minZoom);
     }
 
     return mapboxMapOptions;
