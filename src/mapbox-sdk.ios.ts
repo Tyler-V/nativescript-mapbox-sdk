@@ -86,6 +86,8 @@ export class MapboxView extends MapboxViewBase {
     mapView.zoomEnabled = !settings.disableZoom;
     mapView.attributionButton.hidden = settings.hideAttribution;
     mapView.logoView.hidden = settings.hideLogo;
+    mapView.maximumZoomLevel = settings.maxZoom;
+    mapView.minimumZoomLevel = settings.minZoom;
 
     if (settings.center && settings.center.lat && settings.center.lng) {
       let centerCoordinate = CLLocationCoordinate2DMake(settings.center.lat, settings.center.lng);
