@@ -55,7 +55,7 @@ export class MapboxView extends MapboxViewBase {
         let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapView.delegate;
         delegate.onMapViewDidBecomeIdle = (mapView: MGLMapView) => {
           this.notify({
-            eventName: MapboxViewBase.mapReadyEvent,
+            eventName: MapboxViewBase.cameraMove,
             object: this,
           });
         };
