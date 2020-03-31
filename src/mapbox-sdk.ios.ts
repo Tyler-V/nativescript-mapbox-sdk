@@ -1,4 +1,4 @@
-import { MapboxViewBase, LatLng } from './mapbox-sdk.common';
+import { MapboxViewBase, LatLng, MapViewOptions } from './mapbox-sdk.common';
 import { Map } from './ios/map.ios';
 import { Offline } from './ios/offline.ios';
 import { Style } from './ios/style.ios';
@@ -78,7 +78,7 @@ export class MapboxView extends MapboxViewBase {
     }
   }
 
-  private setMapboxOptions(mapView: MGLMapView, settings) {
+  private setMapboxOptions(mapView: MGLMapView, settings: MapViewOptions) {
     mapView.compassView.hidden = settings.hideCompass;
     mapView.rotateEnabled = !settings.disableRotation;
     mapView.scrollEnabled = !settings.disableScroll;
@@ -86,6 +86,9 @@ export class MapboxView extends MapboxViewBase {
     mapView.zoomEnabled = !settings.disableZoom;
     mapView.attributionButton.hidden = settings.hideAttribution;
     mapView.logoView.hidden = settings.hideLogo;
+
+    if (settings.minZoom) mapView.minimumZoomLevel = settings.minZoom;
+    if (settings.maxZoom) mapView.maximumZoomLevel = settings.maxZoom;
 
     if (settings.center && settings.center.lat && settings.center.lng) {
       let centerCoordinate = CLLocationCoordinate2DMake(settings.center.lat, settings.center.lng);

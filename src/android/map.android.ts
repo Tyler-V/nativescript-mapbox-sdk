@@ -76,6 +76,14 @@ export class Map extends MapboxMap {
     return zoom;
   }
 
+  setMinimumZoomLevel(zoomLevel: number): void {
+    this.view.mapboxMap.setMinZoomPreference(zoomLevel);
+  }
+
+  setMaximumZoomLevel(zoomLevel: number): void {
+    this.view.mapboxMap.setMaxZoomPreference(zoomLevel);
+  }
+
   getTilt(): number {
     const tilt = this.view.mapboxMap.getCameraPosition().tilt;
     return tilt;

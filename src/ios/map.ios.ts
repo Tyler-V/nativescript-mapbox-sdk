@@ -95,6 +95,14 @@ export class Map extends MapboxMap {
     return zoom;
   }
 
+  setMinimumZoomLevel(zoomLevel: number): void {
+    this.view.mapView.minimumZoomLevel = zoomLevel;
+  }
+
+  setMaximumZoomLevel(zoomLevel: number): void {
+    this.view.mapView.maximumZoomLevel = zoomLevel;
+  }
+
   getTilt() {
     const tilt = this.view.mapView.camera.pitch;
     return tilt;
