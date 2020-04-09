@@ -97,7 +97,19 @@ export class LayersComponent implements OnInit {
 
     filter() {
         if (isIOS) {
-            return; // TODO
+            if (this.mapService.heatmapLayer) {
+
+                this.mapService.heatmapLayer.predicate = NSPredicate.predicateWithFormatArgumentArray(
+                    "TYPE = %d", NSArray.arrayWithObject('OIL'));
+                this.mapService.heatmapLayer.predicate = NSPredicate.predicateWithFormatArgumentArray(
+                    "VISIBLE = %d", NSArray.arrayWithObject('TRUE'));
+
+                this.params.closeCallback();
+            }
+            if (this.mapService.symbolLayer) {
+                this.mapService.symbolLayer.predicate = NSPredicate.predicateWithFormatArgumentArray(
+                    "TYPE = %d", NSArray.arrayWithObject('OIL'));
+            }
         }
 
         const randomBoolean = () => Math.random() >= 0.5;
