@@ -95,20 +95,33 @@ export class LayersComponent implements OnInit {
         this.params.closeCallback();
     }
 
-    filter() {
+    filter(wellTypes= ['OIL', 'GAS', 'OILGAS', 'EOR', 'SWD', 'OTHER'], onlyVisibleWells= false) {
         if (isIOS) {
             if (this.mapService.heatmapLayer) {
-
-                this.mapService.heatmapLayer.predicate = NSPredicate.predicateWithFormatArgumentArray(
-                    "TYPE = %d", NSArray.arrayWithObject('OIL'));
-                this.mapService.heatmapLayer.predicate = NSPredicate.predicateWithFormatArgumentArray(
-                    "VISIBLE = %d", NSArray.arrayWithObject('TRUE'));
-
+                let wellPredicates = wellTypes.map(type => {
+                    if (onlyVisibleWells) {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d AND VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
+                    } else {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d", NSArray.arrayWithObject(type));
+                    }
+                });
+                this.mapService.symbolLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(wellPredicates));
                 this.params.closeCallback();
             }
-            if (this.mapService.symbolLayer) {
-                this.mapService.symbolLayer.predicate = NSPredicate.predicateWithFormatArgumentArray(
-                    "TYPE = %d", NSArray.arrayWithObject('OIL'));
+            if (this.mapService.heatmapLayer) {
+                let wellPredicates = wellTypes.map(type => {
+                    if (onlyVisibleWells) {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d && VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
+                    } else {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d", NSArray.arrayWithObject(type));
+                    }
+                });
+                this.mapService.heatmapLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(wellPredicates));
+                this.params.closeCallback();
             }
         }
 
