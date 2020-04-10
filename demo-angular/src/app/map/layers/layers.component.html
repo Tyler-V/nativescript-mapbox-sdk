@@ -10,7 +10,7 @@
   <StackLayout class="hr"></StackLayout>
   <StackLayout class="p-20">
     <StackLayout>
-      <Button text="Filter" class="-primary" (tap)="filter(['GAS', 'OTHER'], true)"></Button>
+      <Button text="Filter" class="-primary" (tap)="filter()"></Button>
       <Button
         [text]="!mapService.heatmapLayer ? 'Add Heatmap Layer' : 'Remove Heatmap Layer'"
         [ngClass]="{ '-primary': !mapService.heatmapLayer, '-danger': mapService.heatmapLayer }"

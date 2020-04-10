@@ -95,36 +95,7 @@ export class LayersComponent implements OnInit {
         this.params.closeCallback();
     }
 
-    filter(wellTypes= ['OIL', 'GAS', 'OILGAS', 'EOR', 'SWD', 'OTHER'], onlyVisibleWells= false) {
-        if (isIOS) {
-            if (this.mapService.heatmapLayer) {
-                let wellPredicates = wellTypes.map(type => {
-                    if (onlyVisibleWells) {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d AND VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
-                    } else {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d", NSArray.arrayWithObject(type));
-                    }
-                });
-                this.mapService.symbolLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(wellPredicates));
-                this.params.closeCallback();
-            }
-            if (this.mapService.heatmapLayer) {
-                let wellPredicates = wellTypes.map(type => {
-                    if (onlyVisibleWells) {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d && VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
-                    } else {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d", NSArray.arrayWithObject(type));
-                    }
-                });
-                this.mapService.heatmapLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(wellPredicates));
-                this.params.closeCallback();
-            }
-        }
-
+    filter() {
         const randomBoolean = () => Math.random() >= 0.5;
         this.OIL = randomBoolean();
         this.OILGAS = randomBoolean();
@@ -134,31 +105,66 @@ export class LayersComponent implements OnInit {
         this.OTHER = randomBoolean();
         this.SHOW_ALL_WELLS = randomBoolean();
 
-        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-        const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-        const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
-        const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
+        if (isIOS) {
+            let wellTypes = ['OIL', 'GAS', 'OILGAS', 'EOR', 'SWD', 'OTHER'];
 
-        const createExpression = (type: string, showAllWells: boolean) => {
-            if (showAllWells) {
-                return eq(get('TYPE'), type);
-            } else {
-                return all([eq(get('TYPE'), type), eq(get('VISIBLE'), true)]);
+            if (this.mapService.symbolLayer) {
+                let wellPredicates = wellTypes.map(type => {
+                    if (!this.SHOW_ALL_WELLS && this[type]) {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d AND VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
+                    } else if (this[type]) {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d", NSArray.arrayWithObject(type));
+                    }
+                });
+                let filteredWellPredicates = wellPredicates.filter(n => n);
+                this.mapService.symbolLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(filteredWellPredicates));
+                this.params.closeCallback();
             }
-        };
+            if (this.mapService.heatmapLayer) {
+                let wellPredicates = wellTypes.map(type => {
+                    if (!this.SHOW_ALL_WELLS && this[type]) {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d && VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
+                    } else if (this[type]) {
+                        return NSPredicate.predicateWithFormatArgumentArray(
+                            "TYPE = %d", NSArray.arrayWithObject(type));
+                    }
+                });
+                let filteredWellPredicates = wellPredicates.filter(n => n); // get rid of the undefined values in the array before passing it in to NSArray
+                this.mapService.heatmapLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(filteredWellPredicates));
+                this.params.closeCallback();
+            }
+        }
 
-        let expressions = [];
-        if (this.OIL) expressions.push(createExpression('OIL', this.SHOW_ALL_WELLS));
-        if (this.OILGAS) expressions.push(createExpression('OILGAS', this.SHOW_ALL_WELLS));
-        if (this.GAS) expressions.push(createExpression('GAS', this.SHOW_ALL_WELLS));
-        if (this.EOR) expressions.push(createExpression('EOR', this.SHOW_ALL_WELLS));
-        if (this.SWD) expressions.push(createExpression('SWD', this.SHOW_ALL_WELLS));
-        if (this.OTHER) expressions.push(createExpression('OTHER', this.SHOW_ALL_WELLS));
-        const expression = any(expressions);
+        if (isAndroid) {
+            const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+            const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+            const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
+            const all = com.mapbox.mapboxsdk.style.expressions.Expression.all;
 
-        if (this.mapService.heatmapLayer) this.mapService.heatmapLayer.setFilter(expression);
-        if (this.mapService.symbolLayer) this.mapService.symbolLayer.setFilter(expression);
+            const createExpression = (type: string, showAllWells: boolean) => {
+                if (showAllWells) {
+                    return eq(get('TYPE'), type);
+                } else {
+                    return all([eq(get('TYPE'), type), eq(get('VISIBLE'), true)]);
+                }
+            };
 
-        this.params.closeCallback();
+            let expressions = [];
+            if (this.OIL) expressions.push(createExpression('OIL', this.SHOW_ALL_WELLS));
+            if (this.OILGAS) expressions.push(createExpression('OILGAS', this.SHOW_ALL_WELLS));
+            if (this.GAS) expressions.push(createExpression('GAS', this.SHOW_ALL_WELLS));
+            if (this.EOR) expressions.push(createExpression('EOR', this.SHOW_ALL_WELLS));
+            if (this.SWD) expressions.push(createExpression('SWD', this.SHOW_ALL_WELLS));
+            if (this.OTHER) expressions.push(createExpression('OTHER', this.SHOW_ALL_WELLS));
+            const expression = any(expressions);
+
+            if (this.mapService.heatmapLayer) this.mapService.heatmapLayer.setFilter(expression);
+            if (this.mapService.symbolLayer) this.mapService.symbolLayer.setFilter(expression);
+
+            this.params.closeCallback();
+        }
     }
 }
