@@ -106,39 +106,27 @@ export class LayersComponent implements OnInit {
         this.SHOW_ALL_WELLS = randomBoolean();
 
         if (isIOS) {
-            let wellTypes = ['OIL', 'GAS', 'OILGAS', 'EOR', 'SWD', 'OTHER'];
+            const createPredicate = (type: string, showAllWells: boolean) => {
+                if (showAllWells) {
+                    return NSPredicate.predicateWithFormatArgumentArray('TYPE = %d', NSArray.arrayWithObject(type));
+                } else {
+                    return NSPredicate.predicateWithFormatArgumentArray('TYPE = %d AND VISIBLE = %d', NSArray.arrayWithArray([type, 'FALSE']));
+                }
+            };
 
-            if (this.mapService.symbolLayer) {
-                let wellPredicates = wellTypes.map(type => {
-                    if (!this.SHOW_ALL_WELLS && this[type]) {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d AND VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
-                    } else if (this[type]) {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d", NSArray.arrayWithObject(type));
-                    }
-                });
-                let filteredWellPredicates = wellPredicates.filter(n => n);
-                this.mapService.symbolLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(filteredWellPredicates));
-                this.params.closeCallback();
-            }
-            if (this.mapService.heatmapLayer) {
-                let wellPredicates = wellTypes.map(type => {
-                    if (!this.SHOW_ALL_WELLS && this[type]) {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d && VISIBLE = %d", NSArray.arrayWithArray([type, "TRUE"]));
-                    } else if (this[type]) {
-                        return NSPredicate.predicateWithFormatArgumentArray(
-                            "TYPE = %d", NSArray.arrayWithObject(type));
-                    }
-                });
-                let filteredWellPredicates = wellPredicates.filter(n => n); // get rid of the undefined values in the array before passing it in to NSArray
-                this.mapService.heatmapLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(filteredWellPredicates));
-                this.params.closeCallback();
-            }
-        }
+            let predicates = [];
+            if (this.OIL) predicates.push(createPredicate('OIL', this.SHOW_ALL_WELLS));
+            if (this.OILGAS) predicates.push(createPredicate('OILGAS', this.SHOW_ALL_WELLS));
+            if (this.GAS) predicates.push(createPredicate('GAS', this.SHOW_ALL_WELLS));
+            if (this.EOR) predicates.push(createPredicate('EOR', this.SHOW_ALL_WELLS));
+            if (this.SWD) predicates.push(createPredicate('SWD', this.SHOW_ALL_WELLS));
+            if (this.OTHER) predicates.push(createPredicate('OTHER', this.SHOW_ALL_WELLS));
 
-        if (isAndroid) {
+            if (this.mapService.symbolLayer)
+                this.mapService.symbolLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(predicates));
+            if (this.mapService.heatmapLayer)
+                this.mapService.heatmapLayer.predicate = NSCompoundPredicate.orPredicateWithSubpredicates(NSArray.arrayWithArray(predicates));
+        } else {
             const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
             const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
             const any = com.mapbox.mapboxsdk.style.expressions.Expression.any;
@@ -163,8 +151,8 @@ export class LayersComponent implements OnInit {
 
             if (this.mapService.heatmapLayer) this.mapService.heatmapLayer.setFilter(expression);
             if (this.mapService.symbolLayer) this.mapService.symbolLayer.setFilter(expression);
-
-            this.params.closeCallback();
         }
+
+        this.params.closeCallback();
     }
 }
