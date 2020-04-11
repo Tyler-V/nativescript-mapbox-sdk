@@ -33,7 +33,8 @@ export abstract class MapboxStyle {
   abstract getStyle();
   abstract getUri(): string;
   abstract setStyleUri(uri: string): Promise<any>;
-  abstract addImage(name: string, filePath: string): void;
+  abstract addImage(name: string, image: any): void;
+  abstract addImageFromPath(name: string, filePath: string): void;
   abstract addSource(source: any): void;
   abstract addLayer(layer: any): void;
   abstract removeLayer(layer: any): void;

@@ -122,12 +122,12 @@ export class MapComponent implements OnInit {
     }
 
     private addSymbolLayer() {
-        this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
-        this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
-        this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
-        this.mapService.mapbox.style.addImage('EOR', 'images/types/eor.png');
-        this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
-        this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
+        this.mapService.mapbox.style.addImageFromPath('OIL', 'images/types/oil.png');
+        this.mapService.mapbox.style.addImageFromPath('GAS', 'images/types/gas.png');
+        this.mapService.mapbox.style.addImageFromPath('OILGAS', 'images/types/oilgas.png');
+        this.mapService.mapbox.style.addImageFromPath('EOR', 'images/types/eor.png');
+        this.mapService.mapbox.style.addImageFromPath('SWD', 'images/types/swd.png');
+        this.mapService.mapbox.style.addImageFromPath('OTHER', 'images/types/other.png');
 
         const options: SymbolLayerOptions = {
             minZoom: 13,
@@ -141,14 +141,53 @@ export class MapComponent implements OnInit {
     }
 
     setupSymbolLayer(feature: Feature) {
-        console.log(feature);
         let resourceId = androidApp.context
             .getResources()
             .getIdentifier('activity_query_feature_window_symbol_layer', 'layout', androidApp.context.getPackageName());
-        const inflater: typeof com.mapbox.mapboxsdk.annotations.BubbleLayout = android.view.LayoutInflater.from(androidApp.foregroundActivity);
+        const inflater = android.view.LayoutInflater.from(androidApp.foregroundActivity);
         const bubbleLayout = inflater.inflate(resourceId, null);
-        const titleTextView = bubbleLayout.findViewById('info_window_title');
-        titleTextView.setText('Test');
-        const stringBuilder = new java.lang.StringBuilder();
+
+        const titleTextViewId = androidApp.context.getResources().getIdentifier('info_window_title', 'id', androidApp.context.getPackageName());
+        const titleTextView = bubbleLayout.findViewById(titleTextViewId);
+        titleTextView.setText(feature.properties.NAME);
+
+        const propertiesListTextId = androidApp.context
+            .getResources()
+            .getIdentifier('info_window_feature_properties_list', 'id', androidApp.context.getPackageName());
+        const propertiesListTextView = bubbleLayout.findViewById(propertiesListTextId);
+        propertiesListTextView.setText(feature.properties.API);
+
+        const image = this.generateBitmapFromView(bubbleLayout);
+        this.mapService.mapbox.style.addImage('callout-image-id', image);
+
+        const symbolLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('callout-layer-id', 'wells');
+        symbolLayer.setSourceLayer('wells');
+
+        const floatArray = (<any>Array).create('java.lang.Float', 2);
+        floatArray[0] = new java.lang.Float(0);
+        floatArray[1] = new java.lang.Float(-15);
+
+        const properties = [];
+        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage('callout-image-id'));
+        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor('bottom'));
+        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap(new java.lang.Boolean(false)));
+        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement(new java.lang.Boolean(false)));
+        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset(floatArray));
+        symbolLayer.setProperties(properties);
+
+        this.mapService.mapbox.style.addLayer(symbolLayer);
+    }
+
+    generateBitmapFromView(view) {
+        const measureSpec = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED);
+        view.measure(measureSpec, measureSpec);
+        const measuredWidth = view.getMeasuredWidth();
+        const measuredHeight = view.getMeasuredHeight();
+        view.layout(0, 0, measuredWidth, measuredHeight);
+        const bitmap = android.graphics.Bitmap.createBitmap(measuredWidth, measuredHeight, android.graphics.Bitmap.Config.ARGB_8888);
+        bitmap.eraseColor(android.graphics.Color.TRANSPARENT);
+        const canvas = new android.graphics.Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
     }
 }

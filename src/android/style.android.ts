@@ -39,7 +39,11 @@ export class Style extends MapboxStyle {
     });
   }
 
-  addImage(name: string, filePath: string) {
+  addImage(name: string, image: any) {
+    this.view.mapStyle.addImage(name, image);
+  }
+
+  addImageFromPath(name: string, filePath: string) {
     this.view.mapStyle.addImage(name, this.getImage(filePath).android);
   }
 
