@@ -144,6 +144,7 @@ export class MapComponent implements OnInit {
         let resourceId = androidApp.context
             .getResources()
             .getIdentifier('activity_query_feature_window_symbol_layer', 'layout', androidApp.context.getPackageName());
+
         const inflater = android.view.LayoutInflater.from(androidApp.foregroundActivity);
         const bubbleLayout = inflater.inflate(resourceId, null);
 
