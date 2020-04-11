@@ -28,6 +28,8 @@ export class MapComponent implements OnInit {
     bearing: number = 0;
     tilt: number = 0;
 
+    calloutLayer: any;
+
     constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {}
 
     ngOnInit(): void {}
@@ -38,10 +40,10 @@ export class MapComponent implements OnInit {
         this.mapService.mapView = args.object.mapView;
         this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
             console.log(latLng);
-            const features = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
-            console.log(features);
-            if (features.length > 0) {
-                this.setupSymbolLayer(features[0]);
+            const calloutLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'callout-layer-id');
+            const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
+            if (symbolLayers.length > 0) {
+                this.setupSymbolLayer(symbolLayers[0]);
             }
         });
         this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
@@ -141,6 +143,46 @@ export class MapComponent implements OnInit {
     }
 
     setupSymbolLayer(feature: Feature) {
+        if (this.calloutLayer) {
+            this.mapService.mapbox.style.removeLayer(this.calloutLayer);
+            this.mapService.mapbox.style.removeImage('callout-image-id');
+        }
+
+        const bubbleLayout = this.createBubbleLayout(feature);
+        const image = this.generateBitmapFromView(bubbleLayout);
+        // this.mapService.mapbox.style.addImage(feature.properties.API, image);
+        this.mapService.mapbox.style.addImage('callout-image-id', image);
+
+        this.calloutLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('callout-layer-id', 'wells');
+        this.calloutLayer.setSourceLayer('wells');
+
+        const floatArray = (<any>Array).create('java.lang.Float', 2);
+        floatArray[0] = new java.lang.Float(0);
+        floatArray[1] = new java.lang.Float(-15);
+
+        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
+        const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+        const iconAnchor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
+        const iconOffset = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
+
+        const properties = [];
+        // properties.push(iconImage(get(feature.properties.API)));
+        properties.push(iconImage('callout-image-id'));
+        properties.push(iconAnchor('bottom'));
+        properties.push(iconAllowOverlap(new java.lang.Boolean(true)));
+        properties.push(iconIgnorePlacement(new java.lang.Boolean(true)));
+        properties.push(iconOffset(floatArray));
+        this.calloutLayer.setProperties(properties);
+
+        this.calloutLayer.setFilter(eq(get('API'), feature.properties.API));
+
+        this.mapService.mapbox.style.addLayer(this.calloutLayer);
+    }
+
+    createBubbleLayout(feature: Feature) {
         let resourceId = androidApp.context
             .getResources()
             .getIdentifier('activity_query_feature_window_symbol_layer', 'layout', androidApp.context.getPackageName());
@@ -158,25 +200,7 @@ export class MapComponent implements OnInit {
         const propertiesListTextView = bubbleLayout.findViewById(propertiesListTextId);
         propertiesListTextView.setText(feature.properties.API);
 
-        const image = this.generateBitmapFromView(bubbleLayout);
-        this.mapService.mapbox.style.addImage('callout-image-id', image);
-
-        const symbolLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('callout-layer-id', 'wells');
-        symbolLayer.setSourceLayer('wells');
-
-        const floatArray = (<any>Array).create('java.lang.Float', 2);
-        floatArray[0] = new java.lang.Float(0);
-        floatArray[1] = new java.lang.Float(-15);
-
-        const properties = [];
-        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage('callout-image-id'));
-        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor('bottom'));
-        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap(new java.lang.Boolean(false)));
-        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement(new java.lang.Boolean(false)));
-        properties.push(com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset(floatArray));
-        symbolLayer.setProperties(properties);
-
-        this.mapService.mapbox.style.addLayer(symbolLayer);
+        return bubbleLayout;
     }
 
     generateBitmapFromView(view) {

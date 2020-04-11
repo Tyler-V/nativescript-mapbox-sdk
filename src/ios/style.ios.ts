@@ -82,4 +82,8 @@ export class Style extends MapboxStyle {
     if (maxZoom) layer.maximumZoomLevel = maxZoom;
     return layer;
   }
+
+  removeImage(name: string) {
+    this.view.mapView.style.removeImageForName(name);
+  }
 }

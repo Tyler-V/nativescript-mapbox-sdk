@@ -72,4 +72,8 @@ export class Style extends MapboxStyle {
   getSource(sourceId: string): any {
     return this.view.mapStyle.getSource(sourceId);
   }
+
+  removeImage(name: string) {
+    this.view.mapStyle.removeImage(name);
+  }
 }
