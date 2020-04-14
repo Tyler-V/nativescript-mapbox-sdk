@@ -29,7 +29,7 @@ export class MapComponent implements OnInit {
     tilt: number = 0;
 
     calloutLayer: any;
-    annotation: any;
+    annotation: MGLPointAnnotation;
 
     constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {}
 
@@ -163,6 +163,10 @@ export class MapComponent implements OnInit {
     }
 
     addIOSCalloutLayer(latLng: LatLng, feature: Feature) {
+        if (this.annotation) {
+            this.mapService.mapView.removeAnnotation(this.annotation);
+        }
+
         this.annotation = MGLPointAnnotation.alloc();
         this.annotation.coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
         this.annotation.title = feature.properties.NAME;
@@ -175,6 +179,7 @@ export class MapComponent implements OnInit {
 
         // Pop-up the callout view.
         this.mapService.mapView.selectAnnotationAnimated(this.annotation, true);
+        this.mapService.mapView.removeAnnotation(this.annotation);
     }
 
     addAndroidCalloutLayer(feature: Feature) {

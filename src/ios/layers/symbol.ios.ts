@@ -15,6 +15,8 @@ export class SymbolLayer extends MapboxSymbolLayer {
       if (options.iconIgnorePlacement) layer.iconIgnoresPlacement = NSExpression.expressionForConstantValue(options.iconIgnorePlacement);
     }
 
+    layer.text = NSExpression.expressionForKeyPath('NAME');
+
     return layer;
   }
 }
