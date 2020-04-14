@@ -104,6 +104,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   private mapLoadedCallback: (mapView: MGLMapView) => void;
   private styleLoadedCallback: (mapView: MGLMapView, style: MGLStyle) => void;
   public onMapViewDidBecomeIdle: (mapView: MGLMapView) => void;
+  public onMapViewTapOnCalloutForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => void;
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -172,8 +173,13 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   }
 
   mapViewDidBecomeIdle(mapView: MGLMapView): void {
-    console.log('MGLMapViewDelegateImpl:mapViewDidBecomeIdle(): callback called.');
+    console.log('MGLMapViewDelegateImpl:mapViewDidBecomeIdle()');
     this.onMapViewDidBecomeIdle(mapView);
+  }
+
+  mapViewTapOnCalloutForAnnotation(mapView: MGLMapView, annotation: MGLAnnotation): void {
+    console.log('MGLMapViewDelegateImpl:mapViewTapOnCalloutForAnnotation()');
+    this.onMapViewTapOnCalloutForAnnotation(mapView, annotation);
   }
 }
 

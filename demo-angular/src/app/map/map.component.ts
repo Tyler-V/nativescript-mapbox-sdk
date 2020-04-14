@@ -159,7 +159,7 @@ export class MapComponent implements OnInit {
 
     addIOSCalloutLayer(feature: Feature) {
         let annotation = MGLPointAnnotation.alloc();
-        annotation.coordinate = CLLocationCoordinate2DMake(35.03946, 135.72956);
+        annotation.coordinate = CLLocationCoordinate2DMake(39.8283, -98.5795);
         annotation.title = 'Kinkaku-ji';
         annotation.subtitle = '(annotation.coordinate.latitude), (annotation.coordinate.longitude)';
 
