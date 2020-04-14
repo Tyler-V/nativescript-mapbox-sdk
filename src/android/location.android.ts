@@ -13,6 +13,7 @@ export class Location extends MapboxLocation {
   private _getLocationComponent() {
     if (!this.locationComponent) {
       this.locationComponent = this.view.mapboxMap.getLocationComponent();
+      this.locationComponent.activateLocationComponent(this._getLocationComponentOptions());
     }
     return this.locationComponent;
   }
@@ -30,7 +31,7 @@ export class Location extends MapboxLocation {
       .build();
   }
 
-  _getRenderMode(mode: TrackingMode) {
+  private _getRenderMode(mode: TrackingMode) {
     switch (mode) {
       case TrackingMode.COMPASS:
         return com.mapbox.mapboxsdk.location.modes.RenderMode.COMPASS;
@@ -41,7 +42,7 @@ export class Location extends MapboxLocation {
     }
   }
 
-  _getCameraMode(mode: TrackingMode, animated: boolean) {
+  private _getCameraMode(mode: TrackingMode, animated: boolean) {
     switch (mode) {
       case TrackingMode.COMPASS:
         if (animated) {
@@ -73,7 +74,6 @@ export class Location extends MapboxLocation {
         };
       }
       const locationComponent = this._getLocationComponent();
-      locationComponent.activateLocationComponent(this._getLocationComponentOptions());
       locationComponent.setLocationComponentEnabled(true);
       locationComponent.setRenderMode(this._getRenderMode(options.mode));
       locationComponent.setCameraMode(

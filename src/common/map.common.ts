@@ -17,7 +17,7 @@ export interface LatLngBounds {
 export interface Feature {
   id: any;
   type: string;
-  properties: Object;
+  properties: any;
 }
 
 export abstract class MapboxMap {

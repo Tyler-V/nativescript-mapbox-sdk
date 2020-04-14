@@ -17,8 +17,11 @@ export class Style extends MapboxStyle {
   }
 
   getUri() {
-    const uri = this.view.mapStyle.getUri();
-    return uri;
+    return this.view.mapStyle.getUri();
+  }
+
+  getImage(name: string) {
+    return this.view.mapStyle.getImage(name);
   }
 
   setStyleUri(uri: string): Promise<void> {
@@ -39,8 +42,12 @@ export class Style extends MapboxStyle {
     });
   }
 
-  addImage(name: string, filePath: string) {
-    this.view.mapStyle.addImage(name, this.getImage(filePath).android);
+  addImage(name: string, image: any) {
+    this.view.mapStyle.addImage(name, image);
+  }
+
+  addImageFromPath(name: string, filePath: string) {
+    this.view.mapStyle.addImage(name, this.getImageFromPath(filePath).android);
   }
 
   addSource(source: any) {
@@ -67,5 +74,9 @@ export class Style extends MapboxStyle {
 
   getSource(sourceId: string): any {
     return this.view.mapStyle.getSource(sourceId);
+  }
+
+  removeImage(name: string) {
+    this.view.mapStyle.removeImage(name);
   }
 }

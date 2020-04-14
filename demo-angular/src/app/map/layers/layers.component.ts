@@ -75,12 +75,12 @@ export class LayersComponent implements OnInit {
     }
 
     addSymbolLayer() {
-        this.mapService.mapbox.style.addImage('OIL', 'images/types/oil.png');
-        this.mapService.mapbox.style.addImage('GAS', 'images/types/gas.png');
-        this.mapService.mapbox.style.addImage('OILGAS', 'images/types/oilgas.png');
-        this.mapService.mapbox.style.addImage('EOR', 'images/types/eor.png');
-        this.mapService.mapbox.style.addImage('SWD', 'images/types/swd.png');
-        this.mapService.mapbox.style.addImage('OTHER', 'images/types/other.png');
+        this.mapService.mapbox.style.addImageFromPath('OIL', 'images/types/oil.png');
+        this.mapService.mapbox.style.addImageFromPath('GAS', 'images/types/gas.png');
+        this.mapService.mapbox.style.addImageFromPath('OILGAS', 'images/types/oilgas.png');
+        this.mapService.mapbox.style.addImageFromPath('EOR', 'images/types/eor.png');
+        this.mapService.mapbox.style.addImageFromPath('SWD', 'images/types/swd.png');
+        this.mapService.mapbox.style.addImageFromPath('OTHER', 'images/types/other.png');
 
         const options: SymbolLayerOptions = {
             minZoom: 12,

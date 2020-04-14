@@ -17,6 +17,10 @@ export class Style extends MapboxStyle {
     return null; // TODO
   }
 
+  getImage(name: string) {
+    return this.view.mapView.style.imageForName(name);
+  }
+
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.view.mapView.styleURL = NSURL.URLWithString(uri);
@@ -32,8 +36,12 @@ export class Style extends MapboxStyle {
     });
   }
 
-  addImage(name: string, filePath: string) {
-    this.view.mapView.style.setImageForName(this.getImage(filePath).ios, name);
+  addImage(name: string, image: any) {
+    this.view.mapView.style.setImageForName(image, name);
+  }
+
+  addImageFromPath(name: string, filePath: string) {
+    this.view.mapView.style.setImageForName(this.getImageFromPath(filePath).ios, name);
   }
 
   addSource(source: any) {
@@ -77,5 +85,9 @@ export class Style extends MapboxStyle {
     if (minZoom) layer.minimumZoomLevel = minZoom;
     if (maxZoom) layer.maximumZoomLevel = maxZoom;
     return layer;
+  }
+
+  removeImage(name: string) {
+    this.view.mapView.style.removeImageForName(name);
   }
 }

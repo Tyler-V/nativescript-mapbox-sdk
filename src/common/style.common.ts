@@ -32,15 +32,21 @@ export abstract class MapboxStyle {
 
   abstract getStyle();
   abstract getUri(): string;
+
   abstract setStyleUri(uri: string): Promise<any>;
-  abstract addImage(name: string, filePath: string): void;
+  abstract getSource(sourceId: string): any;
+  abstract getImage(name: string): any;
+
+  abstract addImage(name: string, image: any): void;
+  abstract addImageFromPath(name: string, filePath: string): void;
   abstract addSource(source: any): void;
   abstract addLayer(layer: any): void;
-  abstract removeLayer(layer: any): void;
   abstract addVectorSource(sourceId: string, uri: string): any;
-  abstract getSource(sourceId: string): any;
 
-  public getImage(filePath: string): ImageSource {
+  abstract removeLayer(layer: any): void;
+  abstract removeImage(name: string): void;
+
+  public getImageFromPath(filePath: string): ImageSource {
     const folder: Folder = <Folder>knownFolders.currentApp();
     const folderPath: string = path.join(folder.path, filePath);
     const imageSource: ImageSource = ImageSource.fromFileSync(folderPath);
