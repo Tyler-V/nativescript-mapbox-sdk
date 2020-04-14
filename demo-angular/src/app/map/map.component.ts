@@ -29,6 +29,7 @@ export class MapComponent implements OnInit {
     tilt: number = 0;
 
     calloutLayer: any;
+    annotation: any;
 
     constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {}
 
@@ -152,24 +153,28 @@ export class MapComponent implements OnInit {
     }
 
     removeCalloutLayer() {
-        if (!this.calloutLayer) return;
-        this.mapService.mapbox.style.removeLayer(this.calloutLayer);
-        this.calloutLayer = null;
+        if (isAndroid) {
+            if (!this.calloutLayer) return;
+            this.mapService.mapbox.style.removeLayer(this.calloutLayer);
+            this.calloutLayer = null;
+        } else {
+            this.mapService.mapView.removeAnnotation(this.annotation);
+        }
     }
 
     addIOSCalloutLayer(latLng: LatLng, feature: Feature) {
-        let annotation = MGLPointAnnotation.alloc();
-        annotation.coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
-        annotation.title = feature.properties.NAME;
-        annotation.subtitle = feature.properties.API;
+        this.annotation = MGLPointAnnotation.alloc();
+        this.annotation.coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+        this.annotation.title = feature.properties.NAME;
+        this.annotation.subtitle = feature.properties.API;
 
-        this.mapService.mapView.addAnnotation(annotation);
+        this.mapService.mapView.addAnnotation(this.annotation);
 
         // Center the map on the annotation.
         // this.mapService.mapView.setCenterCoordinateZoomLevelAnimated(annotation.coordinate, 17, false);
 
         // Pop-up the callout view.
-        this.mapService.mapView.selectAnnotationAnimated(annotation, true);
+        this.mapService.mapView.selectAnnotationAnimated(this.annotation, true);
     }
 
     addAndroidCalloutLayer(feature: Feature) {
