@@ -46,7 +46,7 @@ export class MapComponent implements OnInit {
                 if (isAndroid) {
                     this.addAndroidCalloutLayer(symbolLayers[0]);
                 } else {
-                    this.addIOSCalloutLayer(symbolLayers[0]);
+                    this.addIOSCalloutLayer(latLng, symbolLayers[0]);
                 }
             } else if (calloutLayers.length > 0) {
                 this.removeCalloutLayer();
@@ -157,11 +157,11 @@ export class MapComponent implements OnInit {
         this.calloutLayer = null;
     }
 
-    addIOSCalloutLayer(feature: Feature) {
+    addIOSCalloutLayer(latLng: LatLng, feature: Feature) {
         let annotation = MGLPointAnnotation.alloc();
-        annotation.coordinate = CLLocationCoordinate2DMake(39.8283, -98.5795);
-        annotation.title = 'HICKS M';
-        annotation.subtitle = '35107058160000';
+        annotation.coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+        annotation.title = feature.properties.NAME;
+        annotation.subtitle = feature.properties.API;
 
         this.mapService.mapView.addAnnotation(annotation);
 
