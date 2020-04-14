@@ -43,7 +43,11 @@ export class MapComponent implements OnInit {
             const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
             const calloutLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'callout-layer-id');
             if (symbolLayers.length > 0) {
-                this.addCalloutLayer(symbolLayers[0]);
+                if (isAndroid) {
+                    this.addAndroidCalloutLayer(symbolLayers[0]);
+                } else {
+                    this.addIOSCalloutLayer(symbolLayers[0]);
+                }
             } else if (calloutLayers.length > 0) {
                 this.removeCalloutLayer();
                 console.log('Callout Layer Selected');
@@ -153,7 +157,22 @@ export class MapComponent implements OnInit {
         this.calloutLayer = null;
     }
 
-    addCalloutLayer(feature: Feature) {
+    addIOSCalloutLayer(feature: Feature) {
+        let annotation = MGLPointAnnotation.alloc();
+        annotation.coordinate = CLLocationCoordinate2DMake(35.03946, 135.72956);
+        annotation.title = 'Kinkaku-ji';
+        annotation.subtitle = '(annotation.coordinate.latitude), (annotation.coordinate.longitude)';
+
+        this.mapService.mapView.addAnnotation(annotation);
+
+        // Center the map on the annotation.
+        this.mapService.mapView.setCenter(annotation.coordinate, 17, false);
+
+        // Pop-up the callout view.
+        this.mapService.mapView.selectAnnotation(annotation, true, null);
+    }
+
+    addAndroidCalloutLayer(feature: Feature) {
         this.removeCalloutLayer();
 
         const hasImage = this.mapService.mapbox.style.getImage(feature.properties.API) != null;
