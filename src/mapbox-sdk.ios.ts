@@ -60,6 +60,14 @@ export class MapboxView extends MapboxViewBase {
           });
         };
 
+        delegate.onMapViewAnnotationCanShowCallout = (mapView: MGLMapView, annotation: MGLAnnotation) => {
+          // this.notify({
+          //   eventName: MapboxViewBase.cameraMove,
+          //   object: this,
+          // });
+          return true;
+        };
+
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
         this.setMapboxOptions(this.mapView, settings);
@@ -105,6 +113,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   private styleLoadedCallback: (mapView: MGLMapView, style: MGLStyle) => void;
   public onMapViewDidBecomeIdle: (mapView: MGLMapView) => void;
   public onMapViewTapOnCalloutForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => void;
+  public onMapViewAnnotationCanShowCallout: (mapView: MGLMapView, annotation: MGLAnnotation) => boolean;
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -180,6 +189,11 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   mapViewTapOnCalloutForAnnotation(mapView: MGLMapView, annotation: MGLAnnotation): void {
     console.log('MGLMapViewDelegateImpl:mapViewTapOnCalloutForAnnotation()');
     this.onMapViewTapOnCalloutForAnnotation(mapView, annotation);
+  }
+
+  mapViewAnnotationCanShowCallout(mapView: MGLMapView, annotation: MGLAnnotation): boolean {
+    console.log('MGLMapViewDelegateImpl:mapViewAnnotationCanShowCallout()');
+    return this.onMapViewAnnotationCanShowCallout(mapView, annotation);
   }
 }
 
