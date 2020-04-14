@@ -77,6 +77,19 @@ export class MapboxView extends MapboxViewBase {
           });
         };
 
+        delegate.onMapViewCalloutViewForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
+          const rect = new CGRect();
+          rect.origin.x = 0;
+          rect.origin.y = 0;
+          rect.size.width = 20;
+          rect.size.height = 20;
+
+          const view: MGLAnnotationView = MGLAnnotationView.alloc();
+          view.frame = rect;
+
+          return view;
+        };
+
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
         this.setMapboxOptions(this.mapView, settings);
@@ -123,6 +136,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   public onMapViewDidBecomeIdle: (mapView: MGLMapView) => void;
   public onMapViewTapOnCalloutForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => void;
   public onMapViewAnnotationCanShowCallout: (mapView: MGLMapView, annotation: MGLAnnotation) => boolean;
+  public onMapViewCalloutViewForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => any; // MGLCalloutView?
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -191,18 +205,23 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   }
 
   mapViewDidBecomeIdle(mapView: MGLMapView): void {
-    console.log('MGLMapViewDelegateImpl:mapViewDidBecomeIdle()');
+    console.log('MGLMapViewDelegateImpl:mapView:didBecomeIdle');
     this.onMapViewDidBecomeIdle(mapView);
   }
 
   mapViewTapOnCalloutForAnnotation(mapView: MGLMapView, annotation: MGLAnnotation): void {
-    console.log('MGLMapViewDelegateImpl:mapViewTapOnCalloutForAnnotation()');
+    console.log('MGLMapViewDelegateImpl:mapView:tapOnCalloutForAnnotation');
     this.onMapViewTapOnCalloutForAnnotation(mapView, annotation);
   }
 
   mapViewAnnotationCanShowCallout(mapView: MGLMapView, annotation: MGLAnnotation): boolean {
-    console.log('MGLMapViewDelegateImpl:mapViewAnnotationCanShowCallout()');
+    console.log('MGLMapViewDelegateImpl:mapView:annotationCanShowCallout');
     return this.onMapViewAnnotationCanShowCallout(mapView, annotation);
+  }
+
+  mapViewCalloutViewForAnnotation(mapView: MGLMapView, annotation: MGLAnnotation): any {
+    console.log('MGLMapViewDelegateImpl:mapView:calloutViewForAnnotation');
+    return this.onMapViewCalloutViewForAnnotation(mapView, annotation);
   }
 }
 
