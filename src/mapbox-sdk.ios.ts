@@ -78,8 +78,7 @@ export class MapboxView extends MapboxViewBase {
         };
 
         delegate.onMapViewCalloutViewForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
-          const view: MGLAnnotationView = MGLAnnotationView.alloc().initWithFrame(CGRectMake(0, 0, 20, 20));
-          return view;
+          return <any>MGLAnnotationView.alloc().initWithFrame(CGRectMake(0, 0, 20, 20));
         };
 
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
@@ -128,7 +127,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   public onMapViewDidBecomeIdle: (mapView: MGLMapView) => void;
   public onMapViewTapOnCalloutForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => void;
   public onMapViewAnnotationCanShowCallout: (mapView: MGLMapView, annotation: MGLAnnotation) => boolean;
-  public onMapViewCalloutViewForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => any; // MGLCalloutView?
+  public onMapViewCalloutViewForAnnotation: (mapView: MGLMapView, annotation: MGLAnnotation) => MGLCalloutView;
   private mapboxApi: any;
   private userLocationClickListener: any;
   private userLocationRenderMode: any;
@@ -211,7 +210,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
     return this.onMapViewAnnotationCanShowCallout(mapView, annotation);
   }
 
-  mapViewCalloutViewForAnnotation(mapView: MGLMapView, annotation: MGLAnnotation): any {
+  mapViewCalloutViewForAnnotation(mapView: MGLMapView, annotation: MGLAnnotation): MGLCalloutView {
     console.log('MGLMapViewDelegateImpl:mapView:calloutViewForAnnotation');
     return this.onMapViewCalloutViewForAnnotation(mapView, annotation);
   }
