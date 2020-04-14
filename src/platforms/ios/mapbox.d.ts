@@ -1217,7 +1217,7 @@ interface MGLMapViewDelegate extends NSObjectProtocol {
 
     mapViewAnnotationCanShowCallout?(mapView: MGLMapView, annotation: MGLAnnotation): boolean;
 
-    mapViewCalloutViewForAnnotation?(mapView: MGLMapView, annotation: MGLAnnotation): MGLAnnotationView;
+    mapViewCalloutViewForAnnotation?(mapView: MGLMapView, annotation: MGLAnnotation): MGLCalloutView;
 
     mapViewDidAddAnnotationViews?(mapView: MGLMapView, annotationViews: NSArray<MGLAnnotationView> | MGLAnnotationView[]): void;
 
