@@ -78,15 +78,7 @@ export class MapboxView extends MapboxViewBase {
         };
 
         delegate.onMapViewCalloutViewForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
-          const rect = new CGRect();
-          rect.origin.x = 0;
-          rect.origin.y = 0;
-          rect.size.width = 20;
-          rect.size.height = 20;
-
-          const view: MGLAnnotationView = MGLAnnotationView.alloc();
-          view.frame = rect;
-
+          const view: MGLAnnotationView = MGLAnnotationView.alloc().initWithFrame(CGRectMake(0, 0, 20, 20));
           return view;
         };
 
