@@ -166,10 +166,10 @@ export class MapComponent implements OnInit {
         this.mapService.mapView.addAnnotation(annotation);
 
         // Center the map on the annotation.
-        this.mapService.mapView.setCenter(annotation.coordinate, 17, false);
+        this.mapService.mapView.setCenterCoordinateZoomLevelAnimated(annotation.coordinate, 17, false);
 
         // Pop-up the callout view.
-        this.mapService.mapView.selectAnnotation(annotation, true, null);
+        this.mapService.mapView.selectAnnotationAnimated(annotation, true);
     }
 
     addAndroidCalloutLayer(feature: Feature) {
