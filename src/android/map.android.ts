@@ -9,10 +9,17 @@ function _getFeatures(features) {
 
   for (let i = 0; i < features.size(); i++) {
     const feature = features.get(i);
+
+    const geometry: LatLng = {
+      lat: feature.geometry().latitude(),
+      lng: feature.geometry().longitude(),
+    };
+
     results.push({
       id: feature.id(),
       type: feature.type(),
       properties: JSON.parse(feature.properties().toString()),
+      geometry,
     });
   }
 

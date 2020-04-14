@@ -9,8 +9,8 @@ function _getFeatures(features) {
 
   for (let i = 0; i < features.count; i++) {
     const feature: MGLFeature = features.objectAtIndex(i);
-    const properties = {};
 
+    const properties = {};
     if (feature.attributes && feature.attributes.count > 0) {
       const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
       for (let key of keys) {
@@ -18,10 +18,16 @@ function _getFeatures(features) {
       }
     }
 
+    const geometry: LatLng = {
+      lat: feature.coordinate.latitude,
+      lng: feature.coordinate.longitude,
+    };
+
     results.push({
       id: feature.identifier,
       type: 'Feature',
       properties,
+      geometry,
     });
   }
 

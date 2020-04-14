@@ -18,6 +18,7 @@ export interface Feature {
   id: any;
   type: string;
   properties: any;
+  geometry: LatLng;
 }
 
 export abstract class MapboxMap {

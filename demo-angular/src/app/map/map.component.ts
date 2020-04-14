@@ -179,7 +179,6 @@ export class MapComponent implements OnInit {
 
         // Pop-up the callout view.
         this.mapService.mapView.selectAnnotationAnimated(this.annotation, true);
-        this.mapService.mapView.removeAnnotation(this.annotation);
     }
 
     addAndroidCalloutLayer(feature: Feature) {
