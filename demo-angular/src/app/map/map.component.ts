@@ -167,8 +167,6 @@ export class MapComponent implements OnInit {
             this.mapService.mapView.removeAnnotation(this.annotation);
         }
 
-        const view = <any>MGLAnnotationView.alloc().initWithFrame(CGRectMake(0, 0, 20, 20));
-
         this.annotation = MGLPointAnnotation.alloc();
         this.annotation.coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
         this.annotation.title = feature.properties.NAME;
