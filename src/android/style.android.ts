@@ -17,8 +17,11 @@ export class Style extends MapboxStyle {
   }
 
   getUri() {
-    const uri = this.view.mapStyle.getUri();
-    return uri;
+    return this.view.mapStyle.getUri();
+  }
+
+  getImage(name: string) {
+    return this.view.mapStyle.getImage(name);
   }
 
   setStyleUri(uri: string): Promise<void> {
@@ -44,7 +47,7 @@ export class Style extends MapboxStyle {
   }
 
   addImageFromPath(name: string, filePath: string) {
-    this.view.mapStyle.addImage(name, this.getImage(filePath).android);
+    this.view.mapStyle.addImage(name, this.getImageFromPath(filePath).android);
   }
 
   addSource(source: any) {

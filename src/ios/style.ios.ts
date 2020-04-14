@@ -17,6 +17,10 @@ export class Style extends MapboxStyle {
     return null; // TODO
   }
 
+  getImage(name: string) {
+    return this.view.mapView.style.imageForName(name);
+  }
+
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.view.mapView.styleURL = NSURL.URLWithString(uri);
@@ -37,7 +41,7 @@ export class Style extends MapboxStyle {
   }
 
   addImageFromPath(name: string, filePath: string) {
-    this.view.mapView.style.setImageForName(this.getImage(filePath).ios, name);
+    this.view.mapView.style.setImageForName(this.getImageFromPath(filePath).ios, name);
   }
 
   addSource(source: any) {
