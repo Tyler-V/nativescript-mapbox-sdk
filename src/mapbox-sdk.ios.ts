@@ -68,6 +68,15 @@ export class MapboxView extends MapboxViewBase {
           return true;
         };
 
+        delegate.onMapViewTapOnCalloutForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
+          console.log(mapView);
+          console.log(annotation);
+          this.notify({
+            eventName: MapboxViewBase.tapOnCalloutForAnnotation,
+            object: this,
+          });
+        };
+
         this.mapView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
 
         this.setMapboxOptions(this.mapView, settings);
