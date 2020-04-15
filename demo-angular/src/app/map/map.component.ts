@@ -37,8 +37,12 @@ export class MapComponent implements OnInit {
 
     onMapReady(event) {
         console.log(event.eventName);
-        this.mapService.mapbox = event.object.get('mapbox');
-        this.mapService.mapView = event.object.get('mapView');
+        this.mapService.mapboxView = event.object.mapboxView;
+        const tapOnCalloutForAnnotation = event.object.mapboxView.on('tapOnCalloutForAnnotation', (data) => {
+            console.log(data);
+        });
+        this.mapService.mapbox = event.object.mapbox;
+        this.mapService.mapView = event.object.mapView;
         this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
             console.log(latLng);
             const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');

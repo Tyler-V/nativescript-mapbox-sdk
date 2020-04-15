@@ -5,6 +5,7 @@ import { Mapbox } from 'nativescript-mapbox-sdk';
     providedIn: 'root',
 })
 export class MapService {
+    mapboxView: any;
     mapView: any;
     mapbox: Mapbox;
 
