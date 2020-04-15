@@ -7,9 +7,8 @@ import { OfflineComponent } from './offline/offline.component';
 import { LocationComponent } from './location/location.component';
 import { LayersComponent } from './layers/layers.component';
 import { isAndroid, isIOS } from 'tns-core-modules/platform';
-import { android as androidApp } from 'tns-core-modules/application';
-
-declare const com, java, android;
+import { AndroidCalloutService } from './callouts/android-callout.service';
+import { IOSCalloutService } from './callouts/ios-callout.service';
 
 @Component({
     selector: 'map',
@@ -31,35 +30,52 @@ export class MapComponent implements OnInit {
     calloutLayer: any;
     annotation: MGLPointAnnotation;
 
-    constructor(private mapService: MapService, private modalService: ModalDialogService, private vcRef: ViewContainerRef) {}
+    constructor(
+        private mapService: MapService,
+        private modalService: ModalDialogService,
+        private vcRef: ViewContainerRef,
+        private androidCalloutService: AndroidCalloutService,
+        private iosCalloutService: IOSCalloutService
+    ) {}
 
     ngOnInit(): void {}
 
     onMapReady(event) {
         console.log(event.eventName);
         this.mapService.mapboxView = event.object;
-        const tapOnCalloutForAnnotation = this.mapService.mapboxView.on('tapOnCalloutForAnnotation', (data) => {
-            console.log(data);
-        });
         this.mapService.mapbox = event.object.mapbox;
         this.mapService.mapView = event.object.mapView;
-        this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
-            console.log(latLng);
-            const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
-            const calloutLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'callout-layer-id');
-            if (symbolLayers.length > 0) {
-                if (isAndroid) {
-                    this.addAndroidCalloutLayer(symbolLayers[0]);
-                } else {
-                    this.addIOSCalloutLayer(symbolLayers[0]);
+
+        if (isIOS) {
+            this.mapService.mapboxView.on('tapOnCalloutForAnnotation', (data) => {
+                console.log('navigate to well detail');
+            });
+            this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
+                const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
+                if (symbolLayers.length > 0) {
+                    this.iosCalloutService.addAnnotation(symbolLayers[0]);
                 }
-            } else if (calloutLayers.length > 0) {
-                this.removeCalloutLayer();
-                console.log('Callout Layer Selected');
-            } else {
-                this.removeCalloutLayer();
-            }
-        });
+            });
+        }
+
+        if (isAndroid) {
+            this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
+                const calloutLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'callout-layer-id');
+                if (calloutLayers.length > 0) {
+                    this.androidCalloutService.removeCalloutLayer();
+                    console.log('navigate to well detail');
+                    return;
+                } else {
+                    const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
+                    if (symbolLayers.length > 0) {
+                        this.androidCalloutService.addCalloutLayer(symbolLayers[0]);
+                    } else {
+                        this.androidCalloutService.removeCalloutLayer();
+                    }
+                }
+            });
+        }
+
         this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
             console.log(latLng);
             const bounds = this.mapService.mapbox.map.getBounds();
@@ -154,109 +170,5 @@ export class MapComponent implements OnInit {
         };
         this.mapService.symbolLayer = this.mapService.mapbox.style.layers.symbolLayer.create('symbol-layer-id', 'wells', options);
         this.mapService.mapbox.style.addLayer(this.mapService.symbolLayer);
-    }
-
-    removeCalloutLayer() {
-        if (isAndroid) {
-            if (!this.calloutLayer) return;
-            this.mapService.mapbox.style.removeLayer(this.calloutLayer);
-            this.calloutLayer = null;
-        } else {
-            this.mapService.mapView.removeAnnotation(this.annotation);
-        }
-    }
-
-    tapOnCalloutForAnnotation(event) {
-        console.log(event.eventName);
-    }
-
-    addIOSCalloutLayer(feature: Feature) {
-        if (this.annotation) {
-            this.mapService.mapView.removeAnnotation(this.annotation);
-        }
-
-        this.annotation = MGLPointAnnotation.alloc();
-        this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.lat, feature.geometry.lng);
-        this.annotation.title = feature.properties.NAME;
-        this.annotation.subtitle = feature.properties.API;
-
-        this.mapService.mapView.addAnnotation(this.annotation);
-        this.mapService.mapView.selectAnnotationAnimated(this.annotation, true);
-    }
-
-    iosCallout(latLng: LatLng, title: string, subtitle: string) {}
-
-    androidCallout(title: string, subtitle: string) {}
-
-    addAndroidCalloutLayer(feature: Feature) {
-        this.removeCalloutLayer();
-
-        const hasImage = this.mapService.mapbox.style.getImage(feature.properties.API) != null;
-        if (!hasImage) {
-            const bubbleLayout = this.createBubbleLayout(feature);
-            const image = this.generateBitmapFromView(bubbleLayout);
-            this.mapService.mapbox.style.addImage(feature.properties.API, image);
-        }
-
-        this.calloutLayer = new com.mapbox.mapboxsdk.style.layers.SymbolLayer('callout-layer-id', 'wells');
-        this.calloutLayer.setSourceLayer('wells');
-
-        const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
-        const eq = com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-        const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-        const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-        const iconIgnorePlacement = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-        const iconAnchor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
-        const iconOffset = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
-
-        const properties = [];
-        const floatArray = (<any>Array).create('java.lang.Float', 2);
-        floatArray[0] = new java.lang.Float(0);
-        floatArray[1] = new java.lang.Float(-15);
-        properties.push(iconOffset(floatArray));
-        properties.push(iconImage(get('API')));
-        properties.push(iconAnchor('bottom'));
-        properties.push(iconAllowOverlap(new java.lang.Boolean(true)));
-        properties.push(iconIgnorePlacement(new java.lang.Boolean(true)));
-
-        this.calloutLayer.setProperties(properties);
-
-        this.calloutLayer.setFilter(eq(get('API'), feature.properties.API));
-
-        this.mapService.mapbox.style.addLayer(this.calloutLayer);
-    }
-
-    createBubbleLayout(feature: Feature) {
-        let resourceId = androidApp.context
-            .getResources()
-            .getIdentifier('activity_query_feature_window_symbol_layer', 'layout', androidApp.context.getPackageName());
-
-        const inflater = android.view.LayoutInflater.from(androidApp.foregroundActivity);
-        const bubbleLayout = inflater.inflate(resourceId, null);
-
-        const titleTextViewId = androidApp.context.getResources().getIdentifier('info_window_title', 'id', androidApp.context.getPackageName());
-        const titleTextView = bubbleLayout.findViewById(titleTextViewId);
-        titleTextView.setText(feature.properties.NAME);
-
-        const propertiesListTextId = androidApp.context
-            .getResources()
-            .getIdentifier('info_window_feature_properties_list', 'id', androidApp.context.getPackageName());
-        const propertiesListTextView = bubbleLayout.findViewById(propertiesListTextId);
-        propertiesListTextView.setText(feature.properties.API);
-
-        return bubbleLayout;
-    }
-
-    generateBitmapFromView(view) {
-        const measureSpec = android.view.View.MeasureSpec.makeMeasureSpec(0, android.view.View.MeasureSpec.UNSPECIFIED);
-        view.measure(measureSpec, measureSpec);
-        const measuredWidth = view.getMeasuredWidth();
-        const measuredHeight = view.getMeasuredHeight();
-        view.layout(0, 0, measuredWidth, measuredHeight);
-        const bitmap = android.graphics.Bitmap.createBitmap(measuredWidth, measuredHeight, android.graphics.Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(android.graphics.Color.TRANSPARENT);
-        const canvas = new android.graphics.Canvas(bitmap);
-        view.draw(canvas);
-        return bitmap;
     }
 }
