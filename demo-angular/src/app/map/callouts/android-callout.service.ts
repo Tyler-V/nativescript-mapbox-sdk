@@ -20,8 +20,6 @@ export class AndroidCalloutService {
     }
 
     addCalloutLayer(feature: Feature) {
-        this.removeCalloutLayer();
-
         const iconImageKey = 'API';
         const iconImageName = feature.properties[iconImageKey];
 

@@ -10,11 +10,13 @@ export class IOSCalloutService {
 
     constructor(private mapService: MapService) {}
 
-    addAnnotation(feature: Feature) {
+    removeAnnotation() {
         if (this.annotation) {
             this.mapService.mapView.removeAnnotation(this.annotation);
         }
+    }
 
+    addAnnotation(feature: Feature) {
         this.annotation = MGLPointAnnotation.alloc();
         this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.lat, feature.geometry.lng);
         this.annotation.title = feature.properties.NAME;
