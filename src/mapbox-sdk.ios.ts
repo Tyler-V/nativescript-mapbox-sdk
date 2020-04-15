@@ -61,10 +61,10 @@ export class MapboxView extends MapboxViewBase {
         };
 
         delegate.onMapViewAnnotationCanShowCallout = (mapView: MGLMapView, annotation: MGLAnnotation) => {
-          // this.notify({
-          //   eventName: MapboxViewBase.cameraMove,
-          //   object: this,
-          // });
+          this.notify({
+            eventName: MapboxViewBase.annotationCanShowCallout,
+            object: this,
+          });
           return true;
         };
 
@@ -78,6 +78,10 @@ export class MapboxView extends MapboxViewBase {
         };
 
         delegate.onMapViewViewForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
+          this.notify({
+            eventName: MapboxViewBase.viewViewForAnnotation,
+            object: this,
+          });
           return MGLAnnotationView.alloc().initWithFrame(CGRectMake(0, 0, 20, 20));
         };
 

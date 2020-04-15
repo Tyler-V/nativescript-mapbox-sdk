@@ -47,7 +47,7 @@ export class MapComponent implements OnInit {
                 if (isAndroid) {
                     this.addAndroidCalloutLayer(symbolLayers[0]);
                 } else {
-                    this.addIOSCalloutLayer(latLng, symbolLayers[0]);
+                    this.addIOSCalloutLayer(symbolLayers[0]);
                 }
             } else if (calloutLayers.length > 0) {
                 this.removeCalloutLayer();
@@ -162,13 +162,13 @@ export class MapComponent implements OnInit {
         }
     }
 
-    addIOSCalloutLayer(latLng: LatLng, feature: Feature) {
+    addIOSCalloutLayer(feature: Feature) {
         if (this.annotation) {
             this.mapService.mapView.removeAnnotation(this.annotation);
         }
 
         this.annotation = MGLPointAnnotation.alloc();
-        this.annotation.coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
+        this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.lat, feature.geometry.lng);
         this.annotation.title = feature.properties.NAME;
         this.annotation.subtitle = feature.properties.API;
 
@@ -178,7 +178,7 @@ export class MapComponent implements OnInit {
         // this.mapService.mapView.setCenterCoordinateZoomLevelAnimated(annotation.coordinate, 17, false);
 
         // Pop-up the callout view.
-        this.mapService.mapView.selectAnnotationAnimated(this.annotation, true);
+        this.mapService.mapView.selectAnnotationAnimated(this.annotation, false);
     }
 
     addAndroidCalloutLayer(feature: Feature) {

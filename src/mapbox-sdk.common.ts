@@ -152,7 +152,11 @@ export abstract class MapboxViewBase extends MapboxApi {
   static mapReadyEvent: string = 'mapReady';
   static styleLoadedEvent: string = 'styleLoaded';
   static cameraMove: string = 'cameraMove';
+
+  // iOS
   static tapOnCalloutForAnnotation: string = 'tapOnCalloutForAnnotation';
+  static annotationCanShowCallout: string = 'annotationCanShowCallout';
+  static viewViewForAnnotation: string = 'viewViewForAnnotation';
 
   protected config: MapViewOptions = {};
 
