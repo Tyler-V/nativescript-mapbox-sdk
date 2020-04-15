@@ -70,7 +70,7 @@ export class MapboxView extends MapboxViewBase {
 
         delegate.onMapViewTapOnCalloutForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
           this.notify({
-            eventName: MapboxViewBase.viewViewForAnnotation,
+            eventName: MapboxViewBase.tapOnCalloutForAnnotation,
             object: <any>annotation,
           });
         };
