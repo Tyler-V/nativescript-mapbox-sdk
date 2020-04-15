@@ -37,7 +37,7 @@ export class MapComponent implements OnInit {
 
     onMapReady(event) {
         console.log(event.eventName);
-        this.mapService.mapboxView = event.object.mapboxView;
+        this.mapService.mapboxView = event.object;
         const tapOnCalloutForAnnotation = this.mapService.mapboxView.on('tapOnCalloutForAnnotation', (data) => {
             console.log(data);
         });
