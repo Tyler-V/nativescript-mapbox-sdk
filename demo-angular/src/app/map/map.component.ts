@@ -35,10 +35,10 @@ export class MapComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    onMapReady(args) {
-        console.log(args.eventName);
-        this.mapService.mapbox = args.object.mapbox;
-        this.mapService.mapView = args.object.mapView;
+    onMapReady(event) {
+        console.log(event.eventName);
+        this.mapService.mapbox = event.object.get('mapbox');
+        this.mapService.mapView = event.object.get('mapView');
         this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
             console.log(latLng);
             const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
@@ -64,15 +64,15 @@ export class MapComponent implements OnInit {
         });
     }
 
-    onStyleLoaded(args) {
-        console.log(args.eventName);
+    onStyleLoaded(event) {
+        console.log(event.eventName);
         this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
         this.addHeatmapLayer();
         this.addSymbolLayer();
     }
 
-    onCameraMove(args) {
-        console.log(args.eventName);
+    onCameraMove(event) {
+        console.log(event.eventName);
         console.log(this.mapService.mapbox.map.getZoom());
     }
 
@@ -162,6 +162,10 @@ export class MapComponent implements OnInit {
         }
     }
 
+    tapOnCalloutForAnnotation(event) {
+        console.log(event.eventName);
+    }
+
     addIOSCalloutLayer(feature: Feature) {
         if (this.annotation) {
             this.mapService.mapView.removeAnnotation(this.annotation);
@@ -173,13 +177,12 @@ export class MapComponent implements OnInit {
         this.annotation.subtitle = feature.properties.API;
 
         this.mapService.mapView.addAnnotation(this.annotation);
-
-        // Center the map on the annotation.
-        // this.mapService.mapView.setCenterCoordinateZoomLevelAnimated(annotation.coordinate, 17, false);
-
-        // Pop-up the callout view.
-        this.mapService.mapView.selectAnnotationAnimated(this.annotation, false);
+        this.mapService.mapView.selectAnnotationAnimated(this.annotation, true);
     }
+
+    iosCallout(latLng: LatLng, title: string, subtitle: string) {}
+
+    androidCallout(title: string, subtitle: string) {}
 
     addAndroidCalloutLayer(feature: Feature) {
         this.removeCalloutLayer();
