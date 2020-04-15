@@ -17,6 +17,8 @@ export class IOSCalloutService {
     }
 
     addAnnotation(feature: Feature) {
+        this.removeAnnotation();
+
         this.annotation = MGLPointAnnotation.alloc();
         this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.lat, feature.geometry.lng);
         this.annotation.title = feature.properties.NAME;

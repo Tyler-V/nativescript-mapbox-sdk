@@ -55,7 +55,6 @@ export class MapComponent implements OnInit {
             this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
                 const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
                 if (symbolLayers.length > 0) {
-                    this.iosCalloutService.removeAnnotation();
                     this.iosCalloutService.addAnnotation(symbolLayers[0]);
                 }
             });
@@ -72,7 +71,6 @@ export class MapComponent implements OnInit {
                 } else {
                     const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
                     if (symbolLayers.length > 0) {
-                        this.androidCalloutService.removeCalloutLayer();
                         this.androidCalloutService.addCalloutLayer(symbolLayers[0]);
                     } else {
                         this.androidCalloutService.removeCalloutLayer();
