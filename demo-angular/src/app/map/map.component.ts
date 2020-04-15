@@ -48,6 +48,7 @@ export class MapComponent implements OnInit {
 
         if (isIOS) {
             this.mapService.mapboxView.on('tapOnCalloutForAnnotation', (data) => {
+                const API = (<MGLPointAnnotation>data.object).subtitle;
                 console.log('navigate to well detail');
             });
             this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
@@ -63,6 +64,7 @@ export class MapComponent implements OnInit {
                 const calloutLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'callout-layer-id');
                 if (calloutLayers.length > 0) {
                     this.androidCalloutService.removeCalloutLayer();
+                    const API = calloutLayers[0].properties.API;
                     console.log('navigate to well detail');
                     return;
                 } else {
