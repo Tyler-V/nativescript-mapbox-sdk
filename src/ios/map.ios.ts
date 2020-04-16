@@ -18,11 +18,6 @@ function _getFeatures(features) {
       }
     }
 
-    const geometry: LatLng = {
-      lat: feature.coordinate.latitude,
-      lng: feature.coordinate.longitude,
-    };
-
     results.push({
       id: feature.identifier,
       type: 'Feature',
