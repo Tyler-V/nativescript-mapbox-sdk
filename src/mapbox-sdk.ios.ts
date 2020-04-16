@@ -76,7 +76,7 @@ export class MapboxView extends MapboxViewBase {
         };
 
         delegate.onMapViewViewForAnnotation = (mapView: MGLMapView, annotation: MGLAnnotation) => {
-          if (annotation.class().name === 'MGLUserLocation') {
+          if (annotation.isKindOfClass(MGLUserLocation.class())) {
             return null;
           }
           this.notify({
