@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Feature } from 'nativescript-mapbox-sdk';
 import { MapService } from '../map.service';
 
 @Injectable({
@@ -16,11 +15,11 @@ export class IOSCalloutService {
         }
     }
 
-    addAnnotation(feature: Feature) {
+    addAnnotation(feature: GeoJSON.Feature<GeoJSON.Point>) {
         this.removeAnnotation();
 
         this.annotation = MGLPointAnnotation.alloc();
-        this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.lat, feature.geometry.lng);
+        this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
         this.annotation.title = feature.properties.NAME;
         this.annotation.subtitle = feature.properties.API;
 

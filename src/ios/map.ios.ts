@@ -1,11 +1,11 @@
 import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
-import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
+import { MapboxMap, CameraPosition, LatLngBounds } from '../common/map.common';
 import { toReferenceToCArray } from './utils.ios';
 
 function _getFeatures(features) {
-  const results: Array<Feature> = [];
+  const results: Array<GeoJSON.Feature> = [];
 
   for (let i = 0; i < features.count; i++) {
     const feature: MGLFeature = features.objectAtIndex(i);
@@ -27,7 +27,10 @@ function _getFeatures(features) {
       id: feature.identifier,
       type: 'Feature',
       properties,
-      geometry,
+      geometry: {
+        type: 'Point',
+        coordinates: [feature.coordinate.longitude, feature.coordinate.latitude],
+      },
     });
   }
 
@@ -137,7 +140,7 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature> {
     const mapView: MGLMapView = this.view.mapView;
     const coordinate = CLLocationCoordinate2DMake(point.lat, point.lng);
     const cgPoint = mapView.convertCoordinateToPointToView(coordinate, mapView);
@@ -153,7 +156,7 @@ export class Map extends MapboxMap {
     return _getFeatures(features);
   }
 
-  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<GeoJSON.Feature> {
     const mapView: MGLMapView = this.view.mapView;
     let rect;
 

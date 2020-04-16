@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Feature } from 'nativescript-mapbox-sdk';
 import { MapService } from '../map.service';
 import { android as androidApp } from 'tns-core-modules/application';
 
@@ -19,7 +18,7 @@ export class AndroidCalloutService {
         this.calloutLayer = null;
     }
 
-    addCalloutLayer(feature: Feature) {
+    addCalloutLayer(feature: GeoJSON.Feature<GeoJSON.Point>) {
         this.removeCalloutLayer();
 
         const iconImageKey = 'API';

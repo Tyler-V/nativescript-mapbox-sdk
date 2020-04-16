@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
-import { LatLng, SymbolLayerOptions, MapboxColor, LayerOptions, Feature } from 'nativescript-mapbox-sdk';
+import { LatLng, SymbolLayerOptions, MapboxColor, LayerOptions } from 'nativescript-mapbox-sdk';
 import { MapService } from './map.service';
 import { StylesComponent } from './styles/styles.component';
 import { OfflineComponent } from './offline/offline.component';
@@ -55,7 +55,7 @@ export class MapComponent implements OnInit {
             this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
                 const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
                 if (symbolLayers.length > 0) {
-                    this.iosCalloutService.addAnnotation(symbolLayers[0]);
+                    this.iosCalloutService.addAnnotation(symbolLayers[0] as GeoJSON.Feature<GeoJSON.Point>);
                 }
             });
         }
@@ -71,7 +71,7 @@ export class MapComponent implements OnInit {
                 } else {
                     const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
                     if (symbolLayers.length > 0) {
-                        this.androidCalloutService.addCalloutLayer(symbolLayers[0]);
+                        this.androidCalloutService.addCalloutLayer(symbolLayers[0] as GeoJSON.Feature<GeoJSON.Point>);
                     } else {
                         this.androidCalloutService.removeCalloutLayer();
                     }
