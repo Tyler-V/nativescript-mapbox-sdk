@@ -15,6 +15,7 @@ import { IOSCalloutService } from './callouts/ios-callout.service';
     moduleId: module.id,
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
+    providers: [AndroidCalloutService, IOSCalloutService],
 })
 export class MapComponent implements OnInit {
     accessToken: string = 'sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2s1dml5YXlxMHNncTNnbXgzNXVnYXQ0NyJ9.y0ofxDzXB4vi6KW372rLEQ';
@@ -45,40 +46,7 @@ export class MapComponent implements OnInit {
         this.mapService.mapboxView = event.object;
         this.mapService.mapbox = event.object.mapbox;
         this.mapService.mapView = event.object.mapView;
-
-        if (isIOS) {
-            this.mapService.mapboxView.on('tapOnCalloutForAnnotation', (data) => {
-                this.iosCalloutService.removeAnnotation();
-                const API = (<MGLPointAnnotation>data.object).subtitle;
-                console.log('navigate to well detail');
-            });
-            this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
-                const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
-                if (symbolLayers.length > 0) {
-                    this.iosCalloutService.addAnnotation(symbolLayers[0] as GeoJSON.Feature<GeoJSON.Point>);
-                }
-            });
-        }
-
-        if (isAndroid) {
-            this.mapService.mapbox.map.addOnMapClickListener((latLng: LatLng) => {
-                const calloutLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'callout-layer-id');
-                if (calloutLayers.length > 0) {
-                    this.androidCalloutService.removeCalloutLayer();
-                    const API = calloutLayers[0].properties.API;
-                    console.log('navigate to well detail');
-                    return;
-                } else {
-                    const symbolLayers = this.mapService.mapbox.map.queryRenderedFeatures(latLng, 'symbol-layer-id');
-                    if (symbolLayers.length > 0) {
-                        this.androidCalloutService.addCalloutLayer(symbolLayers[0] as GeoJSON.Feature<GeoJSON.Point>);
-                    } else {
-                        this.androidCalloutService.removeCalloutLayer();
-                    }
-                }
-            });
-        }
-
+        this.mapService.mapReady.next(true);
         this.mapService.mapbox.map.addOnMapLongClickListener((latLng: LatLng) => {
             console.log(latLng);
             const bounds = this.mapService.mapbox.map.getBounds();
@@ -90,8 +58,6 @@ export class MapComponent implements OnInit {
     onStyleLoaded(event) {
         console.log(event.eventName);
         this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
-        this.addHeatmapLayer();
-        this.addSymbolLayer();
     }
 
     onCameraMove(event) {
@@ -126,52 +92,5 @@ export class MapComponent implements OnInit {
         };
 
         return this.modalService.showModal(LayersComponent, options);
-    }
-
-    private addHeatmapLayer() {
-        const options: LayerOptions = {
-            maxZoom: 13,
-        };
-        this.mapService.heatmapLayer = this.mapService.mapbox.style.layers.heatmap.create('heatmap-layer-id', 'wells', options);
-        this.mapService.mapbox.style.layers.heatmap.setHeatmapColor(this.mapService.heatmapLayer, [
-            [0, new MapboxColor(255, 255, 255, 0.01)],
-            [0.25, new MapboxColor(4, 179, 183)],
-            [0.5, new MapboxColor(204, 211, 61)],
-            [0.75, new MapboxColor(252, 167, 55)],
-            [1.0, new MapboxColor(255, 78, 70)],
-        ]);
-        this.mapService.mapbox.style.layers.heatmap.setHeatmapIntensity(this.mapService.heatmapLayer, [
-            [0, 3],
-            [options.maxZoom, 1],
-        ]);
-        this.mapService.mapbox.style.layers.heatmap.setHeatmapRadius(this.mapService.heatmapLayer, [
-            [0, 3],
-            [10, 8],
-            [options.maxZoom, 25],
-        ]);
-        this.mapService.mapbox.style.layers.heatmap.setHeatmapOpacity(this.mapService.heatmapLayer, [
-            [0, 1],
-            [options.maxZoom, 1],
-        ]);
-        this.mapService.mapbox.style.addLayer(this.mapService.heatmapLayer);
-    }
-
-    private addSymbolLayer() {
-        this.mapService.mapbox.style.addImageFromPath('OIL', 'images/types/oil.png');
-        this.mapService.mapbox.style.addImageFromPath('GAS', 'images/types/gas.png');
-        this.mapService.mapbox.style.addImageFromPath('OILGAS', 'images/types/oilgas.png');
-        this.mapService.mapbox.style.addImageFromPath('EOR', 'images/types/eor.png');
-        this.mapService.mapbox.style.addImageFromPath('SWD', 'images/types/swd.png');
-        this.mapService.mapbox.style.addImageFromPath('OTHER', 'images/types/other.png');
-
-        const options: SymbolLayerOptions = {
-            minZoom: 13,
-            iconImageKey: 'TYPE',
-            iconSize: isAndroid ? 2 : 0.75,
-            iconAllowOverlap: true,
-            iconIgnorePlacement: true,
-        };
-        this.mapService.symbolLayer = this.mapService.mapbox.style.layers.symbolLayer.create('symbol-layer-id', 'wells', options);
-        this.mapService.mapbox.style.addLayer(this.mapService.symbolLayer);
     }
 }
