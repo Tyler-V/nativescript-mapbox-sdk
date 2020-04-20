@@ -21,6 +21,10 @@ export class Style extends MapboxStyle {
     return this.view.mapView.style.imageForName(name);
   }
 
+  getSource(sourceId: string) {
+    return this.view.mapView.style.sourceWithIdentifier(sourceId);
+  }
+
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.view.mapView.styleURL = NSURL.URLWithString(uri);
@@ -44,16 +48,16 @@ export class Style extends MapboxStyle {
     this.view.mapView.style.setImageForName(this.getImageFromPath(filePath).ios, name);
   }
 
-  addSource(source: any) {
-    this.view.mapView.style.addSource(source);
-  }
-
   addLayer(layer: any) {
     this.view.mapView.style.addLayer(layer);
   }
 
-  removeLayer(layer: any) {
-    this.view.mapView.style.removeLayer(layer);
+  addSource(source: any) {
+    this.view.mapView.style.addSource(source);
+  }
+
+  addGeoJsonSource(sourceId: string, geoJson: string) {
+    // TODO
   }
 
   addVectorSource(sourceId: string, uri: string): any {
@@ -64,10 +68,6 @@ export class Style extends MapboxStyle {
     source = MGLVectorTileSource.alloc().initWithIdentifierConfigurationURL(sourceId, NSURL.URLWithString(uri));
     this.addSource(source);
     return source;
-  }
-
-  getSource(sourceId: string) {
-    return this.view.mapView.style.sourceWithIdentifier(sourceId);
   }
 
   createLayer(layerType: LayerType, layerId: string, sourceId: string, minZoom: number, maxZoom: number) {
@@ -85,6 +85,10 @@ export class Style extends MapboxStyle {
     if (minZoom) layer.minimumZoomLevel = minZoom;
     if (maxZoom) layer.maximumZoomLevel = maxZoom;
     return layer;
+  }
+
+  removeLayer(layer: any) {
+    this.view.mapView.style.removeLayer(layer);
   }
 
   removeImage(name: string) {

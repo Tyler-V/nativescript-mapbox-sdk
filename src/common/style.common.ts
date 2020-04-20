@@ -34,14 +34,16 @@ export abstract class MapboxStyle {
   abstract getUri(): string;
 
   abstract setStyleUri(uri: string): Promise<any>;
-  abstract getSource(sourceId: string): any;
+  abstract getSource(id: string): any;
   abstract getImage(name: string): any;
 
   abstract addImage(name: string, image: any): void;
   abstract addImageFromPath(name: string, filePath: string): void;
-  abstract addSource(source: any): void;
   abstract addLayer(layer: any): void;
-  abstract addVectorSource(sourceId: string, uri: string): any;
+
+  abstract addSource(source: any): void;
+  abstract addGeoJsonSource(id: string, geoJson: string): void;
+  abstract addVectorSource(id: string, uri: string): any;
 
   abstract removeLayer(layer: any): void;
   abstract removeImage(name: string): void;

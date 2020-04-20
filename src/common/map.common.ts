@@ -1,4 +1,5 @@
 import { MapboxViewBase, LatLng } from '../mapbox-sdk.common';
+import { GeoJsonTypes } from 'geojson';
 
 export interface CameraPosition {
   latLng: LatLng;
@@ -12,12 +13,6 @@ export interface LatLngBounds {
   south: number;
   east: number;
   west: number;
-}
-
-export interface Feature {
-  id: any;
-  type: string;
-  properties: any;
 }
 
 export abstract class MapboxMap {
@@ -41,8 +36,8 @@ export abstract class MapboxMap {
   abstract setLogoEnabled(enabled: boolean);
 
   abstract animateCamera(options: CameraPosition, duration: number): Promise<void>;
-  abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature>;
-  abstract queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<Feature>;
+  abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature>;
+  abstract queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<GeoJSON.Feature>;
   abstract setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void>;
   abstract setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void>;
   abstract setMinimumZoomLevel(zoomLevel: number): void;

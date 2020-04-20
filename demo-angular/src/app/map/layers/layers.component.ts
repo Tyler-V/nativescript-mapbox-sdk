@@ -24,9 +24,7 @@ export class LayersComponent implements OnInit {
 
     constructor(public mapService: MapService, private params: ModalDialogParams) {}
 
-    ngOnInit() {
-        this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
-    }
+    ngOnInit() {}
 
     goBack() {
         this.params.closeCallback();

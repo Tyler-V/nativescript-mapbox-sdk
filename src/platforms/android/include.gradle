@@ -6,6 +6,6 @@ repositories {
 }
  
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.2'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v8:0.7.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
 }

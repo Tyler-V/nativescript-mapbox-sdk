@@ -1,16 +1,16 @@
 import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
-import { MapboxMap, CameraPosition, LatLngBounds, Feature } from '../common/map.common';
+import { MapboxMap, CameraPosition, LatLngBounds } from '../common/map.common';
 import { toReferenceToCArray } from './utils.ios';
 
 function _getFeatures(features) {
-  const results: Array<Feature> = [];
+  const results: Array<GeoJSON.Feature> = [];
 
   for (let i = 0; i < features.count; i++) {
     const feature: MGLFeature = features.objectAtIndex(i);
-    const properties = {};
 
+    const properties = {};
     if (feature.attributes && feature.attributes.count > 0) {
       const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
       for (let key of keys) {
@@ -22,6 +22,10 @@ function _getFeatures(features) {
       id: feature.identifier,
       type: 'Feature',
       properties,
+      geometry: {
+        type: 'Point',
+        coordinates: [feature.coordinate.longitude, feature.coordinate.latitude],
+      },
     });
   }
 
@@ -59,8 +63,8 @@ export class Map extends MapboxMap {
   }
 
   addOnMapClickListener(listener: (latLng: LatLng) => void) {
-    this.view.mapView['mapClickHandler'] = MapClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
-    const tapGestureRecognizer = UITapGestureRecognizer.alloc().initWithTargetAction(this.view.mapView['mapClickHandler'], 'tap');
+    this.view.mapView.mapClickHandler = MapClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    const tapGestureRecognizer = UITapGestureRecognizer.alloc().initWithTargetAction(this.view.mapView.mapClickHandler, 'tap');
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
       let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
@@ -75,8 +79,8 @@ export class Map extends MapboxMap {
   }
 
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {
-    this.view.mapView['mapLongClickHandler'] = MapLongClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
-    const longClickGestureRecognizer = UILongPressGestureRecognizer.alloc().initWithTargetAction(this.view.mapView['mapLongClickHandler'], 'longClick');
+    this.view.mapView.mapLongClickHandler = MapLongClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    const longClickGestureRecognizer = UILongPressGestureRecognizer.alloc().initWithTargetAction(this.view.mapView.mapLongClickHandler, 'longClick');
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
       let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
@@ -131,7 +135,7 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature> {
     const mapView: MGLMapView = this.view.mapView;
     const coordinate = CLLocationCoordinate2DMake(point.lat, point.lng);
     const cgPoint = mapView.convertCoordinateToPointToView(coordinate, mapView);
@@ -147,7 +151,7 @@ export class Map extends MapboxMap {
     return _getFeatures(features);
   }
 
-  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<GeoJSON.Feature> {
     const mapView: MGLMapView = this.view.mapView;
     let rect;
 

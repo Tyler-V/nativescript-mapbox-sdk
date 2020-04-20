@@ -1,18 +1,23 @@
 import { MapboxView } from '../mapbox-sdk.android';
 import { LatLng } from '../mapbox-sdk.common';
-import { MapboxMap, CameraPosition, LatLngBounds, Feature } from './../common/map.common';
+import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
 
 declare const android, com, java, org: any;
 
 function _getFeatures(features) {
-  const results: Array<Feature> = [];
+  const results: Array<GeoJSON.Feature> = [];
 
   for (let i = 0; i < features.size(); i++) {
     const feature = features.get(i);
+
     results.push({
       id: feature.id(),
       type: feature.type(),
       properties: JSON.parse(feature.properties().toString()),
+      geometry: {
+        type: 'Point',
+        coordinates: [feature.geometry().longitude(), feature.geometry().latitude()],
+      },
     });
   }
 
@@ -112,14 +117,14 @@ export class Map extends MapboxMap {
     };
   }
 
-  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature> {
     const latLng = new com.mapbox.mapboxsdk.geometry.LatLng(point.lat, point.lng);
     const pixel = this.view.mapboxMap.getProjection().toScreenLocation(latLng);
     const features = this.view.mapboxMap.queryRenderedFeatures(pixel, layerIds);
     return _getFeatures(features);
   }
 
-  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<Feature> {
+  queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<GeoJSON.Feature> {
     let coordinates;
 
     if (!bounds) {
