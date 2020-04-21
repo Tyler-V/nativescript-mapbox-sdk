@@ -194,7 +194,7 @@ export class Map extends MapboxMap {
       if (animated) {
         this.view.mapboxMap.animateCamera(
           cameraUpdate,
-          3000,
+          4000,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
             onCancel: () => resolve(),
             onFinish: () => resolve(),
