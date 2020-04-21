@@ -181,7 +181,7 @@ export class Map extends MapboxMap {
     });
   }
 
-  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+  setCameraToCoordinates(latLngs: LatLng[], padding?: number, animated?: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
       const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
       for (let latLng of latLngs) {
@@ -191,10 +191,10 @@ export class Map extends MapboxMap {
 
       const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-      if (duration) {
+      if (animated) {
         this.view.mapboxMap.animateCamera(
           cameraUpdate,
-          duration,
+          3000,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
             onCancel: () => resolve(),
             onFinish: () => resolve(),

@@ -36,10 +36,10 @@ export abstract class MapboxMap {
   abstract setLogoEnabled(enabled: boolean);
 
   abstract animateCamera(options: CameraPosition, duration: number): Promise<void>;
-  abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature>;
-  abstract queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<GeoJSON.Feature>;
   abstract setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void>;
-  abstract setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void>;
+  abstract setCameraToCoordinates(latLngs: LatLng[], padding?: number, animated?: boolean): Promise<void>;
   abstract setMinimumZoomLevel(zoomLevel: number): void;
   abstract setMaximumZoomLevel(zoomLevel: number): void;
+  abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature>;
+  abstract queryRenderedFeaturesByBounds(bounds?: LatLngBounds, ...layerIds: string[]): Array<GeoJSON.Feature>;
 }

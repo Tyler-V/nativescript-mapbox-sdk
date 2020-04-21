@@ -2,7 +2,7 @@ import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl } from '../map
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxMap, CameraPosition, LatLngBounds } from '../common/map.common';
-import { toReferenceToCArray } from './utils.ios';
+import * as turf from '@turf/turf';
 
 function _getFeatures(features) {
   const results: Array<GeoJSON.Feature> = [];
@@ -214,36 +214,23 @@ export class Map extends MapboxMap {
     });
   }
 
-  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+  setCameraToCoordinates(latLngs: LatLng[], padding?: number, animated?: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
-      const mapView: MGLMapView = this.view.mapView;
+      let coordinates = [];
+      latLngs.forEach((latLng) => {
+        coordinates.push([latLng.lng, latLng.lat]);
+      });
+      const points = turf.points(coordinates);
+      const bbox = turf.bbox(points);
 
-      let insets: UIEdgeInsets = {
-        top: padding ? padding : 0,
-        left: padding ? padding : 0,
-        bottom: padding ? padding : 0,
-        right: padding ? padding : 0,
+      const latLngBounds: LatLngBounds = {
+        west: bbox[0],
+        south: bbox[1],
+        east: bbox[2],
+        north: bbox[3],
       };
 
-      const coordinates: CLLocationCoordinate2D[] = [];
-      for (let latLng of latLngs) {
-        const coordinate = CLLocationCoordinate2DMake(latLng.lat, latLng.lng);
-        coordinates.push(coordinate);
-      }
-
-      const coordinatesAsCArray = toReferenceToCArray(coordinates, CLLocationCoordinate2D);
-
-      mapView.setVisibleCoordinatesCountEdgePaddingDirectionDurationAnimationTimingFunctionCompletionHandler(
-        coordinatesAsCArray,
-        coordinates.length,
-        insets,
-        0,
-        duration / 1000,
-        CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseInEaseOut),
-        () => {
-          resolve();
-        }
-      );
+      return this.setCameraToBounds(latLngBounds, padding, animated);
     });
   }
 }
