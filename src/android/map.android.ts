@@ -1,6 +1,6 @@
 import { MapboxView } from '../mapbox-sdk.android';
 import { LatLng } from '../mapbox-sdk.common';
-import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
+import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions } from './../common/map.common';
 
 declare const android, com, java, org: any;
 
@@ -28,12 +28,12 @@ export class Map extends MapboxMap {
     super(mapboxView);
   }
 
-  private setCamera(cameraUpdate, duration: number): Promise<void> {
+  private setCamera(cameraUpdate, animationDuration: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (duration) {
+      if (animationDuration) {
         this.view.mapboxMap.animateCamera(
           cameraUpdate,
-          duration,
+          animationDuration,
           new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
             onCancel: () => resolve(),
             onFinish: () => resolve(),
@@ -46,39 +46,49 @@ export class Map extends MapboxMap {
     });
   }
 
-  animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
+  setCameraToLatLng(latLng: LatLng, options?: LatLngCameraOptions): Promise<void> {
     return new Promise((resolve, reject) => {
-      const position = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
-        .target(new com.mapbox.mapboxsdk.geometry.LatLng(options.latLng.lat, options.latLng.lng))
+      const cameraPosition = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
+        .target(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng))
         .zoom(options.zoom)
         .bearing(options.bearing ? options.bearing : 0)
         .tilt(options.tilt ? options.tilt : 0)
         .build();
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(position);
-      resolve(this.setCamera(cameraUpdate, duration));
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(cameraPosition);
+      resolve(this.setCamera(cameraUpdate, options.animationDuration));
     });
   }
 
-  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, duration?: number): Promise<void> {
+  setCameraToBounds(latLngBounds: LatLngBounds, options?: BoundsCameraOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
         .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
         .build();
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-      resolve(this.setCamera(cameraUpdate, duration));
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(
+        bounds,
+        options.bearing ? options.bearing : this.getBearing(),
+        options.tilt ? options.tilt : this.getTilt(),
+        options.padding ? options.padding : 0
+      );
+      resolve(this.setCamera(cameraUpdate, options.animationDuration));
     });
   }
 
-  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+  setCameraToCoordinates(latLngs: LatLng[], options?: BoundsCameraOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
       for (let latLng of latLngs) {
         latLngBoundsBuilder.include(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng));
       }
       const bounds = latLngBoundsBuilder.build();
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-      resolve(this.setCamera(cameraUpdate, duration));
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(
+        bounds,
+        options.bearing ? options.bearing : this.getBearing(),
+        options.tilt ? options.tilt : this.getTilt(),
+        options.padding ? options.padding : 0
+      );
+      resolve(this.setCamera(cameraUpdate, options.animationDuration));
     });
   }
 
