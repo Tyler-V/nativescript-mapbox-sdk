@@ -35,9 +35,9 @@ export abstract class MapboxMap {
   abstract setCompassEnabled(enabled: boolean);
   abstract setLogoEnabled(enabled: boolean);
 
-  abstract animateCamera(options: CameraPosition, duration: number): Promise<void>;
-  abstract setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void>;
-  abstract setCameraToCoordinates(latLngs: LatLng[], padding?: number, animated?: boolean): Promise<void>;
+  abstract animateCamera(options: CameraPosition, duration?: number): Promise<void>;
+  abstract setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, duration?: number): Promise<void>;
+  abstract setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void>;
   abstract setMinimumZoomLevel(zoomLevel: number): void;
   abstract setMaximumZoomLevel(zoomLevel: number): void;
   abstract queryRenderedFeatures(point: LatLng, ...layerIds: string[]): Array<GeoJSON.Feature>;

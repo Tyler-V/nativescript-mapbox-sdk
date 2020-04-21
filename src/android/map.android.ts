@@ -28,6 +28,24 @@ export class Map extends MapboxMap {
     super(mapboxView);
   }
 
+  private setCamera(cameraUpdate, duration: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (duration) {
+        this.view.mapboxMap.animateCamera(
+          cameraUpdate,
+          duration,
+          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
+            onCancel: () => resolve(),
+            onFinish: () => resolve(),
+          })
+        );
+      } else {
+        this.view.mapboxMap.moveCamera(cameraUpdate);
+        resolve();
+      }
+    });
+  }
+
   animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
     return new Promise((resolve, reject) => {
       const position = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
@@ -36,15 +54,31 @@ export class Map extends MapboxMap {
         .bearing(options.bearing ? options.bearing : 0)
         .tilt(options.tilt ? options.tilt : 0)
         .build();
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(position);
+      resolve(this.setCamera(cameraUpdate, duration));
+    });
+  }
 
-      this.view.mapboxMap.animateCamera(
-        com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(position),
-        duration,
-        new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-          onCancel: () => resolve(),
-          onFinish: () => resolve(),
-        })
-      );
+  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, duration?: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
+        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
+        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
+        .build();
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
+      resolve(this.setCamera(cameraUpdate, duration));
+    });
+  }
+
+  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
+      for (let latLng of latLngs) {
+        latLngBoundsBuilder.include(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng));
+      }
+      const bounds = latLngBoundsBuilder.build();
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
+      resolve(this.setCamera(cameraUpdate, duration));
     });
   }
 
@@ -154,56 +188,5 @@ export class Map extends MapboxMap {
 
   setLogoEnabled(enabled: boolean): void {
     this.view.mapboxMap.getUiSettings().setLogoEnabled(enabled);
-  }
-
-  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
-        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
-        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
-        .build();
-
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-      if (animated) {
-        this.view.mapboxMap.animateCamera(
-          cameraUpdate,
-          1000,
-          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => resolve(),
-            onFinish: () => resolve(),
-          })
-        );
-      } else {
-        this.view.mapboxMap.moveCamera(cameraUpdate);
-        resolve();
-      }
-    });
-  }
-
-  setCameraToCoordinates(latLngs: LatLng[], padding?: number, animated?: boolean): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
-      for (let latLng of latLngs) {
-        latLngBoundsBuilder.include(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng));
-      }
-      const bounds = latLngBoundsBuilder.build();
-
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-      if (animated) {
-        this.view.mapboxMap.animateCamera(
-          cameraUpdate,
-          4000,
-          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => resolve(),
-            onFinish: () => resolve(),
-          })
-        );
-      } else {
-        this.view.mapboxMap.moveCamera(cameraUpdate);
-        resolve();
-      }
-    });
   }
 }

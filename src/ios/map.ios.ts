@@ -36,11 +36,18 @@ export class Map extends MapboxMap {
     super(mapboxView);
   }
 
+  private setCamera(camera: MGLMapCamera, duration: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.view.mapView.flyToCameraWithDurationCompletionHandler(camera, duration / 1000, () => {
+        resolve();
+      });
+    });
+  }
+
   animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!options.latLng) {
         reject('A position is required');
-        return;
       }
 
       options.bearing = options.bearing ? options.bearing : this.getBearing();
@@ -50,15 +57,60 @@ export class Map extends MapboxMap {
       const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
       const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, options.latLng.lat, viewportSize);
 
-      let camera = MGLMapCamera.alloc();
-      camera.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
-      camera.heading = options.bearing;
-      camera.pitch = options.tilt;
-      camera.altitude = altitude;
+      let mglMapCamera = MGLMapCamera.alloc();
+      mglMapCamera.centerCoordinate = CLLocationCoordinate2DMake(options.latLng.lat, options.latLng.lng);
+      mglMapCamera.heading = options.bearing;
+      mglMapCamera.pitch = options.tilt;
+      mglMapCamera.altitude = altitude;
 
-      this.view.mapView.flyToCameraWithDurationCompletionHandler(camera, duration / 1000, () => {
-        resolve();
+      resolve(this.setCamera(mglMapCamera, duration));
+    });
+  }
+
+  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, duration?: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let mglCoordinateBounds: MGLCoordinateBounds = {
+        sw: CLLocationCoordinate2DMake(latLngBounds.south, latLngBounds.west),
+        ne: CLLocationCoordinate2DMake(latLngBounds.north, latLngBounds.east),
+      };
+
+      let insets: UIEdgeInsets = {
+        top: padding ? padding : 0,
+        left: padding ? padding : 0,
+        bottom: padding ? padding : 0,
+        right: padding ? padding : 0,
+      };
+
+      const mapView: MGLMapView = this.view.mapView;
+      const mglMapCamera = mapView.cameraThatFitsCoordinateBoundsEdgePadding(mglCoordinateBounds, insets);
+      resolve(this.setCamera(mglMapCamera, duration));
+    });
+  }
+
+  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let coordinates = [];
+      latLngs.forEach((latLng) => {
+        coordinates.push([latLng.lng, latLng.lat]);
       });
+      const points = turf.points(coordinates);
+      const bbox = turf.bbox(points);
+
+      let mglCoordinateBounds: MGLCoordinateBounds = {
+        sw: CLLocationCoordinate2DMake(bbox[1], bbox[0]),
+        ne: CLLocationCoordinate2DMake(bbox[3], bbox[2]),
+      };
+
+      let insets: UIEdgeInsets = {
+        top: padding ? padding : 0,
+        left: padding ? padding : 0,
+        bottom: padding ? padding : 0,
+        right: padding ? padding : 0,
+      };
+
+      const mapView: MGLMapView = this.view.mapView;
+      const mglMapCamera = mapView.cameraThatFitsCoordinateBoundsEdgePadding(mglCoordinateBounds, insets);
+      resolve(this.setCamera(mglMapCamera, duration));
     });
   }
 
@@ -190,47 +242,5 @@ export class Map extends MapboxMap {
   setLogoEnabled(enabled: boolean) {
     this.view.mapView.attributionButton.hidden = enabled; // This is for the info icon on bottom right
     this.view.mapView.logoView.hidden = enabled; // This is for the mapbox logo on bottom left
-  }
-
-  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const mapView: MGLMapView = this.view.mapView;
-
-      let bounds: MGLCoordinateBounds = {
-        sw: CLLocationCoordinate2DMake(latLngBounds.south, latLngBounds.west),
-        ne: CLLocationCoordinate2DMake(latLngBounds.north, latLngBounds.east),
-      };
-
-      let insets: UIEdgeInsets = {
-        top: padding ? padding : 0,
-        left: padding ? padding : 0,
-        bottom: padding ? padding : 0,
-        right: padding ? padding : 0,
-      };
-
-      mapView.setVisibleCoordinateBoundsEdgePaddingAnimatedCompletionHandler(bounds, insets, animated, () => {
-        resolve();
-      });
-    });
-  }
-
-  setCameraToCoordinates(latLngs: LatLng[], padding?: number, animated?: boolean): Promise<void> {
-    return new Promise((resolve, reject) => {
-      let coordinates = [];
-      latLngs.forEach((latLng) => {
-        coordinates.push([latLng.lng, latLng.lat]);
-      });
-      const points = turf.points(coordinates);
-      const bbox = turf.bbox(points);
-
-      const latLngBounds: LatLngBounds = {
-        west: bbox[0],
-        south: bbox[1],
-        east: bbox[2],
-        north: bbox[3],
-      };
-
-      return this.setCameraToBounds(latLngBounds, padding, animated);
-    });
   }
 }
