@@ -57,6 +57,7 @@
     "typescript": "~3.5.3"
   },
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "@types/geojson": "^7946.0.7"
   },
   "bootstrapper": "nativescript-plugin-seed"

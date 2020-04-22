@@ -1,6 +1,6 @@
 import { MapboxView } from '../mapbox-sdk.android';
 import { LatLng } from '../mapbox-sdk.common';
-import { MapboxMap, CameraPosition, LatLngBounds } from './../common/map.common';
+import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions } from './../common/map.common';
 
 declare const android, com, java, org: any;
 
@@ -28,23 +28,67 @@ export class Map extends MapboxMap {
     super(mapboxView);
   }
 
-  animateCamera(options: CameraPosition, duration: number = 1000): Promise<void> {
+  private setCamera(cameraUpdate, animationDuration: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      const position = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
-        .target(new com.mapbox.mapboxsdk.geometry.LatLng(options.latLng.lat, options.latLng.lng))
+      if (animationDuration) {
+        this.view.mapboxMap.animateCamera(
+          cameraUpdate,
+          animationDuration,
+          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
+            onCancel: () => resolve(),
+            onFinish: () => resolve(),
+          })
+        );
+      } else {
+        this.view.mapboxMap.moveCamera(cameraUpdate);
+        resolve();
+      }
+    });
+  }
+
+  setCameraToLatLng(latLng: LatLng, options?: LatLngCameraOptions): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const cameraPosition = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
+        .target(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng))
         .zoom(options.zoom)
         .bearing(options.bearing ? options.bearing : 0)
         .tilt(options.tilt ? options.tilt : 0)
         .build();
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(cameraPosition);
+      resolve(this.setCamera(cameraUpdate, options.animationDuration));
+    });
+  }
 
-      this.view.mapboxMap.animateCamera(
-        com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(position),
-        duration,
-        new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-          onCancel: () => resolve(),
-          onFinish: () => resolve(),
-        })
+  setCameraToBounds(latLngBounds: LatLngBounds, options?: BoundsCameraOptions): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
+        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
+        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
+        .build();
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(
+        bounds,
+        options.bearing ? options.bearing : this.getBearing(),
+        options.tilt ? options.tilt : this.getTilt(),
+        options.padding ? options.padding : 0
       );
+      resolve(this.setCamera(cameraUpdate, options.animationDuration));
+    });
+  }
+
+  setCameraToCoordinates(latLngs: LatLng[], options?: BoundsCameraOptions): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
+      for (let latLng of latLngs) {
+        latLngBoundsBuilder.include(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng));
+      }
+      const bounds = latLngBoundsBuilder.build();
+      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(
+        bounds,
+        options.bearing ? options.bearing : this.getBearing(),
+        options.tilt ? options.tilt : this.getTilt(),
+        options.padding ? options.padding : 0
+      );
+      resolve(this.setCamera(cameraUpdate, options.animationDuration));
     });
   }
 
@@ -154,56 +198,5 @@ export class Map extends MapboxMap {
 
   setLogoEnabled(enabled: boolean): void {
     this.view.mapboxMap.getUiSettings().setLogoEnabled(enabled);
-  }
-
-  setCameraToBounds(latLngBounds: LatLngBounds, padding?: number, animated?: boolean): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const bounds = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder()
-        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.north, latLngBounds.east))
-        .include(new com.mapbox.mapboxsdk.geometry.LatLng(latLngBounds.south, latLngBounds.west))
-        .build();
-
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-      if (animated) {
-        this.view.mapboxMap.animateCamera(
-          cameraUpdate,
-          1000,
-          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => resolve(),
-            onFinish: () => resolve(),
-          })
-        );
-      } else {
-        this.view.mapboxMap.moveCamera(cameraUpdate);
-        resolve();
-      }
-    });
-  }
-
-  setCameraToCoordinates(latLngs: LatLng[], padding?: number, duration?: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const latLngBoundsBuilder = new com.mapbox.mapboxsdk.geometry.LatLngBounds.Builder();
-      for (let latLng of latLngs) {
-        latLngBoundsBuilder.include(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng));
-      }
-      const bounds = latLngBoundsBuilder.build();
-
-      const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-      if (duration) {
-        this.view.mapboxMap.animateCamera(
-          cameraUpdate,
-          duration,
-          new com.mapbox.mapboxsdk.maps.MapboxMap.CancelableCallback({
-            onCancel: () => resolve(),
-            onFinish: () => resolve(),
-          })
-        );
-      } else {
-        this.view.mapboxMap.moveCamera(cameraUpdate);
-        resolve();
-      }
-    });
   }
 }
