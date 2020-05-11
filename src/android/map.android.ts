@@ -50,9 +50,9 @@ export class Map extends MapboxMap {
     return new Promise((resolve, reject) => {
       const cameraPosition = new com.mapbox.mapboxsdk.camera.CameraPosition.Builder()
         .target(new com.mapbox.mapboxsdk.geometry.LatLng(latLng.lat, latLng.lng))
-        .zoom(options.zoom)
-        .bearing(options.bearing ? options.bearing : 0)
-        .tilt(options.tilt ? options.tilt : 0)
+        .zoom(options.zoom ? options.zoom : this.getZoom())
+        .bearing(options.bearing ? options.bearing : this.getBearing())
+        .tilt(options.tilt ? options.tilt : this.getTilt())
         .build();
       const cameraUpdate = com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(cameraPosition);
       resolve(this.setCamera(cameraUpdate, options.animationDuration));
