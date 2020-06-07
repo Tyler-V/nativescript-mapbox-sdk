@@ -8,3 +8,4 @@ export * from './common/color.common';
 export * from './common/layers/layers.common';
 export * from './common/layers/heatmap.common';
 export * from './common/layers/symbol.common';
+export * from './common/layers/fill.common';
