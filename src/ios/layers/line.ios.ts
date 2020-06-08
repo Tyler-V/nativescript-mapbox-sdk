@@ -1,9 +1,9 @@
-import { MapboxFillLayer, FillLayerOptions } from '../../common/layers/fill.common';
+import { MapboxLineLayer, LineLayerOptions } from '../../common/layers/line.common';
 
-export class FillLayer extends MapboxFillLayer {
-  create(layerId: string, sourceId: string, options?: FillLayerOptions) {
+export class LineLayer extends MapboxLineLayer {
+  create(layerId: string, sourceId: string, options?: LineLayerOptions) {
     const source = this.view.mapbox.style.getSource(sourceId);
-    const layer = MGLFillStyleLayer.alloc().initWithIdentifierSource(layerId, source);
+    const layer = MGLLineStyleLayer.alloc().initWithIdentifierSource(layerId, source);
     layer.sourceLayerIdentifier = sourceId;
 
     if (options) {

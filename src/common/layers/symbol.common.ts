@@ -2,6 +2,7 @@ import { LayerOptions } from './layers.common';
 import { MapboxViewBase } from '../../mapbox-sdk.common';
 
 export interface SymbolLayerOptions extends LayerOptions {
+  textField: string;
   iconImageKey?: string;
   iconSize?: number;
   iconAllowOverlap?: boolean;
