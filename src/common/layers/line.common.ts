@@ -3,8 +3,8 @@ import { MapboxViewBase } from '../../mapbox-sdk.common';
 import { MapboxColor } from '../color.common';
 
 export interface LineLayerOptions extends LayerOptions {
-  lineWidth: number;
-  lineColor: MapboxColor;
+  lineWidth?: number;
+  lineColor?: MapboxColor;
 }
 
 export abstract class MapboxLineLayer {

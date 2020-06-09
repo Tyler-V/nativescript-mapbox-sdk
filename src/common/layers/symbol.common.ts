@@ -1,12 +1,15 @@
 import { LayerOptions } from './layers.common';
 import { MapboxViewBase } from '../../mapbox-sdk.common';
+import { MapboxColor } from '../color.common';
 
 export interface SymbolLayerOptions extends LayerOptions {
-  textField: string;
   iconImageKey?: string;
   iconSize?: number;
   iconAllowOverlap?: boolean;
   iconIgnorePlacement?: boolean;
+  textFieldKey?: string;
+  textSize?: number;
+  textColor?: MapboxColor;
 }
 
 export abstract class MapboxSymbolLayer {
