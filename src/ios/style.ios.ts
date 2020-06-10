@@ -52,6 +52,20 @@ export class Style extends MapboxStyle {
     this.view.mapView.style.addLayer(layer);
   }
 
+  addLayerAt(layer: any, index: number) {
+    this.view.mapView.style.insertLayerAtIndex(layer, index);
+  }
+
+  addLayerBelow(layer: any, below: string) {
+    const belowLayer = this.view.mapView.style.layerWithIdentifier(below);
+    this.view.mapView.style.insertLayerBelowLayer(layer, belowLayer);
+  }
+
+  addLayerAbove(layer: any, above: string) {
+    const aboveLayer = this.view.mapView.style.layerWithIdentifier(above);
+    this.view.mapView.style.insertLayerAboveLayer(layer, aboveLayer);
+  }
+
   addSource(source: any) {
     this.view.mapView.style.addSource(source);
   }

@@ -40,6 +40,9 @@ export abstract class MapboxStyle {
   abstract addImage(name: string, image: any): void;
   abstract addImageFromPath(name: string, filePath: string): void;
   abstract addLayer(layer: any): void;
+  abstract addLayerAt(layer: any, index: number);
+  abstract addLayerBelow(layer: any, below: string);
+  abstract addLayerAbove(layer: any, above: string);
 
   abstract addSource(source: any): void;
   abstract addGeoJsonSource(id: string, geoJson: string): void;
