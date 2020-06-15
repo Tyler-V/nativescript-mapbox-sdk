@@ -56,7 +56,7 @@ export class Map extends MapboxMap {
       options.tilt = options.tilt ? options.tilt : this.getTilt();
       options.zoom = options.zoom ? options.zoom : this.getZoom();
 
-      const viewportSize = CGSizeMake(this.view.getMeasuredWidth(), this.view.getMeasuredHeight());
+      const viewportSize = CGSizeMake(this.view.getActualSize().width, this.view.getActualSize().height);
       const altitude = MGLAltitudeForZoomLevel(options.zoom, options.tilt, latLng.lat, viewportSize);
 
       let mglMapCamera = MGLMapCamera.alloc();
