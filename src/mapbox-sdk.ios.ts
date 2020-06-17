@@ -55,7 +55,7 @@ export class MapboxView extends MapboxViewBase {
         let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.mapView.delegate;
         delegate.onMapViewDidBecomeIdle = (mapView: MGLMapView) => {
           this.notify({
-            eventName: MapboxViewBase.cameraMove,
+            eventName: MapboxViewBase.mapIdleEvent,
             object: this,
           });
         };
@@ -273,5 +273,31 @@ export class MapLongClickHandlerImpl extends NSObject {
 
   public static ObjCExposedMethods = {
     longClick: { returns: interop.types.void, params: [interop.types.id] },
+  };
+}
+
+export class MapPanHandlerImpl extends NSObject {
+  private _owner: WeakRef<Map>;
+  private _listener: (state: UIGestureRecognizerState) => void;
+  private _mapView: MGLMapView;
+
+  public static initWithOwnerAndListenerForMap(
+    owner: WeakRef<Map>,
+    listener: (state: UIGestureRecognizerState) => void,
+    mapView: MGLMapView
+  ): MapPanHandlerImpl {
+    let handler = <MapPanHandlerImpl>MapPanHandlerImpl.new();
+    handler._owner = owner;
+    handler._listener = listener;
+    handler._mapView = mapView;
+    return handler;
+  }
+
+  public pan(recognizer: UIPanGestureRecognizer): void {
+    this._listener(recognizer.state);
+  }
+
+  public static ObjCExposedMethods = {
+    pan: { returns: interop.types.void, params: [interop.types.id] },
   };
 }

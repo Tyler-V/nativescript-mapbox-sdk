@@ -16,7 +16,8 @@
         disableTilt="false"
         (mapReady)="onMapReady($event)"
         (styleLoaded)="onStyleLoaded($event)"
-        (cameraMove)="onCameraMove($event)"
+        (mapIdle)="onMapIdle($event)"
+        (mapMoveEnd)="onMapMoveEnd($event)"
       >
       </Mapbox>
     </ContentView>

@@ -63,7 +63,30 @@ export class MapboxView extends MapboxViewBase {
                 new com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraIdleListener({
                   onCameraIdle: () => {
                     this.notify({
-                      eventName: MapboxViewBase.cameraMove,
+                      eventName: MapboxViewBase.mapIdleEvent,
+                      object: this,
+                    });
+                  },
+                })
+              );
+
+              mapboxMap.addOnMoveListener(
+                new com.mapbox.mapboxsdk.maps.MapboxMap.OnMoveListener({
+                  onMoveBegin: (detector) => {
+                    this.notify({
+                      eventName: MapboxViewBase.mapMoveBeginEvent,
+                      object: this,
+                    });
+                  },
+                  onMove: (detector) => {
+                    this.notify({
+                      eventName: MapboxViewBase.mapMoveEvent,
+                      object: this,
+                    });
+                  },
+                  onMoveEnd: (detector) => {
+                    this.notify({
+                      eventName: MapboxViewBase.mapMoveEndEvent,
                       object: this,
                     });
                   },

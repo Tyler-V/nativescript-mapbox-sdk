@@ -60,9 +60,13 @@ export class MapComponent implements OnInit {
         this.mapService.mapbox.style.addVectorSource('wells', 'mapbox://tvorpahl.b31830kk');
     }
 
-    onCameraMove(event) {
+    onMapIdle(event) {
         console.log(event.eventName);
         console.log(this.mapService.mapbox.map.getZoom());
+    }
+
+    onMapMoveEnd(event) {
+        console.log(event.eventName);
     }
 
     showLocationModal() {

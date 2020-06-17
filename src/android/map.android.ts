@@ -120,6 +120,31 @@ export class Map extends MapboxMap {
     );
   }
 
+  addOnMapPanListener(listener: (value: any) => void) {
+    this.view.mapboxMap.addOnMoveListener(
+      new com.mapbox.mapboxsdk.maps.MapboxMap.OnMoveListener({
+        onMoveBegin: (detector) => {
+          listener({
+            eventName: 'mapMoveBegin',
+            object: this,
+          });
+        },
+        onMove: (detector) => {
+          listener({
+            eventName: 'mapMove',
+            object: this,
+          });
+        },
+        onMoveEnd: (detector) => {
+          listener({
+            eventName: 'mapMoveEnd',
+            object: this,
+          });
+        },
+      })
+    );
+  }
+
   getZoom(): number {
     const zoom = this.view.mapboxMap.getCameraPosition().zoom;
     return zoom;

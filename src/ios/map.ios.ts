@@ -1,4 +1,4 @@
-import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl } from '../mapbox-sdk.ios';
+import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl, MapPanHandlerImpl } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
 import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions } from '../common/map.common';
@@ -152,6 +152,20 @@ export class Map extends MapboxMap {
     this.view.mapView.addGestureRecognizer(longClickGestureRecognizer);
 
     return false;
+  }
+
+  addOnMapPanListener(listener: (value: any) => void) {
+    this.view.mapView.mapTapHandler = MapPanHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    const panGestureRecognizer = UIPanGestureRecognizer.alloc().initWithTargetAction(this.view.mapView.mapTapHandler, 'pan');
+
+    for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
+      let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
+      if (recognizer instanceof UIPanGestureRecognizer) {
+        panGestureRecognizer.requireGestureRecognizerToFail(recognizer);
+      }
+    }
+
+    this.view.mapView.addGestureRecognizer(panGestureRecognizer);
   }
 
   getZoom() {
