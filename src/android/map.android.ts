@@ -124,22 +124,13 @@ export class Map extends MapboxMap {
     this.view.mapboxMap.addOnMoveListener(
       new com.mapbox.mapboxsdk.maps.MapboxMap.OnMoveListener({
         onMoveBegin: (detector) => {
-          listener({
-            eventName: 'mapMoveBegin',
-            object: this,
-          });
+          listener('mapMoveBegin');
         },
         onMove: (detector) => {
-          listener({
-            eventName: 'mapMove',
-            object: this,
-          });
+          listener('mapMove');
         },
         onMoveEnd: (detector) => {
-          listener({
-            eventName: 'mapMoveEnd',
-            object: this,
-          });
+          listener('mapMoveEnd');
         },
       })
     );
