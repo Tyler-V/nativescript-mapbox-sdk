@@ -10,6 +10,7 @@ import { MapStyle } from './common/style.common';
 export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
 export { MapboxColor } from './common/color.common';
+export { MapPanEvent } from './common/map.common';
 
 declare const android, com, java, org: any;
 
