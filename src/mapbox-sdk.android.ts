@@ -69,29 +69,6 @@ export class MapboxView extends MapboxViewBase {
                   },
                 })
               );
-
-              mapboxMap.addOnMoveListener(
-                new com.mapbox.mapboxsdk.maps.MapboxMap.OnMoveListener({
-                  onMoveBegin: (detector) => {
-                    this.notify({
-                      eventName: MapboxViewBase.mapMoveBeginEvent,
-                      object: this,
-                    });
-                  },
-                  onMove: (detector) => {
-                    this.notify({
-                      eventName: MapboxViewBase.mapMoveEvent,
-                      object: this,
-                    });
-                  },
-                  onMoveEnd: (detector) => {
-                    this.notify({
-                      eventName: MapboxViewBase.mapMoveEndEvent,
-                      object: this,
-                    });
-                  },
-                })
-              );
             },
           })
         );
