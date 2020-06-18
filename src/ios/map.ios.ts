@@ -1,7 +1,7 @@
 import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl, MapPanHandlerImpl } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from 'tns-core-modules/utils/utils';
-import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions } from '../common/map.common';
+import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions, MapPanEvent } from '../common/map.common';
 import * as turf from '@turf/turf';
 
 function _getFeatures(features) {
@@ -154,7 +154,7 @@ export class Map extends MapboxMap {
     return false;
   }
 
-  addOnMapPanListener(listener: (state: string) => void) {
+  addOnMapPanListener(listener: (event: MapPanEvent) => void) {
     this.view.mapView.mapPanHandler = MapPanHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {

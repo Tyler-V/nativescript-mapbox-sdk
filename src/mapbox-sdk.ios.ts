@@ -5,6 +5,7 @@ import { Style } from './ios/style.ios';
 import { Location } from './ios/location.ios';
 import { Annotation } from './ios/annotation.ios';
 import { MapStyle } from './common/style.common';
+import { MapPanEvent } from './common/map.common';
 
 export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
@@ -278,11 +279,11 @@ export class MapLongClickHandlerImpl extends NSObject {
 
 export class MapPanHandlerImpl extends NSObject {
   private _owner: WeakRef<Map>;
-  private _listener: (state: string) => void;
+  private _listener: (event: MapPanEvent) => void;
   private onMoveBegin: boolean;
   private _mapView: MGLMapView;
 
-  public static initWithOwnerAndListenerForMap(owner: WeakRef<Map>, listener: (state: string) => void, mapView: MGLMapView): MapPanHandlerImpl {
+  public static initWithOwnerAndListenerForMap(owner: WeakRef<Map>, listener: (event: MapPanEvent) => void, mapView: MGLMapView): MapPanHandlerImpl {
     let handler = <MapPanHandlerImpl>MapPanHandlerImpl.new();
     handler._owner = owner;
     handler._listener = listener;
@@ -293,13 +294,13 @@ export class MapPanHandlerImpl extends NSObject {
   public pan(recognizer: UIPanGestureRecognizer): void {
     switch (recognizer.state) {
       case UIGestureRecognizerState.Began:
-        this._listener('mapMoveBegin');
-        break;
-      case UIGestureRecognizerState.Ended:
-        this._listener('mapMoveEnd');
+        this._listener(MapPanEvent.Begin);
         break;
       case UIGestureRecognizerState.Changed:
-        this._listener('mapMove');
+        this._listener(MapPanEvent.Pan);
+        break;
+      case UIGestureRecognizerState.Ended:
+        this._listener(MapPanEvent.End);
         break;
     }
   }

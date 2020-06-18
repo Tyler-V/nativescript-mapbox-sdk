@@ -1,6 +1,6 @@
 import { MapboxView } from '../mapbox-sdk.android';
 import { LatLng } from '../mapbox-sdk.common';
-import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions } from './../common/map.common';
+import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions, MapPanEvent } from './../common/map.common';
 
 declare const android, com, java, org: any;
 
@@ -120,17 +120,17 @@ export class Map extends MapboxMap {
     );
   }
 
-  addOnMapPanListener(listener: (state: string) => void) {
+  addOnMapPanListener(listener: (event: MapPanEvent) => void) {
     this.view.mapboxMap.addOnMoveListener(
       new com.mapbox.mapboxsdk.maps.MapboxMap.OnMoveListener({
         onMoveBegin: (detector) => {
-          listener('mapMoveBegin');
+          listener(MapPanEvent.Begin);
         },
         onMove: (detector) => {
-          listener('mapMove');
+          listener(MapPanEvent.Pan);
         },
         onMoveEnd: (detector) => {
-          listener('mapMoveEnd');
+          listener(MapPanEvent.End);
         },
       })
     );
