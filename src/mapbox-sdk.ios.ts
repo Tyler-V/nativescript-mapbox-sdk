@@ -276,7 +276,7 @@ export class MapLongClickHandlerImpl extends NSObject {
   };
 }
 
-class MapPanHandlerImpl extends NSObject {
+export class MapPanHandlerImpl extends NSObject {
   private _owner: WeakRef<Map>;
   private _listener: (data?: LatLng) => void;
   private onMoveBegin: boolean;
