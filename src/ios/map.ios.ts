@@ -156,7 +156,6 @@ export class Map extends MapboxMap {
 
   addOnMapPanListener(listener: (state: string) => void) {
     this.view.mapView.mapPanHandler = MapPanHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
-    this.view.mapView.mapPanHandler.setOnMoveBegin();
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
       let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
