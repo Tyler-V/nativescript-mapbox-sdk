@@ -120,7 +120,7 @@ export class Map extends MapboxMap {
     );
   }
 
-  addOnMapPanListener(listener: (value: any) => void) {
+  addOnMapPanListener(listener: (state: string) => void) {
     this.view.mapboxMap.addOnMoveListener(
       new com.mapbox.mapboxsdk.maps.MapboxMap.OnMoveListener({
         onMoveBegin: (detector) => {

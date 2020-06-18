@@ -154,7 +154,7 @@ export class Map extends MapboxMap {
     return false;
   }
 
-  addOnMapPanListener(listener: (value: any) => void) {
+  addOnMapPanListener(listener: (state: string) => void) {
     this.view.mapView.mapPanHandler = MapPanHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
     this.view.mapView.mapPanHandler.setOnMoveBegin();
 

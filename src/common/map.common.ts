@@ -30,7 +30,7 @@ export abstract class MapboxMap {
 
   abstract addOnMapClickListener(listener: (latLng: LatLng) => void);
   abstract addOnMapLongClickListener(listener: (latLng: LatLng) => void);
-  abstract addOnMapPanListener(listener: (value: any) => void);
+  abstract addOnMapPanListener(listener: (state: string) => void);
 
   abstract getZoom(): number;
   abstract getTilt(): number;
