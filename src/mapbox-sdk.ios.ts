@@ -276,25 +276,54 @@ export class MapLongClickHandlerImpl extends NSObject {
   };
 }
 
-export class MapPanHandlerImpl extends NSObject {
+class MapPanHandlerImpl extends NSObject {
   private _owner: WeakRef<Map>;
-  private _listener: (state: UIGestureRecognizerState) => void;
+  private _listener: (data?: LatLng) => void;
+  private onMoveBegin: boolean;
   private _mapView: MGLMapView;
 
-  public static initWithOwnerAndListenerForMap(
-    owner: WeakRef<Map>,
-    listener: (state: UIGestureRecognizerState) => void,
-    mapView: MGLMapView
-  ): MapPanHandlerImpl {
+  public static initWithOwnerAndListenerForMap(owner: WeakRef<Map>, listener: (data?: LatLng) => void, mapView: MGLMapView): MapPanHandlerImpl {
     let handler = <MapPanHandlerImpl>MapPanHandlerImpl.new();
     handler._owner = owner;
     handler._listener = listener;
     handler._mapView = mapView;
+
+    handler.onMoveBegin = false;
+
     return handler;
   }
 
+  public setOnMoveBegin() {
+    this.onMoveBegin = true;
+  }
+
   public pan(recognizer: UIPanGestureRecognizer): void {
-    this._listener(recognizer.state);
+    const panPoint = recognizer.locationInView(this._mapView);
+    const panCoordinate = this._mapView.convertPointToCoordinateFromView(panPoint, this._mapView);
+
+    console.log('MapPanHandlerImpl::pan(): top with state:', recognizer.state);
+
+    // if this is the beginning of the pan simulate the Android onMoveBegin
+    //
+    // See the objc platform declarations in objc!UIKit.d.ts. It doesn't quite match the apple documention
+
+    if (this.onMoveBegin) {
+      if (recognizer.state === UIGestureRecognizerState.Began) {
+        console.log('MapPanHandlerImpl::pan(): calling onMoveBegin listener');
+
+        this._listener({
+          lat: panCoordinate.latitude,
+          lng: panCoordinate.longitude,
+        });
+      }
+
+      return;
+    }
+
+    this._listener({
+      lat: panCoordinate.latitude,
+      lng: panCoordinate.longitude,
+    });
   }
 
   public static ObjCExposedMethods = {
