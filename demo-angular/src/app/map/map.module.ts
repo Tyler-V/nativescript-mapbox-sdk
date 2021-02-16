@@ -1,8 +1,5 @@
-import { ModalDialogService } from 'nativescript-angular/modal-dialog';
+import { ModalDialogService, NativeScriptFormsModule, NativeScriptCommonModule, registerElement } from '@nativescript/angular';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { NativeScriptFormsModule } from 'nativescript-angular/forms';
-import { NativeScriptCommonModule } from 'nativescript-angular/common';
-import { registerElement } from 'nativescript-angular/element-registry';
 
 import { MapRoutingModule } from './map-routing.module';
 import { MapComponent } from './map.component';

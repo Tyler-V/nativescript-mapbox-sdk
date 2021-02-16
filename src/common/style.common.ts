@@ -1,5 +1,4 @@
-import { Folder, path, knownFolders } from 'tns-core-modules/file-system';
-import { ImageSource } from 'tns-core-modules/image-source';
+import { Folder, path, knownFolders, ImageSource } from '@nativescript/core';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 import { MapboxLayers } from './layers/layers.common';
 

@@ -57,7 +57,7 @@ export class Offline extends MapboxOffline {
             });
 
             if (complete) {
-              resolve();
+              resolve(true);
             }
           });
         }
@@ -140,24 +140,23 @@ export class Offline extends MapboxOffline {
 
       MGLOfflineStorage.sharedOfflineStorage.resetDatabaseWithCompletionHandler((error) => {
         if (error) {
-          console.log("Failed to reset Mapbox database!  Error:" + error);
+          console.log('Failed to reset Mapbox database!  Error:' + error);
         } else {
-            console.log("Mapbox database was reset.");
+          console.log('Mapbox database was reset.');
         }
       });
 
       for (let i = 0; i < packs.count; i++) {
         let pack: MGLOfflinePack = packs.objectAtIndex(i);
-          MGLOfflineStorage.sharedOfflineStorage.removePackWithCompletionHandler(pack, (error: NSError) => {
-            if (error) {
-              // The pack couldn’t be deleted for some reason.
-              reject(error.localizedFailureReason);
-            } else {
-              resolve();
-              // don't return, see note below
-            }
-          });
-        }
+        MGLOfflineStorage.sharedOfflineStorage.removePackWithCompletionHandler(pack, (error: NSError) => {
+          if (error) {
+            // The pack couldn’t be deleted for some reason.
+            reject(error.localizedFailureReason);
+          } else {
+            resolve(true);
+          }
+        });
+      }
     });
   }
 
@@ -182,8 +181,7 @@ export class Offline extends MapboxOffline {
                 // The pack couldn’t be deleted for some reason.
                 reject(error.localizedFailureReason);
               } else {
-                resolve();
-                // don't return, see note below
+                resolve(true);
               }
             });
             // don't break the loop as there may be multiple packs with the same name

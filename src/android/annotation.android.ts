@@ -1,8 +1,6 @@
-import { Color } from 'tns-core-modules/color';
+import { Color } from '@nativescript/core';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxAnnotation } from '../common/annotation.common';
-
-declare const android, com, java, org: any;
 
 export class Annotation extends MapboxAnnotation {
   constructor(mapboxView: MapboxView) {

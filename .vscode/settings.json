@@ -7,5 +7,7 @@
   "search.exclude": {
     "**/node_modules": true
   },
-  "typescript.tsdk": "./demo-angular/node_modules/typescript/lib"
+  "typescript.tsdk": "./demo-angular/node_modules/typescript/lib",
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+  "typescript.preferences.importModuleSpecifier": "relative"
 }

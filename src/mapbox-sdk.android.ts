@@ -4,7 +4,7 @@ import { Offline } from './android/offline.android';
 import { Style } from './android/style.android';
 import { Location } from './android/location.android';
 import { Annotation } from './android/annotation.android';
-import * as utils from 'tns-core-modules/utils/utils';
+import * as utils from '@nativescript/core/utils';
 import { MapStyle } from './common/style.common';
 
 export { TrackingMode, LocationOptions } from './common/location.common';

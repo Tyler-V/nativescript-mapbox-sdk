@@ -1,8 +1,6 @@
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxLocation, LocationOptions, TrackingMode } from '../common/location.common';
 
-declare const android, com, java, org: any;
-
 export class Location extends MapboxLocation {
   private locationComponent;
 

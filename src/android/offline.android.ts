@@ -1,8 +1,6 @@
-import * as utils from 'tns-core-modules/utils/utils';
+import * as utils from '@nativescript/core/utils';
 import { MapboxView } from '../mapbox-sdk.android';
 import { MapboxOffline, DownloadOfflineRegionOptions, DeleteOfflineRegionOptions } from '../common/offline.common';
-
-declare const android, com, java, org: any;
 
 export class Offline extends MapboxOffline {
   private offlineManager;
@@ -101,9 +99,10 @@ export class Offline extends MapboxOffline {
 
   _getRegionName(offlineRegion) {
     const metadata = offlineRegion.getMetadata();
-    const jsonStr = new java.lang.String(metadata, 'UTF-8');
-    const jsonObj = new org.json.JSONObject(jsonStr);
-    return jsonObj.getString('name');
+    const map = new java.util.Map<String, String>(); // TEST
+    map.put(metadata, 'UTF-8');
+    const jsonObject = new org.json.JSONObject(map);
+    return jsonObject.getString('name');
   }
 
   listOfflineRegions(): Promise<any> {
@@ -151,7 +150,7 @@ export class Offline extends MapboxOffline {
             reject(error);
           },
           onSuccess: () => {
-            resolve();
+            resolve(true);
           },
         })
       );
@@ -166,7 +165,8 @@ export class Offline extends MapboxOffline {
             reject(error);
           },
           onList: (offlineRegions) => {
-            for (let offlineRegion of offlineRegions) {
+            for (let i = 0; i < offlineRegions.length; i++) {
+              let offlineRegion = offlineRegions[i];
               let name = this._getRegionName(offlineRegion);
               if (name === options.name) {
                 offlineRegion.delete(
@@ -175,7 +175,7 @@ export class Offline extends MapboxOffline {
                       reject(error);
                     },
                     onDelete: () => {
-                      resolve();
+                      resolve(true);
                     },
                   })
                 );

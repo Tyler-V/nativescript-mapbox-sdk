@@ -2,8 +2,6 @@ import { MapboxHeatmap, HeatmapLayerOptions } from '../../common/layers/heatmap.
 import { MapboxColor } from '../../common/color.common';
 import { toExpressionStop } from '../utils.android';
 
-declare const com: any;
-
 const heatmapColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
 const heatmapIntensity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
 const heatmapOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;

@@ -1,6 +1,6 @@
 import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl, MapPanHandlerImpl } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
-import * as utils from 'tns-core-modules/utils/utils';
+import * as utils from '@nativescript/core/utils';
 import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions, MapPanEvent } from '../common/map.common';
 import * as turf from '@turf/turf';
 
@@ -12,7 +12,7 @@ function _getFeatures(features) {
 
     const properties = {};
     if (feature.attributes && feature.attributes.count > 0) {
-      const keys = utils.ios.collections.nsArrayToJSArray(feature.attributes.allKeys);
+      const keys = utils.iOSNativeHelper.collections.nsArrayToJSArray(feature.attributes.allKeys);
       for (let key of keys) {
         properties[key] = feature.attributes.valueForKey(key);
       }

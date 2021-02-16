@@ -2,10 +2,19 @@ android {
 }
 
 repositories {
-    mavenCentral()
+    maven {
+        url 'https://api.mapbox.com/downloads/v2/releases/maven'
+        authentication {
+            basic(BasicAuthentication)
+        }
+        credentials {
+            username = "mapbox"
+            password = "sk.eyJ1IjoidHZvcnBhaGwiLCJhIjoiY2tsODlnYml3MGRkbTJ1bHc0bjc2emIyaiJ9.q-WoXVkbPiDlt3JDiH6f7g"
+        }
+    }
 }
  
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.1.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.5.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0'
 }

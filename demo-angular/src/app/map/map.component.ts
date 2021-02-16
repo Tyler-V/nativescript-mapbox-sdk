@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { ModalDialogService, ModalDialogOptions } from 'nativescript-angular/modal-dialog';
+import { ModalDialogService, ModalDialogOptions } from '@nativescript/angular';
+import { isAndroid, isIOS } from '@nativescript/core';
 import { LatLng, SymbolLayerOptions, MapboxColor, LayerOptions } from 'nativescript-mapbox-sdk';
 import { MapService } from './map.service';
 import { StylesComponent } from './styles/styles.component';
 import { OfflineComponent } from './offline/offline.component';
 import { LocationComponent } from './location/location.component';
 import { LayersComponent } from './layers/layers.component';
-import { isAndroid, isIOS } from 'tns-core-modules/platform';
 import { AndroidCalloutService } from './callouts/android-callout.service';
 import { IOSCalloutService } from './callouts/ios-callout.service';
 
@@ -29,7 +29,6 @@ export class MapComponent implements OnInit {
     tilt: number = 0;
 
     calloutLayer: any;
-    annotation: MGLPointAnnotation;
 
     constructor(
         private mapService: MapService,

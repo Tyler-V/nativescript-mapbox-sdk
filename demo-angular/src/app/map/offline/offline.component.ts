@@ -1,8 +1,7 @@
-import { Page } from 'tns-core-modules/ui/page';
-import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
+import { ModalDialogParams } from '@nativescript/angular';
+import { Page, Progress } from '@nativescript/core';
 import { Component, OnInit } from '@angular/core';
 import { MapService } from './../map.service';
-import { Progress } from 'tns-core-modules/ui/progress';
 
 @Component({
     selector: 'offline',

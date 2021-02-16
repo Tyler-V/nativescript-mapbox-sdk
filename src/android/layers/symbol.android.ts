@@ -1,7 +1,6 @@
 import { MapboxSymbolLayer, SymbolLayerOptions } from '../../common/layers/symbol.common';
 import { mapboxColorToColor } from '../utils.android';
 
-declare const com, java: any;
 const get = com.mapbox.mapboxsdk.style.expressions.Expression.get;
 const iconImage = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 const iconAllowOverlap = com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;

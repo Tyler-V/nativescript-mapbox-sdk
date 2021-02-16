@@ -12,21 +12,21 @@ $fab-margin: 10;
 }
 
 .location {
-  $button-index: 0;
-  margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
-}
-
-.styles {
   $button-index: 1;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }
 
-.layers {
+.styles {
   $button-index: 2;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }
 
-.offline {
+.layers {
   $button-index: 3;
+  margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
+}
+
+.offline {
+  $button-index: 4;
   margin-top: ($fab-size * $button-index) + ($fab-margin * ($button-index + 1));
 }

@@ -1,7 +1,6 @@
 import { MapboxFillLayer, FillLayerOptions } from '../../common/layers/fill.common';
 import { mapboxColorToColor } from '../../android/utils.android';
 
-declare const com, java: any;
 const fillColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 const fillOpacity = com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 const fillAntialias = com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillAntialias;

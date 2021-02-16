@@ -1,7 +1,6 @@
 import { MapboxLineLayer, LineLayerOptions } from '../../common/layers/line.common';
 import { mapboxColorToColor } from '../utils.android';
 
-declare const com, java: any;
 const lineWidth = com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 const lineColor = com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
 

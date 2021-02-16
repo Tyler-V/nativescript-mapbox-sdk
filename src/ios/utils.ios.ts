@@ -1,5 +1,5 @@
 import { MapboxColor } from '../common/color.common';
-import { Color } from 'tns-core-modules/color';
+import { Color } from '@nativescript/core';
 
 export function toReferenceToCArray<T>(input: T[], type: interop.Type<T>): interop.Reference<T> {
   const ref = new interop.Reference<T>(type, interop.alloc(interop.sizeof(CLLocationCoordinate2D) * input.length));

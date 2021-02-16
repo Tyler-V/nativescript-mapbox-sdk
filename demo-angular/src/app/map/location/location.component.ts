@@ -1,9 +1,9 @@
-import { Page } from 'tns-core-modules/ui/page';
-import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { Component, OnInit } from '@angular/core';
-import { MapService } from './../map.service';
-import * as geolocation from 'nativescript-geolocation';
+import { ModalDialogParams } from '@nativescript/angular';
+import { Page } from '@nativescript/core';
+import * as geolocation from '@nativescript/geolocation';
 import { TrackingMode } from 'nativescript-mapbox-sdk';
+import { MapService } from './../map.service';
 
 @Component({
     selector: 'location',

@@ -2,8 +2,6 @@ import { MapboxView } from '../mapbox-sdk.android';
 import { LatLng } from '../mapbox-sdk.common';
 import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions, MapPanEvent } from './../common/map.common';
 
-declare const android, com, java, org: any;
-
 function _getFeatures(features) {
   const results: Array<GeoJSON.Feature> = [];
 

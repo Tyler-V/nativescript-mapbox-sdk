@@ -8,6 +8,7 @@ export interface RegionOptions {
   maxZoom?: number;
   bounds?: LatLngBounds;
 }
+
 export interface DownloadProgress {
   name: string;
   completed: number;
@@ -16,6 +17,7 @@ export interface DownloadProgress {
   complete: boolean;
   completedSize?: number; // Android only, the size in bytes of the download so far.
 }
+
 export interface DownloadOfflineRegionOptions extends RegionOptions {
   onProgress?: (data: DownloadProgress) => void;
   accessToken?: string; // Android only, in case the map has not been shown yet.
@@ -24,6 +26,7 @@ export interface DownloadOfflineRegionOptions extends RegionOptions {
 export interface DeleteOfflineRegionOptions {
   name: string;
 }
+
 export abstract class MapboxOffline {
   protected view: MapboxViewBase;
 

@@ -1,5 +1,4 @@
-import { ContentView } from 'tns-core-modules/ui/content-view';
-import { booleanConverter, Property } from 'tns-core-modules/ui/core/view';
+import { ContentView, booleanConverter, Property } from '@nativescript/core';
 import { MapboxStyle } from './common/style.common';
 import { MapboxLocation } from './common/location.common';
 import { MapboxMap } from './common/map.common';

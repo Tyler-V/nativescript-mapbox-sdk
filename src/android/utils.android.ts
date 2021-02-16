@@ -1,6 +1,5 @@
 import { MapboxColor } from '../common/color.common';
 
-declare const com, java: any;
 const stop = com.mapbox.mapboxsdk.style.expressions.Expression.stop;
 const rgba = com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
 const rgb = com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
