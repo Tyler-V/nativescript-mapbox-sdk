@@ -99,10 +99,9 @@ export class Offline extends MapboxOffline {
 
   _getRegionName(offlineRegion) {
     const metadata = offlineRegion.getMetadata();
-    const map = new java.util.Map<String, String>(); // TEST
-    map.put(metadata, 'UTF-8');
-    const jsonObject = new org.json.JSONObject(map);
-    return jsonObject.getString('name');
+    const jsonStr: any = new java.lang.String(metadata, 'UTF-8'); // TODO
+    const jsonObj = new org.json.JSONObject(jsonStr);
+    return jsonObj.getString('name');
   }
 
   listOfflineRegions(): Promise<any> {
