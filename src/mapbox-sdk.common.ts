@@ -151,7 +151,7 @@ export class Mapbox {
 export abstract class MapboxViewBase extends MapboxApi {
   static mapReadyEvent: string = 'mapReady';
   static styleLoadedEvent: string = 'styleLoaded';
-  static cameraMove: string = 'cameraMove';
+  static mapIdleEvent: string = 'mapIdle';
 
   protected config: MapViewOptions = {};
 

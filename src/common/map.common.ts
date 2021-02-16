@@ -21,6 +21,12 @@ export interface LatLngBounds {
   west: number;
 }
 
+export enum MapPanEvent {
+  Begin = 'Begin',
+  Pan = 'Pan',
+  End = 'End',
+}
+
 export abstract class MapboxMap {
   protected view: MapboxViewBase;
 
@@ -30,6 +36,7 @@ export abstract class MapboxMap {
 
   abstract addOnMapClickListener(listener: (latLng: LatLng) => void);
   abstract addOnMapLongClickListener(listener: (latLng: LatLng) => void);
+  abstract addOnMapPanListener(listener: (event: MapPanEvent) => void);
 
   abstract getZoom(): number;
   abstract getTilt(): number;
