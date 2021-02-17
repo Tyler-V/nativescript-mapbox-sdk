@@ -67,7 +67,7 @@ export class MapComponent implements OnInit {
     showLocationModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: true,
+            fullscreen: false,
         };
 
         return this.modalService.showModal(LocationComponent, options);
@@ -78,7 +78,7 @@ export class MapComponent implements OnInit {
     showStylesModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: true,
+            fullscreen: false,
         };
 
         return this.modalService.showModal(StylesComponent, options);
@@ -87,7 +87,7 @@ export class MapComponent implements OnInit {
     showLayersModal() {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            fullscreen: true,
+            fullscreen: false,
         };
 
         return this.modalService.showModal(LayersComponent, options);
