@@ -128,6 +128,7 @@ export class MapboxView extends MapboxViewBase {
   }
 }
 
+@NativeClass()
 export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelegate {
   public static ObjCProtocols = [MGLMapViewDelegate];
   private mapLoadedCallback: (mapView: MGLMapView) => void;
@@ -224,6 +225,7 @@ export class MGLMapViewDelegateImpl extends NSObject implements MGLMapViewDelega
   }
 }
 
+@NativeClass()
 export class MapClickHandlerImpl extends NSObject {
   private _owner: WeakRef<Map>;
   private _listener: (data: LatLng) => void;
@@ -252,6 +254,7 @@ export class MapClickHandlerImpl extends NSObject {
   };
 }
 
+@NativeClass()
 export class MapLongClickHandlerImpl extends NSObject {
   private _owner: WeakRef<Map>;
   private _listener: (data?: LatLng) => void;
@@ -279,6 +282,7 @@ export class MapLongClickHandlerImpl extends NSObject {
   };
 }
 
+@NativeClass()
 export class MapPanHandlerImpl extends NSObject {
   private _owner: WeakRef<Map>;
   private _listener: (event: MapPanEvent) => void;
