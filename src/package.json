@@ -15,19 +15,17 @@
     "url": "https://github.com/Tyler-V/nativescript-mapbox-sdk.git"
   },
   "scripts": {
-    "tsc": "npm i && tsc",
-    "build": "npm run tsc && npm run build.native",
+    "tsc": "tsc -skipLibCheck",
+    "build": "npm i && ts-patch install && tsc",
     "build.native": "ns plugin build",
     "tslint": "cd .. && tslint \"**/*.ts\" --config tslint.json --exclude \"**/node_modules/**\"",
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/platforms/**'",
     "prepack": "npm run build.native",
-    "demo.ios": "npm run tsc && cd ../demo && tns run ios --emulator",
-    "demo.android": "npm run tsc && cd ../demo && tns run android --emulator",
+    "demo.ios": "npm run build && cd ../demo-angular && ns run ios --no-hmr",
+    "demo.android": "npm run build && cd ../demo-angular && ns run android --no-hmr",
     "demo.reset": "cd ../demo && npx rimraf -- hooks node_modules platforms package-lock.json",
-    "demo-angular.ios": "npm run tsc && cd ../demo-angular && tns run ios --emulator",
-    "demo-angular.android": "npm run tsc && cd ../demo-angular && tns run android --emulator",
     "demo-angular.reset": "cd ../demo-angular && npx rimraf -- hooks node_modules platforms package-lock.json",
-    "plugin.prepare": "npm run build && cd ../demo && tns plugin remove nativescript-mapbox-sdk && tns plugin add ../src && cd ../demo-angular && tns plugin remove nativescript-mapbox-sdk && tns plugin add ../src",
+    "plugin.prepare": "npm run build && cd ../demo && ns plugin remove nativescript-mapbox-sdk && ns plugin add ../src && cd ../demo-angular && ns plugin remove nativescript-mapbox-sdk && ns plugin add ../src",
     "clean": "npm run demo.reset && npm run demo-angular.reset && npx rimraf -- node_modules package-lock.json && npm i"
   },
   "keywords": [
@@ -56,11 +54,12 @@
     "@nativescript/core": "~7.2.1",
     "@nativescript/types": "~7.2.0",
     "@nativescript/webpack": "~4.1.0",
-    "typescript": "~4.1.5"
+    "typescript": "~4.1.5",
+    "@types/geojson": "^7946.0.7"
   },
   "dependencies": {
     "@turf/turf": "^6.3.0",
-    "@types/geojson": "^7946.0.7"
+    "ts-node": "^9.1.1"
   },
   "bootstrapper": "nativescript-plugin-seed"
 }

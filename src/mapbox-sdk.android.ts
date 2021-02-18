@@ -1,11 +1,10 @@
-import { setTimeout } from '@nativescript/core/timer';
+import { Utils } from '@nativescript/core';
 import { MapboxViewBase } from './mapbox-sdk.common';
 import { Map } from './android/map.android';
 import { Offline } from './android/offline.android';
 import { Style } from './android/style.android';
 import { Location } from './android/location.android';
 import { Annotation } from './android/annotation.android';
-import * as utils from '@nativescript/core/utils';
 import { MapStyle } from './common/style.common';
 
 export { TrackingMode, LocationOptions } from './common/location.common';
@@ -26,7 +25,7 @@ export class MapboxView extends MapboxViewBase {
   public createNativeView(): Object {
     let nativeView = new android.widget.FrameLayout(this._context);
 
-    setTimeout(() => {
+    Utils.setTimeout(() => {
       this.initMap();
     });
 
@@ -38,7 +37,7 @@ export class MapboxView extends MapboxViewBase {
   initMap(): void {
     if (!this.mapView && this.config.accessToken) {
       let settings = this.config;
-      const context = utils.ad.getApplicationContext();
+      const context = Utils.android.getApplicationContext();
       const instance = com.mapbox.mapboxsdk.Mapbox.getInstance(context, this.config.accessToken); // com.mapbox.mapboxsdk.Mapbox
 
       let drawMap = () => {
@@ -76,7 +75,7 @@ export class MapboxView extends MapboxViewBase {
         this.nativeView.addView(this.mapView);
       };
 
-      setTimeout(drawMap);
+      Utils.setTimeout(drawMap);
     }
   }
 
