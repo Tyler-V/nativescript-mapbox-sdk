@@ -1,3 +1,4 @@
+import { setTimeout } from '@nativescript/core/timer';
 import { MapboxViewBase, LatLng, MapViewOptions } from './mapbox-sdk.common';
 import { Map } from './ios/map.ios';
 import { Offline } from './ios/offline.ios';

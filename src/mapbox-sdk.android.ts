@@ -1,3 +1,4 @@
+import { setTimeout } from '@nativescript/core/timer';
 import { MapboxViewBase } from './mapbox-sdk.common';
 import { Map } from './android/map.android';
 import { Offline } from './android/offline.android';
@@ -11,8 +12,6 @@ export { TrackingMode, LocationOptions } from './common/location.common';
 export { MapStyle, LayerType } from './common/style.common';
 export { MapboxColor } from './common/color.common';
 export { MapPanEvent } from './common/map.common';
-
-declare const android, com, java, org: any;
 
 export class MapboxView extends MapboxViewBase {
   constructor() {
