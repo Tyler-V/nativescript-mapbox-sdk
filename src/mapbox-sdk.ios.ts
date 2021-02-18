@@ -1,4 +1,4 @@
-import { setTimeout } from '@nativescript/core/timer';
+import { Utils } from '@nativescript/core';
 import { MapboxViewBase, LatLng, MapViewOptions } from './mapbox-sdk.common';
 import { Map } from './ios/map.ios';
 import { Offline } from './ios/offline.ios';
@@ -28,7 +28,7 @@ export class MapboxView extends MapboxViewBase {
   public createNativeView(): Object {
     let nativeView = super.createNativeView();
 
-    setTimeout(() => {
+    Utils.setTimeout(() => {
       this.initMap();
     });
 
@@ -96,7 +96,7 @@ export class MapboxView extends MapboxViewBase {
         this.nativeView.addSubview(this.mapView);
       };
 
-      setTimeout(drawMap);
+      Utils.setTimeout(drawMap);
     }
   }
 
