@@ -156,16 +156,15 @@ export class Map extends MapboxMap {
 
   addOnMapPanListener(listener: (event: MapPanEvent) => void) {
     this.view.mapView.mapPanHandler = MapPanHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
-    const panGestureRecognizer = UIPanGestureRecognizer.alloc().initWithTargetAction(this.view.mapView.mapPanHandler, 'pan');
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
       let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
+
       if (recognizer instanceof UIPanGestureRecognizer) {
-        panGestureRecognizer.requireGestureRecognizerToFail(recognizer);
+        recognizer.addTargetAction(this.view.mapView.mapPanHandler, 'pan');
+        break;
       }
     }
-
-    this.view.mapView.addGestureRecognizer(panGestureRecognizer);
   }
 
   getZoom() {
