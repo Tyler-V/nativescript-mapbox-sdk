@@ -76,10 +76,14 @@ export class Style extends MapboxStyle {
     this.view.mapStyle.addSource(source);
   }
 
+  removeSource(source: any) {
+    this.view.mapStyle.removeSource(source);
+  }
+
   addGeoJsonSource(sourceId: string, geoJson: string) {
     let source = this.getSource(sourceId);
     if (source != null) {
-      this.view.mapStyle.removeSource(sourceId);
+      return source;
     }
     source = new com.mapbox.mapboxsdk.style.sources.GeoJsonSource(sourceId, geoJson);
     this.addSource(source);
@@ -89,7 +93,7 @@ export class Style extends MapboxStyle {
   addVectorSource(sourceId: string, uri: string): any {
     let source = this.getSource(sourceId);
     if (source != null) {
-      this.view.mapStyle.removeSource(sourceId);
+      return source;
     }
     source = new com.mapbox.mapboxsdk.style.sources.VectorSource(sourceId, uri);
     this.addSource(source);

@@ -44,6 +44,7 @@ export abstract class MapboxStyle {
   abstract addLayerAbove(layer: any, above: string);
 
   abstract addSource(source: any): void;
+  abstract removeSource(source: any): void;
   abstract addGeoJsonSource(id: string, geoJson: string): void;
   abstract addVectorSource(id: string, uri: string): any;
 

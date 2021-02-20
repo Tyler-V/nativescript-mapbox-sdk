@@ -70,6 +70,10 @@ export class Style extends MapboxStyle {
     this.view.mapView.style.addSource(source);
   }
 
+  removeSource(source: any) {
+    this.view.mapView.style.removeSource(source);
+  }
+
   addGeoJsonSource(sourceId: string, geoJson: string) {
     // TODO
   }
