@@ -39,7 +39,7 @@ export class IOSCalloutService {
     addAnnotation(feature: GeoJSON.Feature<GeoJSON.Point>) {
         this.removeAnnotation();
 
-        this.annotation = MGLPointAnnotation.alloc();
+        this.annotation = MGLPointAnnotation.alloc().init();
         this.annotation.coordinate = CLLocationCoordinate2DMake(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
         this.annotation.title = feature.properties.NAME;
         this.annotation.subtitle = feature.properties.API;
