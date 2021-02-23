@@ -1,5 +1,5 @@
 import { Layers } from './layers/layers.ios';
-import { MapboxView, MGLMapViewDelegateImpl } from '../mapbox-sdk.ios';
+import { MapboxView } from '../mapbox-sdk.ios';
 import { MapboxStyle, LayerType } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
@@ -28,7 +28,7 @@ export class Style extends MapboxStyle {
   setStyleUri(uri: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.view.mapView.styleURL = NSURL.URLWithString(uri);
-      let delegate: MGLMapViewDelegateImpl = <MGLMapViewDelegateImpl>this.view.mapView.delegate;
+      let delegate: any = this.view.mapView.delegate;
       delegate.setStyleLoadedCallback((mapView, style) => {
         console.log('setStyleUri():mapViewDidFinishLoadingStyle');
         this.view.notify({

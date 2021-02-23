@@ -1,4 +1,4 @@
-import { MapboxView, MapClickHandlerImpl, MapLongClickHandlerImpl, MapPanHandlerImpl } from '../mapbox-sdk.ios';
+import { MapboxView, createMapClickHandler, createMapLongClickHandler, createMapPanHandler } from '../mapbox-sdk.ios';
 import { LatLng } from '../mapbox-sdk.common';
 import * as utils from '@nativescript/core/utils';
 import { MapboxMap, LatLngBounds, LatLngCameraOptions, BoundsCameraOptions, MapPanEvent } from '../common/map.common';
@@ -123,7 +123,7 @@ export class Map extends MapboxMap {
   }
 
   addOnMapClickListener(listener: (latLng: LatLng) => void) {
-    this.view.mapView.mapClickHandler = MapClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    this.view.mapView.mapClickHandler = createMapClickHandler(new WeakRef(this), listener, this.view.mapView);
     const tapGestureRecognizer = UITapGestureRecognizer.alloc().initWithTargetAction(this.view.mapView.mapClickHandler, 'tap');
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
@@ -139,7 +139,7 @@ export class Map extends MapboxMap {
   }
 
   addOnMapLongClickListener(listener: (latLng: LatLng) => void) {
-    this.view.mapView.mapLongClickHandler = MapLongClickHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    this.view.mapView.mapLongClickHandler = createMapLongClickHandler(new WeakRef(this), listener, this.view.mapView);
     const longClickGestureRecognizer = UILongPressGestureRecognizer.alloc().initWithTargetAction(this.view.mapView.mapLongClickHandler, 'longClick');
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
@@ -155,7 +155,7 @@ export class Map extends MapboxMap {
   }
 
   addOnMapPanListener(listener: (event: MapPanEvent) => void) {
-    this.view.mapView.mapPanHandler = MapPanHandlerImpl.initWithOwnerAndListenerForMap(new WeakRef(this), listener, this.view.mapView);
+    this.view.mapView.mapPanHandler = createMapPanHandler(new WeakRef(this), listener, this.view.mapView);
 
     for (let i = 0; i < this.view.mapView.gestureRecognizers.count; i++) {
       let recognizer: UIGestureRecognizer = this.view.mapView.gestureRecognizers.objectAtIndex(i);
