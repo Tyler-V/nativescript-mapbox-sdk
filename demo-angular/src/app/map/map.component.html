@@ -1,28 +1,36 @@
 <GridLayout>
-  <StackLayout>
-    <ContentView height="100%" width="100%">
-      <Mapbox
-        [accessToken]="accessToken"
-        [mapStyle]="mapStyle"
-        [zoomLevel]="zoom"
-        [minZoom]="minZoom"
-        [maxZoom]="maxZoom"
-        [latitude]="latitude"
-        [longitude]="longitude"
-        hideCompass="true"
-        disableZoom="false"
-        disableRotation="false"
-        disableScroll="false"
-        disableTilt="false"
-        (mapReady)="onMapReady($event)"
-        (styleLoaded)="onStyleLoaded($event)"
-        (mapIdle)="onMapIdle($event)"
-      >
-      </Mapbox>
-    </ContentView>
+  <StackLayout *ngIf="!showMap">
+    <FlexboxLayout alignItems="flex-start" justifyContent="center" height="300">
+      <Label text="nativescript-mapbox-sdk" alignSelf="center" fontSize="20"></Label>
+    </FlexboxLayout>
+    <Button text="Go To Map" class="-primary" (tap)="showMap = true"></Button>
   </StackLayout>
-  <FAB (tap)="showLocationModal()" icon="~/images/location.png" rippleColor="#f1f1f1" class="fab-button location"></FAB>
-  <FAB (tap)="showStylesModal()" icon="~/images/map.png" rippleColor="#f1f1f1" class="fab-button styles"></FAB>
-  <FAB (tap)="showLayersModal()" icon="~/images/layers.png" rippleColor="#f1f1f1" class="fab-button layers"></FAB>
-  <FAB (tap)="showOfflineModal()" icon="~/images/offline.png" rippleColor="#f1f1f1" class="fab-button offline"></FAB>
+  <GridLayout *ngIf="showMap">
+    <StackLayout>
+      <ContentView height="100%" width="100%">
+        <Mapbox
+          [accessToken]="accessToken"
+          [mapStyle]="mapStyle"
+          [zoomLevel]="zoom"
+          [minZoom]="minZoom"
+          [maxZoom]="maxZoom"
+          [latitude]="latitude"
+          [longitude]="longitude"
+          hideCompass="true"
+          disableZoom="false"
+          disableRotation="false"
+          disableScroll="false"
+          disableTilt="false"
+          (mapReady)="onMapReady($event)"
+          (styleLoaded)="onStyleLoaded($event)"
+          (mapIdle)="onMapIdle($event)"
+        >
+        </Mapbox>
+      </ContentView>
+    </StackLayout>
+    <FAB (tap)="showLocationModal()" icon="~/images/location.png" rippleColor="#f1f1f1" class="fab-button location"></FAB>
+    <FAB (tap)="showStylesModal()" icon="~/images/map.png" rippleColor="#f1f1f1" class="fab-button styles"></FAB>
+    <FAB (tap)="showLayersModal()" icon="~/images/layers.png" rippleColor="#f1f1f1" class="fab-button layers"></FAB>
+    <FAB (tap)="showOfflineModal()" icon="~/images/offline.png" rippleColor="#f1f1f1" class="fab-button offline"></FAB>
+  </GridLayout>
 </GridLayout>
