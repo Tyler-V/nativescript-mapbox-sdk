@@ -49,6 +49,7 @@ export abstract class MapboxStyle {
   abstract addVectorSource(id: string, uri: string): any;
 
   abstract removeLayer(layer: any): void;
+  abstract removeLayerById(layerId: string): void;
   abstract removeImage(name: string): void;
 
   public getImageFromPath(filePath: string): ImageSource {

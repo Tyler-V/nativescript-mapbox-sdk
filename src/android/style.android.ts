@@ -72,6 +72,10 @@ export class Style extends MapboxStyle {
     this.view.mapStyle.removeLayer(layer);
   }
 
+  removeLayerById(layerId: string) {
+    this.view.mapStyle.removeLayer(layerId);
+  }
+
   addSource(source: any) {
     this.view.mapStyle.addSource(source);
   }

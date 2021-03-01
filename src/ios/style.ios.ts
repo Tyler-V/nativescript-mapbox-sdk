@@ -4,6 +4,8 @@ import { MapboxStyle, LayerType } from '../common/style.common';
 import { MapboxViewBase } from '../mapbox-sdk.common';
 
 export class Style extends MapboxStyle {
+  mapView: MGLMapView = this.view.mapView;
+
   constructor(mapboxView: MapboxView) {
     super(mapboxView);
     this.layers = new Layers(mapboxView);
@@ -105,8 +107,13 @@ export class Style extends MapboxStyle {
     return layer;
   }
 
-  removeLayer(layer: any) {
-    this.view.mapView.style.removeLayer(layer);
+  removeLayer(layer: MGLStyleLayer) {
+    this.mapView.style.removeLayer(layer);
+  }
+
+  removeLayerById(layerId: string) {
+    const layer = this.mapView.style.layerWithIdentifier(layerId);
+    this.removeLayer(layer);
   }
 
   removeImage(name: string) {
